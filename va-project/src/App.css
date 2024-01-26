@@ -1,38 +1,84 @@
 .App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+  width: -webkit-fill-available;
+  height: -webkit-fill-available;
+  background-color: black;
   display: flex;
   flex-direction: column;
+  padding: .5%;
+}
+
+div.TopBar {
+  height: 5rem;
+  width: -webkit-fill-available;
+  display: flex;
+  background-color: #3D3D3D;
+  padding:0 1rem 0 1rem;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+}
+
+.TopBar>h1{
+  font-size: 1.5vw;
   color: white;
+  font-weight: bold;
+  margin: 0;
 }
 
-.App-link {
-  color: #61dafb;
+.ScreenCenter {
+  display: flex;
+  flex-direction: row;
+  width: -webkit-fill-available;
+  height: -webkit-fill-available;
+  padding: 1rem 0 0 0
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.Filters {
+  display: flex;
+  flex-direction: column;
+  width:55%;
+  height: -webkit-fill-available;
+}
+
+.Map {
+  display: flex;
+  flex-direction: column;
+  margin-left: 1rem;
+  width: -webkit-fill-available;
+  height: -webkit-fill-available;
+}
+
+.ScreenBottom 
+{
+  display: flex;
+  flex-direction: row;
+  width: -webkit-fill-available;
+  height: 65%;
+  padding: 1rem 0 0 0
+}
+
+.ScreenBottom > div, .ScreenCenter > div {
+  background-color: #3D3D3D;
+  align-items: center;
+  justify-content:center;
+}
+
+.DimReduction {
+  display: flex;
+  flex-direction: column;
+  width: 40%;
+  height: -webkit-fill-available;
+}
+
+.ParallelCoordinates {
+  display: flex;
+  flex-direction: column;
+  margin: 0 1rem 0 1rem ;
+  width: -webkit-fill-available;
+  height: -webkit-fill-available;
+}
+
+.Heatmap {
+  display: flex;
+  flex-direction: column;
+  width: 40%;
+  height: -webkit-fill-available;
 }
