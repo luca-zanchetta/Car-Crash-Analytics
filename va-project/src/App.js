@@ -5,6 +5,7 @@ import MapComponent from './Charts/mapView';
 import { useEffect, useState } from 'react';
 import { ExtractFeatures } from './Utilities/SliceColumns';
 import { Scatterplot } from './Charts/Scatterplot.tsx';
+import { Heatmap } from './Charts/Heatmap.tsx';
 
 export const columns = {
   Date: "Accident Date",
@@ -59,6 +60,7 @@ function App() {
 
         </div>
         <div className='Heatmap'>
+          <Heatmap data={ExtractFeatures(data, [columns.Date,columns.Time])}></Heatmap>
         </div>
       </div>
     </div>
