@@ -36,7 +36,7 @@ function App() {
   },[])
  
   function Hey() {
-    console.log("frochoni")
+    //console.log("frochoni")
   }
   return (
     <div className="App">
@@ -53,7 +53,7 @@ function App() {
       </div>
       <div className='ScreenBottom'>
         <div className='DimReduction'>
-          <Scatterplot callbackMouseEnter={Hey} data={ExtractFeatures(data,[columns.Number_of_Casualties,columns.Speed_limit])}></Scatterplot>
+          <Scatterplot callbackMouseEnter={Hey} data={ExtractFeatures(data,[columns.Number_of_Casualties,columns.Number_of_Vehicles])}></Scatterplot>
         </div>
         <div className='ParallelCoordinates'>
 

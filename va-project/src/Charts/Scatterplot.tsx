@@ -11,7 +11,7 @@ type ScatterplotProps = {
     data : {x:number, y:number, name:string}[];
 };
 
-export const Scatterplot = ({callbackMouseEnter, margin = 25,data= [{x: 2,y: 4, name:"Frochino"},{x: 8,y: 5, name:"Frochone"}]}:ScatterplotProps) => {
+export const Scatterplot = ({callbackMouseEnter, margin = 40,data= [{x: 2,y: 4, name:"Frochino"},{x: 8,y: 5, name:"Frochone"}]}:ScatterplotProps) => {
 
     //needed for responsive dimensions
     const chartRef = useRef(null);
@@ -23,8 +23,17 @@ export const Scatterplot = ({callbackMouseEnter, margin = 25,data= [{x: 2,y: 4, 
     const boundsWidth = chartSize.width - margin - margin;
     const boundsHeight = chartSize.height - margin - margin;
 
-    const y = d3.scaleLinear().domain([0, 1000]).range([boundsHeight, 0]);
-    const x = d3.scaleLinear().domain([0, 1000]).range([0, boundsWidth]);
+    var mx = 0,my = 0
+    data.map((d, i) => {    
+        if(mx < d[0]) 
+            mx = d[0]
+
+        if(my < d[1]) 
+            my = d[1]
+    })
+    console.log(mx)
+    const y = d3.scaleLinear().domain([0, my]).range([boundsHeight, 0]);
+    const x = d3.scaleLinear().domain([0, mx]).range([0, boundsWidth]);
 
     // Build the shapes
     const allShapes = data.map((d, i) => {
@@ -32,8 +41,8 @@ export const Scatterplot = ({callbackMouseEnter, margin = 25,data= [{x: 2,y: 4, 
         <circle
             key={i}
             r={13}
-            cx={x(d.y)}
-            cy={y(d.x)}
+            cx={x(d[0])}
+            cy={y(d[1])}
             opacity={1}
             stroke="#cb1dd1"
             fill="#cb1dd1"
@@ -42,9 +51,9 @@ export const Scatterplot = ({callbackMouseEnter, margin = 25,data= [{x: 2,y: 4, 
             onMouseEnter={() =>{
                 callbackMouseEnter();
                 setHovered({
-                  xPos: x(d.x),
-                  yPos: y(d.y),
-                  name: d.name
+                  xPos: x(d[0]),
+                  yPos: y(d[1]),
+                  name: "frochonis"
                 })}
               }
               onMouseLeave={() => setHovered(null)}
@@ -80,14 +89,11 @@ export const Scatterplot = ({callbackMouseEnter, margin = 25,data= [{x: 2,y: 4, 
             {/* Tooltip */}
             <div
                 style={{
-                width: boundsWidth,
-                height: boundsHeight,
+                width: "-webkit-fill-available",
+                height: "-webkit-fill-available",
                 position: "absolute",
-                top: 0,
-                left: 0,
                 pointerEvents: "none",
-                marginLeft: margin,
-                marginTop: margin,
+                margin:margin
                 }}
             >
                 <Tooltip interactionData={hovered} />
