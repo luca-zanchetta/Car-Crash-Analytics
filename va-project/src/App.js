@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { ExtractFeatures } from './Utilities/SliceColumns';
 import { Scatterplot } from './Charts/Scatterplot.tsx';
 import { Heatmap } from './Charts/Heatmap.tsx';
+import { ParallelCoordinate } from './Charts/ParallelCoordinate.tsx';
 
 export const columns = {
   Date: "Accident Date",
@@ -59,7 +60,7 @@ function App() {
           <Scatterplot callbackMouseEnter={Hey} data={ExtractFeatures(data,[columns.Number_of_Casualties,columns.Number_of_Vehicles])}></Scatterplot>
         </div>
         <div className='ParallelCoordinates'>
-
+          <ParallelCoordinate data={data} variables={[columns.Severity, ]}></ParallelCoordinate>
         </div>
         <div className='Heatmap'>
           {/* <Heatmap data={ExtractFeatures(data, [columns.Date,columns.Time])}></Heatmap> */}
