@@ -16,7 +16,7 @@ type HeatmapData = {
     accidents: number;
 }
 
-export const Heatmap = ({Data, margin = 25}: HeatmapProps) => {
+export const Heatmap = ({Data, margin = 50}: HeatmapProps) => {
   var data : HeatmapData[] = []
 
   Days.map((D,i) => {
@@ -30,6 +30,7 @@ export const Heatmap = ({Data, margin = 25}: HeatmapProps) => {
               data[index].accidents++
       }
   })
+  
   //needed for responsive dimensions
   const chartRef = useRef(null);
   const chartSize = useDimensions(chartRef);
@@ -59,11 +60,12 @@ export const Heatmap = ({Data, margin = 25}: HeatmapProps) => {
       .padding(0.01);
   }, [data, chartSize.height]);
 
-  const [min, max] = d3.extent(data.map((d) => d.accidents));
+  var min = data[0].accidents, max = data[0].accidents
 
-  if (!min || !max) {
-    return null;
-  }
+  data.map((d,i) => {
+    if(d.accidents> max) max = d.accidents
+    if(d.accidents< min) min = d.accidents
+  })
 
   // Color scale
   const colorScale = d3
@@ -98,7 +100,9 @@ export const Heatmap = ({Data, margin = 25}: HeatmapProps) => {
         y={boundsHeight + 10}
         textAnchor="middle"
         dominantBaseline="middle"
-        fontSize={10}
+        fontSize={12}
+        fill="white"
+        cursor="pointer"
       >
         {name}
       </text>
@@ -114,7 +118,9 @@ export const Heatmap = ({Data, margin = 25}: HeatmapProps) => {
         y={yPos + yScale.bandwidth() / 2}
         textAnchor="end"
         dominantBaseline="middle"
-        fontSize={10}
+        fontSize={11}
+        fill="white"
+        cursor="pointer"
       >
         {name}
       </text>

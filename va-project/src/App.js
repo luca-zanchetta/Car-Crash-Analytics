@@ -25,6 +25,7 @@ export const columns = {
   Urban_or_Rural_Area:"Urban_or_Rural_Area",
   Vehicle_Type:"Vehicle_Type",
   Weather_Conditions:"Weather_Conditions",
+  Time_Interval:"Time_interval"
 }
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
   useEffect(() =>{
     d3.csv("dataset.csv").then(data => {
       setData(data)
+      console.log(data[0])
     });
  
   },[])
@@ -60,7 +62,8 @@ function App() {
 
         </div>
         <div className='Heatmap'>
-          <Heatmap data={ExtractFeatures(data, [columns.Date,columns.Time])}></Heatmap>
+          {/* <Heatmap data={ExtractFeatures(data, [columns.Date,columns.Time])}></Heatmap> */}
+          <Heatmap Data={ExtractFeatures(data, [columns.Time_Interval,columns.Day])}></Heatmap>
         </div>
       </div>
     </div>

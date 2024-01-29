@@ -8,6 +8,6 @@ export function ExtractFeatures(Data, Features) {
         newData.push(newEntry)
     })
 
-    console.log(newData)
+   
     return newData;
 }
