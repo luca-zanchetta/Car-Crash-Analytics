@@ -87,13 +87,29 @@ road_type_enc = encode(road_type)
 weather_conditions_enc = encode(weather_conditions)
 vehicle_type_enc = encode(vehicle_type)
 
+jc = []
+jd = []
+lc = []
+rsc = []
+rt = []
+wc = []
+vt = []
+
 for index, row in data.iterrows():
-    row['Junction_Control'] = junction_control_enc[row['Junction_Control']]
-    row['Junction_Detail'] = junction_detail_enc[row['Junction_Detail']]
-    row['Light_Conditions'] = light_conditions_enc[row['Light_Conditions']]
-    row['Road_Surface_Conditions'] = road_surface_conditions_enc[row['Road_Surface_Conditions']]
-    row['Road_Type'] = road_type_enc[row['Road_Type']]
-    row['Weather_Conditions'] = weather_conditions_enc[row['Weather_Conditions']]
-    row['Vehicle_Type'] = vehicle_type_enc[row['Vehicle_Type']]
+    jc.append(junction_control_enc[row['Junction_Control']])
+    jd.append(junction_detail_enc[row['Junction_Detail']])
+    lc.append(light_conditions_enc[row['Light_Conditions']])
+    rsc.append(road_surface_conditions_enc[row['Road_Surface_Conditions']])
+    rt.append(road_type_enc[row['Road_Type']])
+    wc.append(weather_conditions_enc[row['Weather_Conditions']])
+    vt.append(vehicle_type_enc[row['Vehicle_Type']])
+
+data['Junction_Control'] = jc
+data['Junction_Detail'] = jd
+data['Light_Conditions'] = lc
+data['Road_Surface_Conditions'] = rsc
+data['Road_Type'] = rt
+data['Weather_Conditions'] = wc
+data['Vehicle_Type'] = vt
 
 data.to_csv('./va-project/public/dataset.csv', index=False, sep=',')

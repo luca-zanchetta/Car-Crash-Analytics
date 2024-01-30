@@ -2,7 +2,7 @@ import pandas as pd
 
 # fasce orarie: 0-3, 3-6, 6-9, 9-12, 12-15, 15-18, 18-21, 21-24
 
-data = pd.read_csv('./Data/dataset.csv')
+data = pd.read_csv('./va-project/public/dataset.csv')
 hourly_intervals = []
 
 time = data['Time']
@@ -27,4 +27,4 @@ for elem in time:
 
 data['Time_interval'] = hourly_intervals
 
-data.to_csv('./Data/dataset.csv', index=False, sep=',')
+data.to_csv('./va-project/public/dataset.csv', index=False, sep=',')
