@@ -1,7 +1,8 @@
 import { useMemo, useRef } from "react";
 import * as d3 from "d3";
 import React from "react";
-import { useDimensions } from "../Utilities/useDimensions.ts";
+import { useDimensions } from "../../Utilities/useDimensions.ts";
+import "../Charts.css"
 
 const Days = ["Monday","Tuesday",  "Wednesday", "Thursday", "Friday",  "Saturday", "Sunday"]
 const TimeBounds = ["0-3","3-6","6-9","9-12","12-15", "15-18", "18-21", "21-24"]

@@ -27,14 +27,15 @@ div.TopBar {
   display: flex;
   flex-direction: row;
   width: -webkit-fill-available;
-  height: -webkit-fill-available;
+  height:50%;
   padding: 1rem 0 0 0
 }
 
 .Filters {
   display: flex;
   flex-direction: column;
-  width:55%;
+  max-width:40%;
+  min-width:40%;
   height: -webkit-fill-available;
 }
 
@@ -51,7 +52,7 @@ div.TopBar {
   display: flex;
   flex-direction: row;
   width: -webkit-fill-available;
-  height: 65%;
+  height:50%;
   padding: 1rem 0 0 0
 }
 

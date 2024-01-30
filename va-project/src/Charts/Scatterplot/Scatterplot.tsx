@@ -1,9 +1,10 @@
 import * as d3 from "d3";
 import React, { useReducer, useRef, useState } from "react";
-import { useDimensions } from "../Utilities/useDimensions.ts";
+import { useDimensions } from "../../Utilities/useDimensions.ts";
 import { AxisBottom } from "./XAxis_scatterplot.tsx";
 import { AxisLeft } from "./YAxis_scatterplot.tsx";
 import { InteractionData, Tooltip } from "./Tooltip.tsx";
+import "../Charts.css"
 
 type ScatterplotProps = {
     callbackMouseEnter: Function;
@@ -31,7 +32,7 @@ export const Scatterplot = ({callbackMouseEnter, margin = 40,data= [{x: 2,y: 4, 
         if(my < d[1]) 
             my = d[1]
     })
-    console.log(mx)
+    
     const y = d3.scaleLinear().domain([0, my]).range([boundsHeight, 0]);
     const x = d3.scaleLinear().domain([0, mx]).range([0, boundsWidth]);
 

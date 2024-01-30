@@ -1,26 +1,15 @@
 import './App.css';
 import * as d3 from "d3"
-import LinePlot from './Charts/test.js';
-import MapComponent from './Charts/mapView.js';
+import MapComponent from './Charts/Map/mapView.js';
 import { useEffect, useState } from 'react';
 import { ExtractFeatures } from './Utilities/SliceColumns.js';
-import { Scatterplot } from './Charts/Scatterplot.tsx';
-import { Heatmap } from './Charts/Heatmap.tsx';
-import { ParallelCoordinate } from './Charts/ParallelCoordinate.tsx';
+import { Scatterplot } from './Charts/Scatterplot/Scatterplot.tsx';
+import { Heatmap } from './Charts/Heatmap/Heatmap.tsx';
+import { ParallelCoordinate } from './Charts/Parallel Coordinate/ParallelCoordinate.tsx';
+import Filters from './Screens/Filters.tsx';
+import { FilterData } from './Utilities/FilterData.js';
 
-/*
-junction_control_enc = {'Data missing or out of range': 0, 'Give way or uncontrolled': 1, 'Stop sign': 2, 'Auto traffic signal': 3, 'Authorised person': 4}    
 
-junction_detail_enc = {'Roundabout': 0, 'Other junction': 1, 'Crossroads': 2, 'Mini-roundabout': 3, 'More than 4 arms (not roundabout)': 4, 'Not at junction or within 20 metres': 5, 'Slip road': 6, 'T or staggered junction': 7, 'Private drive or entrance': 8}
-
-light_conditions_enc = {'Darkness - no lighting': 0, 'Darkness - lights unlit': 1, 'Darkness - lighting unknown': 2, 'Daylight': 3, 'Darkness - lights lit': 4}
-
-road_surface_conditions_enc = {'Frost or ice': 0, 'Snow': 1, 'Wet or damp': 2, 'Dry': 3}
-
-road_type_enc = {'Roundabout': 0, 'Dual carriageway': 1, 'Single carriageway': 2, 'One way street': 3, 'Slip road': 4}
-
-weather_conditions_enc = {'Snowing no high winds': 0, 'Raining + high winds': 1, 'Raining no high winds': 2, 'Other': 3, 'Fine no high winds': 4, nan: 5, 'Fine + high winds': 6}
-*/
 
 export const columns = {
   Date: "Accident Date",
@@ -43,16 +32,57 @@ export const columns = {
   Time_Interval:"Time_interval"
 }
 
+
+const junction_control_enc = {'Data missing or out of range': 0, 'Give way or uncontrolled': 1, 'Stop sign': 2, 'Auto traffic signal': 3, 'Authorised person': 4}    
+const junction_detail_enc = {'Roundabout': 0, 'Other junction': 1, 'Crossroads': 2, 'Mini-roundabout': 3, 'More than 4 arms (not roundabout)': 4, 'Not at junction or within 20 metres': 5, 'Slip road': 6, 'T or staggered junction': 7, 'Private drive or entrance': 8}
+const light_conditions_enc = {'Darkness - no lighting': 0, 'Darkness - lights unlit': 1, 'Darkness - lighting unknown': 2, 'Daylight': 3, 'Darkness - lights lit': 4}
+const road_surface_conditions_enc = {'Frost or ice': 0, 'Snow': 1, 'Wet or damp': 2, 'Dry': 3}
+const road_type_enc = {'Roundabout': 0, 'Dual carriageway': 1, 'Single carriageway': 2, 'One way street': 3, 'Slip road': 4}
+const weather_conditions_enc = {'Snowing no high winds': 0, 'Raining + high winds': 1, 'Raining no high winds': 2, 'Other': 3, 'Fine no high winds': 4, nan: 5, 'Fine + high winds': 6}
+
+
+export const filters = [[columns.JControl,junction_control_enc], [columns.JDetail,junction_detail_enc],[columns.Light,light_conditions_enc],[columns.Road_Surface_Conditions,road_surface_conditions_enc],[columns.Road_Type,road_type_enc],[columns.Weather_Conditions,weather_conditions_enc]]
+
 function App() {
-  const [data , setData] = useState([])
+  // the single filter is an array [column,value]
+  const [DATA, setDATA] = useState([])
+  const [activeFilters, setFilters] = useState([])
+  const [data,setData] = useState([])
+  const [iteration,setIteration] = useState(0)
+
+
+  function addFilter(filter) {
+    if(!activeFilters.includes(filter)){
+      setFilters([...activeFilters, filter])
+      setData(FilterData(DATA,activeFilters))
+    }
+  }
+
+  function removeFilter(filter) {
+    var newFilters = []
+    activeFilters.map(d => {
+      
+      if(!(d[0] === filter[0] && d[1] === filter[1])){
+        newFilters.push(d)
+      }    
+    })
+    setFilters(newFilters)
+  }
+
   useEffect(() =>{
-    d3.csv("dataset.csv").then(data => {
-      setData(data)
-      console.log(data[0])
-    });
+    if(iteration >=1) {
+        setData(FilterData(DATA,activeFilters))
+    }else 
+    {
+      d3.csv("dataset.csv").then(data => {
+        setDATA(data)
+        setData(data)
+        setIteration(1)
+      });
+  }
+  },[activeFilters])
  
-  },[])
- 
+  
   function Hey() {
     //console.log("frochoni")
   }
@@ -63,7 +93,7 @@ function App() {
       </div>
       <div className='ScreenCenter'>
         <div className='Filters'>
-
+          <Filters addFilter={addFilter} removeFilter={removeFilter}></Filters>
         </div>
         <div className='Map'>
           <MapComponent></MapComponent>

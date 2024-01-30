@@ -1,8 +1,8 @@
 import * as d3 from "d3";
-import { AxisVertical } from "../Charts/AxisVertical.tsx";
+import { AxisVertical } from "./AxisVertical.tsx";
 import React, { useRef } from "react";
-import { useDimensions } from "../Utilities/useDimensions.ts";
-
+import { useDimensions } from "../../Utilities/useDimensions.ts";
+import "../Charts.css"
 const MARGIN = { top: 60, right: 80, bottom: 30, left: 80 };
 
 const COLORS = [
@@ -47,7 +47,6 @@ export const ParallelCoordinate = ({
     })
     data.push(newEntry)
   })
-  console.log(data)
 
   //needed for responsive dimensions
   const chartRef = useRef(null);
