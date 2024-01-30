@@ -1,6 +1,6 @@
 import './App.css';
 import * as d3 from "d3"
-import MapComponent from './Charts/Map/mapView.js';
+import MapComponent from './Charts/Map/mapView.tsx';
 import { useEffect, useState } from 'react';
 import { ExtractFeatures } from './Utilities/SliceColumns.js';
 import { Scatterplot } from './Charts/Scatterplot/Scatterplot.tsx';
@@ -96,7 +96,7 @@ function App() {
           <Filters addFilter={addFilter} removeFilter={removeFilter}></Filters>
         </div>
         <div className='Map'>
-          <MapComponent></MapComponent>
+          <MapComponent data={ExtractFeatures(data,[columns.Latitude,columns.Longitude,columns.Severity])}></MapComponent>
         </div>
       </div>
       <div className='ScreenBottom'>
