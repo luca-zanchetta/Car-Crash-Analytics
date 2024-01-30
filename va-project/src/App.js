@@ -1,9 +1,9 @@
 import './App.css';
 import * as d3 from "d3"
-import LinePlot from './Charts/test';
-import MapComponent from './Charts/mapView';
+import LinePlot from './Charts/test.js';
+import MapComponent from './Charts/mapView.js';
 import { useEffect, useState } from 'react';
-import { ExtractFeatures } from './Utilities/SliceColumns';
+import { ExtractFeatures } from './Utilities/SliceColumns.js';
 import { Scatterplot } from './Charts/Scatterplot.tsx';
 import { Heatmap } from './Charts/Heatmap.tsx';
 import { ParallelCoordinate } from './Charts/ParallelCoordinate.tsx';

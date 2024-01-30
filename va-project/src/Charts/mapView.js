@@ -49,7 +49,7 @@ const MapComponent = () => {
     return null;
   }
 
-  const center = [-41.2858, 174.7868];
+  const center = [51.528344,-0.217295];
 
   return (
     <>
