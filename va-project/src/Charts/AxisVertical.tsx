@@ -34,9 +34,9 @@ export const AxisVertical = ({
         x={0}
         y={-25}
         style={{
-          fontSize: "14px",
+          fontSize: ".7vw",
           textAnchor: "middle",
-          fill: "black",
+          fill: "white",
         }}
       >
         {name}
@@ -48,7 +48,7 @@ export const AxisVertical = ({
         x2={0}
         y1={0}
         y2={yScale(range[1])}
-        stroke="black"
+        stroke="white"
         strokeWidth={0.5}
       />
 
@@ -59,14 +59,15 @@ export const AxisVertical = ({
           transform={`translate(0, ${yOffset})`}
           shapeRendering={"crispEdges"}
         >
-          <line x1={-TICK_LENGTH} x2={0} stroke="black" strokeWidth={0.5} />
+          <line x1={-TICK_LENGTH} x2={0} stroke="white" strokeWidth={0.5} />
           <text
             key={value}
             style={{
-              fontSize: "10px",
+              fontSize: ".5vw",
               textAnchor: "middle",
               alignmentBaseline: "central",
-              transform: "translateX(-10px)",
+              transform: "translateX(-.5vw)",
+              fill:"white"
             }}
           >
             {value}

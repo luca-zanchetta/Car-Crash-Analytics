@@ -1,5 +1,3 @@
-// TO DELETE
-
 export type Variable = "sepalLength" | "sepalWidth" | "petalLength" | "petalWidth"
 
 type DataItem<T extends string> = {

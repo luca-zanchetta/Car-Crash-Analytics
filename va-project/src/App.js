@@ -60,10 +60,9 @@ function App() {
           <Scatterplot callbackMouseEnter={Hey} data={ExtractFeatures(data,[columns.Number_of_Casualties,columns.Number_of_Vehicles])}></Scatterplot>
         </div>
         <div className='ParallelCoordinates'>
-          <ParallelCoordinate data={data} variables={[columns.Severity, ]}></ParallelCoordinate>
+          <ParallelCoordinate Data={ExtractFeatures(data, [columns.JControl,columns.JDetail,columns.Light,columns.Road_Surface_Conditions,columns.Road_Type,columns.Vehicle_Type,columns.Weather_Conditions])}></ParallelCoordinate>
         </div>
         <div className='Heatmap'>
-          {/* <Heatmap data={ExtractFeatures(data, [columns.Date,columns.Time])}></Heatmap> */}
           <Heatmap Data={ExtractFeatures(data, [columns.Time_Interval,columns.Day])}></Heatmap>
         </div>
       </div>

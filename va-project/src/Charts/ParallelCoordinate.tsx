@@ -1,10 +1,9 @@
 import * as d3 from "d3";
 import { AxisVertical } from "../Charts/AxisVertical.tsx";
-import { Data } from "./data";
 import React, { useRef } from "react";
 import { useDimensions } from "../Utilities/useDimensions.ts";
 
-const MARGIN = { top: 60, right: 40, bottom: 30, left: 40 };
+const MARGIN = { top: 60, right: 80, bottom: 30, left: 80 };
 
 const COLORS = [
   "#e0ac2b",
@@ -14,30 +13,49 @@ const COLORS = [
   "#a53253",
   "#69b3a2",
 ];
+//DATA TYPES
+type Variable = "Junction_Control" | "Junction_Detail" | "Light_Conditions" | "Road_Surface_Conditions" | "Road_Type" | "Vehicle_Type" | "Weather_Conditions"
 
 type ParallelCoordinateProps = {
-  width: number;
-  height: number;
-  data: Data;
+  margin: number;
   variables: Variable[];
+  Data: [];
 };
 
-type YScale = d3.scaleLinear<number, number, never>;
-type Variable = "sepalLength" | "sepalWidth" | "petalLength" | "petalWidth";
+type DataItem<T extends string> = {
+  [key in T]: number
+} & {
+  group: string
+}
+
+type Data = DataItem<Variable>[]
+
+type YScale = d3.ScaleLinear<number, number, never>;
 
 export const ParallelCoordinate = ({
-  width,
-  height,
-  data,
-  variables,
+  margin = 20,
+  variables = ["Junction_Control","Junction_Detail","Light_Conditions","Road_Surface_Conditions","Road_Type","Vehicle_Type","Weather_Conditions"],
+  Data,
 }: ParallelCoordinateProps) => {
+  var data : DataItem<Variable>[] = []
+  //Model data 
+  
+  Data.map((d,i) => {
+    var newEntry:DataItem<Variable> = {"Junction_Control":0,"Junction_Detail":0,"Light_Conditions":0,"Road_Surface_Conditions":0,"Road_Type":0,"Vehicle_Type":0,"Weather_Conditions":0,"group":"AE"}
+    variables.map((v,i) => {
+      newEntry[v] = d[i]
+    })
+    data.push(newEntry)
+  })
+  console.log(data)
 
   //needed for responsive dimensions
   const chartRef = useRef(null);
   const chartSize = useDimensions(chartRef);
-  
-  const boundsWidth = width - MARGIN.right - MARGIN.left;
-  const boundsHeight = height - MARGIN.top - MARGIN.bottom;
+
+  // bounds = area inside the axis
+  const boundsWidth = chartSize.width - MARGIN.right - MARGIN.left;
+  const boundsHeight = chartSize.height - MARGIN.top - MARGIN.bottom;
 
   const allGroups = [...new Set(data.map((d) => d.group))];
 
@@ -92,17 +110,17 @@ export const ParallelCoordinate = ({
   });
 
   return (
-    <div className="Chart" ref={chartRef}>    
-    <svg width={chartSize.width} height={chartSize.height}>
-      <g
-        width={boundsWidth}
-        height={boundsHeight}
-        transform={`translate(${[MARGIN.left, MARGIN.top].join(",")})`}
-      >
-        {allLines}
-        {allAxes}
-      </g>
-    </svg>
+    <div className="Chart" ref={chartRef}>
+      <svg width={chartSize.width} height={chartSize.height}>
+        <g
+          width={boundsWidth}
+          height={boundsHeight}
+          transform={`translate(${[MARGIN.left, MARGIN.top].join(",")})`}
+        >
+          {allLines}
+          {allAxes}
+        </g>
+      </svg>
     </div>
   );
 };
