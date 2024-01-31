@@ -14,60 +14,29 @@ const slight = "Slight"
 const serious = "Serious"
 const fatal = "Fatal"
 
+const colors = {"Slight":"green","Serious":"yellow" ,"Fatal":"red" }
+const icons = {"Slight":greenCircle,"Serious":yellowCircle ,"Fatal":redCircle }
+
 const MapComponent = ({data}:MapProps) => {
 
-  var redMarkers = [ ];
-  var greenMarkers = [ ]
-  var yellowMarkers = []
+  var redMarkers = [];
+  var greenMarkers = [];
+  var yellowMarkers = [];
 
   data.map((d,i) => {
-    if(d[2] === "Slight"){
       greenMarkers.push(
         {
           id: i,
-          iconColor: "red",
+          iconColor: colors[d[2]],
           position: [d[0], d[1]],
           popup: "Quack!",
           popupOpen: false, // if popup has to be open by default
-          onClick: () => alert("marker clicked"),
-          tooltip: "Nice!",
-          customIcon:greenCircle,
+          //onClick: () => alert("marker clicked"),
+          tooltip: d[2] + " accident;<br> date: " + d[3] + "<br>Number of veichles involved: " + d[4],
+          customIcon:icons[d[2]],
         }
       )
-
-    }    
-    if(d[2] === "Serious"){
-      yellowMarkers.push(
-        {
-          id: i,
-          iconColor: "red",
-          position: [d[0], d[1]],
-          popup: "Quack!",
-          popupOpen: false, // if popup has to be open by default
-          onClick: () => alert("marker clicked"),
-          tooltip: "Nice!",
-          customIcon:yellowCircle,
-        }
-      )
-    } 
-    if(d[2] === "Fatal"){
-      redMarkers.push(
-        {
-          id: i,
-          iconColor: "red",
-          position: [d[0], d[1]],
-          popup: "Quack!",
-          popupOpen: false, // if popup has to be open by default
-          onClick: () => alert("marker clicked"),
-          tooltip: "Nice!",
-          customIcon:redCircle,
-        }
-      )
-    }
-
-    
-  })
-
+    })
 
   return (
     <MapContainer
@@ -83,8 +52,6 @@ const MapComponent = ({data}:MapProps) => {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <PixiOverlay markers={redMarkers} />
-      <PixiOverlay markers={yellowMarkers} />
       <PixiOverlay markers={greenMarkers} />
     </MapContainer>
   );

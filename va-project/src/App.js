@@ -96,7 +96,7 @@ function App() {
           <Filters addFilter={addFilter} removeFilter={removeFilter}></Filters>
         </div>
         <div className='Map'>
-          <MapComponent data={ExtractFeatures(data,[columns.Latitude,columns.Longitude,columns.Severity])}></MapComponent>
+          <MapComponent data={ExtractFeatures(data,[columns.Latitude,columns.Longitude,columns.Severity,columns.Date, columns.Number_of_Vehicles])}></MapComponent>
         </div>
       </div>
       <div className='ScreenBottom'>
