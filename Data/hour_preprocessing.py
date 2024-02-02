@@ -24,7 +24,6 @@ for elem in time:
         hourly_intervals.append("18-21")
     elif 21 <= value < 24:
         hourly_intervals.append("21-24")
-
 data['Time_interval'] = hourly_intervals
 
 data.to_csv('./va-project/public/dataset.csv', index=False, sep=',')
