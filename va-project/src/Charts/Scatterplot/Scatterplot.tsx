@@ -9,10 +9,10 @@ import "../Charts.css"
 type ScatterplotProps = {
     callbackMouseEnter: Function;
     margin : number;
-    data : {x:number, y:number, name:string}[];
+    data : {x:number, y:number, severity:number, name:string}[];
 };
 
-export const Scatterplot = ({callbackMouseEnter, margin = 40,data= [{x: 2,y: 4, name:"Frochino"},{x: 8,y: 5, name:"Frochone"}]}:ScatterplotProps) => {
+export const Scatterplot = ({callbackMouseEnter, margin = 40,data= [{x: 2,y: 4, severity: 0, name:"Frochino"},{x: 8,y: 5, severity: 0, name:"Frochone"}]}:ScatterplotProps) => {
 
     //needed for responsive dimensions
     const chartRef = useRef(null);
@@ -24,29 +24,57 @@ export const Scatterplot = ({callbackMouseEnter, margin = 40,data= [{x: 2,y: 4, 
     const boundsWidth = chartSize.width - margin - margin;
     const boundsHeight = chartSize.height - margin - margin;
 
-    var mx = 0,my = 0
+    // Search for the maximum value for x and y
+    var max_x = 0, max_y = 0
     data.map((d, i) => {    
-        if(mx < d[0]) 
-            mx = d[0]
+        if(max_x < d[0]) 
+        max_x = parseInt(d[0])
 
-        if(my < d[1]) 
-            my = d[1]
+        if(max_y < d[1]) 
+        max_y = parseInt(d[1])
+    })
+
+    // Search for the minimum value for x and y
+    var min_x = 0, min_y = 0
+    data.map((d, i) => {
+        if(min_x > d[0])
+            min_x = parseInt(d[0])
+
+        if(min_y > d[1])
+            min_y = parseInt(d[1])
     })
     
-    const y = d3.scaleLinear().domain([0, my]).range([boundsHeight, 0]);
-    const x = d3.scaleLinear().domain([0, mx]).range([0, boundsWidth]);
+    const y = d3.scaleLinear().domain([min_y, max_y]).range([boundsHeight, 0]);
+    const x = d3.scaleLinear().domain([min_x, max_x]).range([0, boundsWidth]);
 
     // Build the shapes
     const allShapes = data.map((d, i) => {
+        // Change color based on the severity of the single accident
+        var color = ""
+
+        switch(d[2]) {
+            case "0":
+                color = "lightgreen"
+                break
+            case "1":
+                color = "yellow"
+                break
+            case "2":
+                color = "red"
+                break
+            default:
+                color = "#cb1dd1"
+        }
+
         return (
         <circle
             key={i}
-            r={13}
+            r={1}
             cx={x(d[0])}
             cy={y(d[1])}
             opacity={1}
-            stroke="#cb1dd1"
-            fill="#cb1dd1"
+            stroke={color}
+            fill={color}
             fillOpacity={0.2}
             strokeWidth={1}
             onMouseEnter={() =>{

@@ -29,7 +29,10 @@ export const columns = {
   Urban_or_Rural_Area:"Urban_or_Rural_Area",
   Vehicle_Type:"Vehicle_Type",
   Weather_Conditions:"Weather_Conditions",
-  Time_Interval:"Time_interval"
+  Time_Interval:"Time_interval",
+  Id:"Id",
+  tsne_x:"tsne_x",
+  tsne_y:"tsne_y"
 }
 
 
@@ -101,7 +104,7 @@ function App() {
       </div>
       <div className='ScreenBottom'>
         <div className='DimReduction'>
-          <Scatterplot callbackMouseEnter={Hey} data={ExtractFeatures(data,[columns.Number_of_Casualties,columns.Number_of_Vehicles])}></Scatterplot>
+          <Scatterplot callbackMouseEnter={Hey} data={ExtractFeatures(data,[columns.tsne_x,columns.tsne_y, columns.Severity])}></Scatterplot>
         </div>
         <div className='ParallelCoordinates'>
           <ParallelCoordinate Data={ExtractFeatures(data, [columns.JControl,columns.JDetail,columns.Light,columns.Road_Surface_Conditions,columns.Road_Type,columns.Vehicle_Type,columns.Weather_Conditions])}></ParallelCoordinate>
