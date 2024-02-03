@@ -160,7 +160,7 @@ for item in filtered_df['Accident_Severity']:
         severity.append(severity_enc['Fatal'])
 df['Accident_Severity'] = severity
 
-df.sort_values(by='Accident_Severity')
+df.sort_values(by=['Accident_Severity'], inplace=True)
 filtered_df = df[selected_columns]
 
 
