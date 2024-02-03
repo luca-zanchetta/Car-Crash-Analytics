@@ -9,10 +9,11 @@ import "../Charts.css"
 type ScatterplotProps = {
     callbackMouseEnter: Function;
     margin : number;
-    data : {x:number, y:number, severity:number, name:string}[];
+    data : {x:number, y:number, severity:number}[];
+    name?: string
 };
 
-export const Scatterplot = ({callbackMouseEnter, margin = 40,data= [{x: 2,y: 4, severity: 0, name:"Frochino"},{x: 8,y: 5, severity: 0, name:"Frochone"}]}:ScatterplotProps) => {
+export const Scatterplot = ({callbackMouseEnter, margin = 40,data= [{x: 2,y: 4, severity: 0},{x: 8,y: 5, severity: 0}]}:ScatterplotProps) => {
 
     //needed for responsive dimensions
     const chartRef = useRef(null);
@@ -82,7 +83,15 @@ export const Scatterplot = ({callbackMouseEnter, margin = 40,data= [{x: 2,y: 4, 
                 setHovered({
                   xPos: x(d[0]),
                   yPos: y(d[1]),
-                  name: "frochonis"
+                  name: (
+                    <>
+                        Number of Causalities: {d[3]}<br />
+                        Number of Vehicles: {d[4]}<br />
+                        Speed limit: {d[5]}<br />
+                        Latitude: {d[6]}<br />
+                        Longitude: {d[7]}
+                    </>
+                ),
                 })}
               }
               onMouseLeave={() => setHovered(null)}

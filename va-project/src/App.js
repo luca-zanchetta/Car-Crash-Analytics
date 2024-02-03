@@ -2,7 +2,7 @@ import './App.css';
 import * as d3 from "d3"
 import MapComponent from './Charts/Map/mapView.tsx';
 import { useEffect, useState } from 'react';
-import { ExtractFeatures } from './Utilities/SliceColumns.js';
+import { ExtractFeatures, CreateTooltipStringFromData } from './Utilities/SliceColumns.js';
 import { Scatterplot } from './Charts/Scatterplot/Scatterplot.tsx';
 import { Heatmap } from './Charts/Heatmap/Heatmap.tsx';
 import { ParallelCoordinate } from './Charts/Parallel Coordinate/ParallelCoordinate.tsx';
@@ -104,7 +104,10 @@ function App() {
       </div>
       <div className='ScreenBottom'>
         <div className='DimReduction'>
-          <Scatterplot callbackMouseEnter={Hey} data={ExtractFeatures(data,[columns.tsne_x,columns.tsne_y, columns.Severity])}></Scatterplot>
+          <Scatterplot 
+            callbackMouseEnter={Hey} 
+            data={ExtractFeatures(data,[columns.tsne_x, columns.tsne_y, columns.Severity, columns.Number_of_Casualties, columns.Number_of_Vehicles, columns.Speed_limit, columns.Latitude, columns.Longitude])}
+          ></Scatterplot>
         </div>
         <div className='ParallelCoordinates'>
           <ParallelCoordinate Data={ExtractFeatures(data, [columns.JControl,columns.JDetail,columns.Light,columns.Road_Surface_Conditions,columns.Road_Type,columns.Vehicle_Type,columns.Weather_Conditions])}></ParallelCoordinate>

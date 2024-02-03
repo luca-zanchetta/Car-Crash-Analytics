@@ -1,11 +1,11 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import "./tooltip.css";
 
 // Information needed to build the tooltip
 export type InteractionData = {
   xPos: number;
   yPos: number;
-  name: string;
+  name: ReactNode;
 };
 
 type TooltipProps = {
