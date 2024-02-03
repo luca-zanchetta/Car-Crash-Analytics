@@ -88,8 +88,6 @@ export const Scatterplot = ({callbackMouseEnter, margin = 40,data= [{x: 2,y: 4, 
                         Number of Causalities: {d[3]}<br />
                         Number of Vehicles: {d[4]}<br />
                         Speed limit: {d[5]}<br />
-                        Latitude: {d[6]}<br />
-                        Longitude: {d[7]}
                     </>
                 ),
                 })}
