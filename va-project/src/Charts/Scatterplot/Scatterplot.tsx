@@ -5,6 +5,7 @@ import { AxisBottom } from "./XAxis_scatterplot.tsx";
 import { AxisLeft } from "./YAxis_scatterplot.tsx";
 import { InteractionData, Tooltip } from "./Tooltip.tsx";
 import "../Charts.css"
+import { brushX, select } from "d3";
 
 type ScatterplotProps = {
     callbackMouseEnter: Function;
@@ -21,6 +22,8 @@ export const Scatterplot = ({callbackMouseEnter, margin = 40,data= [{x: 2,y: 4, 
     //tooltip
     const [hovered, setHovered] = useState<InteractionData | null>(null);
 
+    const svgRef = useRef()
+    const svg = select(svgRef.current)
 
     const boundsWidth = chartSize.width - margin - margin;
     const boundsHeight = chartSize.height - margin - margin;
@@ -97,10 +100,22 @@ export const Scatterplot = ({callbackMouseEnter, margin = 40,data= [{x: 2,y: 4, 
         );
     });
 
+    // Brush logic
+    const brush = brushX().extent([
+        [0, 0],
+        [boundsWidth, boundsHeight]
+    ]).on("start brush end", (event) => {
+        if(event.selection) {
+            const indexSelection = event.selection.map(x.invert)
+        }
+    })
+
+    svg.select(".brush").call(brush).call(brush.move, [0, 100])
+
     //Rendering of the chart
     return(
         <div className="Chart" ref={chartRef}>
-            <svg width={chartSize.width} height={chartSize.height}>
+            <svg width={chartSize.width} height={chartSize.height} ref={svgRef}>
                 <g
                     width={boundsWidth}
                     height={boundsHeight}
@@ -121,6 +136,7 @@ export const Scatterplot = ({callbackMouseEnter, margin = 40,data= [{x: 2,y: 4, 
                     {/* Circles */}
                     {allShapes}
                 </g>
+                <g className="brush" />
             </svg>
             {/* Tooltip */}
             <div
