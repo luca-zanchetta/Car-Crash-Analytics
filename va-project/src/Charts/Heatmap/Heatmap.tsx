@@ -1,7 +1,8 @@
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, useState } from "react";
 import * as d3 from "d3";
 import React from "react";
 import { useDimensions } from "../../Utilities/useDimensions.ts";
+import { InteractionDataHeatmap, TooltipHeatmap } from "./TooltipHeatmap.tsx";
 import "../Charts.css"
 
 const Days = ["Monday","Tuesday",  "Wednesday", "Thursday", "Friday",  "Saturday", "Sunday"]
@@ -19,6 +20,7 @@ type HeatmapData = {
 
 export const Heatmap = ({Data, margin = 50}: HeatmapProps) => {
   var data : HeatmapData[] = []
+  const [hovered, setHovered] = useState<InteractionDataHeatmap | null>(null);
 
   Days.map((D,i) => {
       TimeBounds.map((T,i) => {data.push({time:T,day:D,accidents:0})})
@@ -88,6 +90,18 @@ export const Heatmap = ({Data, margin = 50}: HeatmapProps) => {
         fill={colorScale(d.accidents)}
         rx={5}
         stroke={"white"}
+        onMouseEnter={() => {
+          setHovered({
+            xPos: xScale(d.time),
+            yPos: yScale(d.day),
+            name: (
+              <>
+                  # Accidents: {d.accidents}
+              </>
+          ),
+          })
+        }}
+        onMouseLeave={() => setHovered(null)}
       />
     );
   });
@@ -141,6 +155,18 @@ export const Heatmap = ({Data, margin = 50}: HeatmapProps) => {
           {yLabels}
         </g>
       </svg>
+      {/* Tooltip */}
+      <div
+          style={{
+          width: "-webkit-fill-available",
+          height: "-webkit-fill-available",
+          position: "absolute",
+          pointerEvents: "none",
+          margin:margin
+          }}
+      >
+          <TooltipHeatmap interactionData={hovered} />    
+      </div>  
     </div>
   );
 };
