@@ -6,6 +6,7 @@ import { AxisLeft } from "./YAxis_scatterplot.tsx";
 import { InteractionData, Tooltip } from "./Tooltip.tsx";
 import "../Charts.css"
 import { brushX, select } from "d3";
+import usePrevious from "./usePrevious.js";
 
 type ScatterplotProps = {
     callbackMouseEnter: Function;
@@ -25,6 +26,9 @@ export const Scatterplot = ({callbackMouseEnter, margin = 40,data= [{x: 2,y: 4, 
     const [zoomFactor, setZoomFactor] = useState(1)
     const [zoomXOffset, setXoffset] = useState(0)
     const [zoomYOffset, setYoffset] = useState(0)
+    const [selection, setSelection] = useState([0, 0])
+    const previousSelection = usePrevious(selection)
+    const [scatterplotInit, setScatterplotInit] = useState(true)
 
     function MoveCamera(e) { 
         
@@ -120,8 +124,7 @@ export const Scatterplot = ({callbackMouseEnter, margin = 40,data= [{x: 2,y: 4, 
             cx={x(d[0])}
             cy={y(d[1])}
             opacity={1}
-            stroke={color}
-            fill={color}
+            stroke={((x(d[0]) >= x(selection[0]) && x(d[0]) <= x(selection[1])) || (scatterplotInit) ) ? color : "grey"}
             fillOpacity={0.2}
             strokeWidth={1}
             onMouseEnter={() =>{
@@ -148,12 +151,24 @@ export const Scatterplot = ({callbackMouseEnter, margin = 40,data= [{x: 2,y: 4, 
         [0, 0],
         [boundsWidth, boundsHeight]
     ]).on("start brush end", (event) => {
+        console.log("event: ", event)
         if(event.selection) {
+            setScatterplotInit(false)
             const indexSelection = event.selection.map(x.invert)
+            setSelection(indexSelection)
+        }
+        if(event.end) {
+            setScatterplotInit(true)
         }
     })
 
-    svg.select(".brush").call(brush)
+    if (previousSelection === selection) {
+        console.log("SAME")
+        svg
+        .select(".brush")
+        .call(brush)
+        .call(brush.move, selection.map(x))
+    }
 
     //Rendering of the chart
     return(
