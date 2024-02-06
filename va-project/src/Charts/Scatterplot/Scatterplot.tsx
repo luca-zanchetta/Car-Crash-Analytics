@@ -33,7 +33,7 @@ export const Scatterplot = ({callbackMouseEnter, margin = 40,data= [{x: 2,y: 4, 
         var y = e["clientY"];
         
         var movementX = x - startCoord[0]
-        var movementY = (y - startCoord[1])
+        var movementY = (y - startCoord[1])*-1
 
         setXoffset(startOff[0] + movementX*scrollK)
         setYoffset(startOff[1] + movementY*scrollK)
