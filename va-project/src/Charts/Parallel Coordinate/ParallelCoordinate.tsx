@@ -20,6 +20,8 @@ type ParallelCoordinateProps = {
   margin: number;
   variables: Variable[];
   Data: [];
+  addFilter: Function;
+  removeFilter: Function;
 };
 
 type DataItem<T extends string> = {
@@ -36,6 +38,8 @@ export const ParallelCoordinate = ({
   margin = 20,
   variables = ["Junction_Control","Junction_Detail","Light_Conditions","Road_Surface_Conditions","Road_Type","Vehicle_Type","Weather_Conditions"],
   Data,
+  addFilter,
+  removeFilter
 }: ParallelCoordinateProps) => {
   var data : DataItem<Variable>[] = []
   //Model data 
@@ -103,7 +107,7 @@ export const ParallelCoordinate = ({
     const yScale = yScales[variable];
     return (
       <g key={i} transform={"translate(" + xScale(variable) + ",0)"}>
-        <AxisVertical yScale={yScale} pixelsPerTick={40} name={variable} />
+        <AxisVertical yScale={yScale} pixelsPerTick={40} name={variable} filterName={variable} addFilter={addFilter} removeFilter={removeFilter}/>
       </g>
     );
   });

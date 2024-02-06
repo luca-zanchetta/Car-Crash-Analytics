@@ -29,11 +29,11 @@ function Filters({addFilter,removeFilter}:filterProp) {
   function toggleFilter(filterClass, key, value) {
     if(activeFilter.includes(key+value)){
       setActiveFilters(current => current.filter(elem =>{ return elem !== key+value}))  
-      removeFilter([filterClass,value])
+      removeFilter([[filterClass,value]])
     }
     else{
       setActiveFilters([...activeFilter, key+value])
-      addFilter([filterClass,value])
+      addFilter([[filterClass,value]])
     }
   }
 

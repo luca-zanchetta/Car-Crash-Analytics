@@ -54,20 +54,28 @@ function App() {
   const [iteration,setIteration] = useState(0)
 
 
-  function addFilter(filter) {
-    if(!activeFilters.includes(filter)){
-      setFilters([...activeFilters, filter])
-      setData(FilterData(DATA,activeFilters))
-    }
+  function addFilter(filters) {
+    var addedFilters= []
+    filters.map( (filter) => {
+      if(!activeFilters.includes(filter))
+        addedFilters.push(filter)
+    })
+    activeFilters.map((filter) => {
+      addedFilters.push(filter)
+    })
+    setFilters(addedFilters)
+    setData(FilterData(DATA,addedFilters))
   }
 
-  function removeFilter(filter) {
+  function removeFilter(filters) {
     var newFilters = []
     activeFilters.map(d => {
-      
-      if(!(d[0] === filter[0] && d[1] === filter[1])){
-        newFilters.push(d)
-      }    
+      filters.map( (filter) => {
+
+        if(!(d[0] === filter[0] && d[1] === filter[1])){
+          newFilters.push(d)
+        }    
+      })
     })
     setFilters(newFilters)
   }
@@ -110,7 +118,7 @@ function App() {
           ></Scatterplot>
         </div>
         <div className='ParallelCoordinates'>
-          <ParallelCoordinate Data={ExtractFeatures(data, [columns.JControl,columns.JDetail,columns.Light,columns.Road_Surface_Conditions,columns.Road_Type,columns.Vehicle_Type,columns.Weather_Conditions])}></ParallelCoordinate>
+          <ParallelCoordinate Data={ExtractFeatures(data, [columns.JControl,columns.JDetail,columns.Light,columns.Road_Surface_Conditions,columns.Road_Type,columns.Vehicle_Type,columns.Weather_Conditions])} addFilter={addFilter} removeFilter={removeFilter}></ParallelCoordinate>
         </div>
         <div className='Heatmap'>
           <Heatmap Data={ExtractFeatures(data, [columns.Time_Interval,columns.Day])}></Heatmap>
