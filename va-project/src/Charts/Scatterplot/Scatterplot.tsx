@@ -18,36 +18,38 @@ type ScatterplotProps = {
 export const Scatterplot = ({callbackMouseEnter, margin = 40,data= [{x: 2,y: 4, severity: 0},{x: 8,y: 5, severity: 0}]}:ScatterplotProps) => {
 
     const zoomContant = 1.1
-    const scrollK = 2.5
+    const scrollK = .1
     const [isDown, setDown] = useState(false)
     const [startCoord, setStartingCoord] = useState(null)
+    const [startOff, setStartingOff] = useState([0,0])
     const [zoomFactor, setZoomFactor] = useState(1)
     const [zoomXOffset, setXoffset] = useState(0)
     const [zoomYOffset, setYoffset] = useState(0)
 
     function MoveCamera(e) { 
-        if(!isDown) return
-        var x = e["movementX"];
-        var y = e["movementY"];
         
-        // var offX = x - startCoord[0]
-        // var offY = y - startCoord[1]
-        // var mod = Math.sqrt(offX*offX + offY*offY)
-        // offX = offX/mod
-        // offY = offY/mod
+        if(!isDown) return
+        var x = e["clientX"];
+        var y = e["clientY"];
+        
+        var movementX = x - startCoord[0]
+        var movementY = (y - startCoord[1])
 
-        setXoffset(zoomXOffset + x*scrollK)
-        setYoffset(zoomXOffset + y*scrollK)
+        setXoffset(startOff[0] + movementX*scrollK)
+        setYoffset(startOff[1] + movementY*scrollK)
     }
 
 
     function OnMouseUp(e) {
+        if(e["button"] != 1 ) return
         setDown(false)
     }
     function OnMouseDown(e) {
+        if(e["button"] != 1 ) return
         setDown(true)
         console.log(e)
         setStartingCoord([e["clientX"] ,e["clientY"]])
+        setStartingOff([zoomXOffset,zoomYOffset])
     }
     function Zoom(e) {  
         if(e["deltaY"] < 0)
@@ -56,7 +58,7 @@ export const Scatterplot = ({callbackMouseEnter, margin = 40,data= [{x: 2,y: 4, 
             setZoomFactor(zoomFactor*1.1)
     }
 
-
+ 
     //needed for responsive dimensions
     const chartRef = useRef(null);
     const chartSize = useDimensions(chartRef);
