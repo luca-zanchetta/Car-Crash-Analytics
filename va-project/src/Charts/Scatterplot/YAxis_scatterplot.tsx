@@ -36,7 +36,7 @@ export const AxisLeft = ({ yScale, pixelsPerTick, width }: AxisLeftProps) => {
             x1={-TICK_LENGTH}
             x2={width + TICK_LENGTH}
             stroke="#D2D7D3"
-            strokeWidth={0.5}
+            strokeWidth={0}
           />
           <text
             key={value}

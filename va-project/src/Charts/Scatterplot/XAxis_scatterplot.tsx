@@ -41,7 +41,7 @@ export const AxisBottom = ({
             y1={TICK_LENGTH}
             y2={-height - TICK_LENGTH}
             stroke="#D2D7D3"
-            strokeWidth={0.5}
+            strokeWidth={0}
           />
           <text
             key={value}
