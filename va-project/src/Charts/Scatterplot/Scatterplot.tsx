@@ -48,8 +48,8 @@ export const Scatterplot = ({callbackMouseEnter, margin = 40,data= [{x: 2,y: 4, 
             min_y = parseInt(d[1])
     })
     
-    const y = d3.scaleLinear().domain([min_y, max_y]).range([boundsHeight, 0]);
-    const x = d3.scaleLinear().domain([min_x, max_x]).range([0, boundsWidth]);
+    const y = d3.scaleLinear().domain([min_y, max_y]).range([boundsHeight-10, 0]);
+    const x = d3.scaleLinear().domain([min_x, max_x]).range([5, boundsWidth-10]);
 
     // Build the shapes
     const allShapes = data.map((d, i) => {
@@ -110,12 +110,13 @@ export const Scatterplot = ({callbackMouseEnter, margin = 40,data= [{x: 2,y: 4, 
         }
     })
 
-    svg.select(".brush").call(brush).call(brush.move, [0, 100])
+    svg.select(".brush").call(brush)
 
     //Rendering of the chart
     return(
         <div className="Chart" ref={chartRef}>
             <svg width={chartSize.width} height={chartSize.height} ref={svgRef}>
+                <g className="brush" transform={`translate(${[margin, margin].join(',')})`} />
                 <g
                     width={boundsWidth}
                     height={boundsHeight}
@@ -136,7 +137,6 @@ export const Scatterplot = ({callbackMouseEnter, margin = 40,data= [{x: 2,y: 4, 
                     {/* Circles */}
                     {allShapes}
                 </g>
-                <g className="brush" />
             </svg>
             {/* Tooltip */}
             <div
