@@ -106,7 +106,7 @@ function App() {
         <div className='DimReduction'>
           <Scatterplot 
             callbackMouseEnter={Hey} 
-            data={ExtractFeatures(data,[columns.tsne_x, columns.tsne_y, columns.Severity, columns.Number_of_Casualties, columns.Number_of_Vehicles, columns.Speed_limit, columns.Latitude, columns.Longitude])}
+            data={ExtractFeatures(data,[columns.tsne_x, columns.tsne_y, columns.Severity, columns.Number_of_Casualties, columns.Number_of_Vehicles, columns.Speed_limit, columns.Latitude, columns.Longitude, columns.Id])}
           ></Scatterplot>
         </div>
         <div className='ParallelCoordinates'>
