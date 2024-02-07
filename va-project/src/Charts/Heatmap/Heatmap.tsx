@@ -22,6 +22,9 @@ export const Heatmap = ({Data, margin = 50}: HeatmapProps) => {
   var data : HeatmapData[] = []
   const [hovered, setHovered] = useState<InteractionDataHeatmap | null>(null);
 
+  const [selectedDay, setSelectedDay] = useState<string | null>(null);
+  const [selectedTime, setSelectedTime] = useState<string | null>(null);
+
   Days.map((D,i) => {
       TimeBounds.map((T,i) => {data.push({time:T,day:D,accidents:0})})
   })
@@ -76,8 +79,32 @@ export const Heatmap = ({Data, margin = 50}: HeatmapProps) => {
     .interpolator(d3.interpolateInferno)
     .domain([min, max]);
 
+
+  const clickItem = (d) => {
+    console.log("d: ", d)
+  }
+  
+
+  // Determine if filters are active
+  const isDayFiltered = selectedDay !== null;
+  const isTimeFiltered = selectedTime !== null;
+
   // Build the rectangles
   const allRects = data.map((d, i) => {
+    const isDaySelected = selectedDay && selectedDay === d.day;
+    const isTimeSelected = selectedTime && selectedTime === d.time;
+
+    const isHighlighted = isDaySelected || isTimeSelected
+
+    // Apply normal color scale when no filters are active
+    let fill = colorScale(d.accidents);
+
+    // If day filter is active, highlight selected day's line
+    // If time filter is active, highlight selected time's interval
+    if (isDayFiltered || isTimeFiltered) {
+      fill = isHighlighted ? colorScale(d.accidents) : "grey";
+    }
+    
     return (
       <rect
         key={i}
@@ -87,7 +114,7 @@ export const Heatmap = ({Data, margin = 50}: HeatmapProps) => {
         width={xScale.bandwidth()}
         height={yScale.bandwidth()}
         opacity={1}
-        fill={colorScale(d.accidents)}
+        fill={fill}
         rx={5}
         stroke={"white"}
         onMouseEnter={() => {
@@ -101,10 +128,21 @@ export const Heatmap = ({Data, margin = 50}: HeatmapProps) => {
           ),
           })
         }}
+        onClick={() => clickItem(d)}
         onMouseLeave={() => setHovered(null)}
       />
     );
   });
+
+  const clickTimeBounds = (event) => {
+    const name = event.target.textContent;
+    setSelectedTime((prev) => (prev === name ? null : name)); // Toggle selection
+  };
+
+  const clickDays = (event) => {
+    const name = event.target.textContent;
+    setSelectedDay((prev) => (prev === name ? null : name)); // Toggle selection
+  };
 
   const xLabels = allXGroups.map((name, i) => {
     const xPos = xScale(name) ?? 0;
@@ -118,6 +156,7 @@ export const Heatmap = ({Data, margin = 50}: HeatmapProps) => {
         fontSize={12}
         fill="white"
         cursor="pointer"
+        onClick={clickTimeBounds}
       >
         {name}
       </text>
@@ -136,6 +175,7 @@ export const Heatmap = ({Data, margin = 50}: HeatmapProps) => {
         fontSize={11}
         fill="white"
         cursor="pointer"
+        onClick={clickDays}
       >
         {name}
       </text>

@@ -191,7 +191,7 @@ export const Scatterplot = ({callbackMouseEnter, margin = 40,data= [{x: 2,y: 4, 
     const brush = d3.brush()
         .extent([[0, 0], [boundsWidth, boundsHeight]])
         .on("start brush end", (event) => {
-            console.log("event: ", event.type);
+            // console.log("event: ", event.type);
             if (event.selection) {
                 const [[x0, y0], [x1, y1]] = event.selection;
                 const indexSelection = [
@@ -208,7 +208,7 @@ export const Scatterplot = ({callbackMouseEnter, margin = 40,data= [{x: 2,y: 4, 
                     }
                 });
                 selectedPoints = selected
-                console.log("Selected points: ", selectedPoints)
+                // console.log("Selected points: ", selectedPoints)
             }
         });
 

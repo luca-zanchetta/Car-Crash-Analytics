@@ -92,7 +92,7 @@ function App() {
   return (
     <div className="App">
       <div className='TopBar'>
-        <h1>Car crash anlytics</h1>
+        <h1>Car crash analytics</h1>
       </div>
       <div className='ScreenCenter'>
         <div className='Filters'>
