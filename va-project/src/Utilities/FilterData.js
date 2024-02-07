@@ -10,7 +10,6 @@ export function FilterData(data,filters) {
             if(d[f[0]] == f[1])
                 check = true
         })
-
         if(check) newData.push(d)
     })
     return newData

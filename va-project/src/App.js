@@ -9,8 +9,9 @@ import { ParallelCoordinate } from './Charts/Parallel Coordinate/ParallelCoordin
 import Filters from './Screens/Filters.tsx';
 import { FilterData } from './Utilities/FilterData.js';
 
-
-
+import redcircle from './img/redcircle.svg'
+import greenCircle from './img/circle-oval-svgrepo-com (2).svg'
+import yellowCircle from './img/circle-oval-svgrepo-com.svg'
 export const columns = {
   Date: "Accident Date",
   Severity: "Accident_Severity",
@@ -108,6 +109,14 @@ function App() {
         </div>
         <div className='Map'>
           <MapComponent data={ExtractFeatures(data,[columns.Latitude,columns.Longitude,columns.Severity,columns.Date, columns.Number_of_Vehicles])}></MapComponent>
+          <div className='MapLegend'>
+            <img src={redcircle} style={{aspectRatio:1/1,width:"1rem", paddingRight:".5rem", paddingLeft:".5rem"}}></img>
+            Fatal Accident
+            <img src={yellowCircle} style={{aspectRatio:1/1,width:"1rem", paddingRight:".5rem", paddingLeft:".5rem"}}></img>
+            Serious Accident
+            <img src={greenCircle} style={{aspectRatio:1/1,width:"1rem", paddingRight:".5rem", paddingLeft:".5rem"}}></img>
+            Slight Accident
+          </div>
         </div>
       </div>
       <div className='ScreenBottom'>

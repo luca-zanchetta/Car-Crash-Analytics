@@ -143,30 +143,41 @@ export const Heatmap = ({Data, margin = 50}: HeatmapProps) => {
   });
 
   return (
-    <div className="Chart" ref={chartRef}>
-      <svg width={chartSize.width} height={chartSize.height}>
-        <g
-          width={boundsWidth}
-          height={boundsHeight}
-          transform={`translate(${[margin, margin].join(",")})`}
+    <div className="Chart"> 
+      <div className="HeatmapScaleContainer">
+        <h5>
+          {min}
+        </h5>
+        <div className="Scale"></div>
+        <h5>
+          {max}
+        </h5>
+      </div>
+      <div className="HeatmapChart" ref={chartRef}>
+        <svg width={chartSize.width} height={chartSize.height}>
+          <g
+            width={boundsWidth}
+            height={boundsHeight}
+            transform={`translate(${[margin, margin].join(",")})`}
+          >
+            {allRects}
+            {xLabels}
+            {yLabels}
+          </g>
+        </svg>
+        {/* Tooltip */}
+        <div
+            style={{
+            width: "-webkit-fill-available",
+            height: "-webkit-fill-available",
+            position: "absolute",
+            pointerEvents: "none",
+            margin:margin
+            }}
         >
-          {allRects}
-          {xLabels}
-          {yLabels}
-        </g>
-      </svg>
-      {/* Tooltip */}
-      <div
-          style={{
-          width: "-webkit-fill-available",
-          height: "-webkit-fill-available",
-          position: "absolute",
-          pointerEvents: "none",
-          margin:margin
-          }}
-      >
-          <TooltipHeatmap interactionData={hovered} />    
-      </div>  
+            <TooltipHeatmap interactionData={hovered} />    
+        </div>  
+      </div>
     </div>
   );
 };
