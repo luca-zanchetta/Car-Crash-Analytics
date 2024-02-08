@@ -130,7 +130,7 @@ function App() {
           <ParallelCoordinate Data={ExtractFeatures(data, [columns.JControl,columns.JDetail,columns.Light,columns.Road_Surface_Conditions,columns.Road_Type,columns.Vehicle_Type,columns.Weather_Conditions])} addFilter={addFilter} removeFilter={removeFilter}></ParallelCoordinate>
         </div>
         <div className='Heatmap'>
-          <Heatmap Data={ExtractFeatures(data, [columns.Time_Interval,columns.Day])}></Heatmap>
+          <Heatmap Data={ExtractFeatures(data, [columns.Time_Interval, columns.Day])} addFilter={addFilter} removeFilter={removeFilter}></Heatmap>
         </div>
       </div>
     </div>

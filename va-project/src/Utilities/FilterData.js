@@ -5,10 +5,10 @@ export function FilterData(data,filters) {
     var newData = []
     if(filters.length == 0) return data
     data.map((d) => {
-        var check = false
+        var check = true
         filters.map(f => {
-            if(d[f[0]] == f[1])
-                check = true
+            if(d[f[0]] != f[1])
+                check = false
         })
         if(check) newData.push(d)
     })
