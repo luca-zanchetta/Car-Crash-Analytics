@@ -48,8 +48,8 @@ export const AxisVertical = ({
     //get the Top most point of the Line
   }
 
-  function resetBrush(brushedPoints) {
-    removeFilter(brushedPoints)
+  function resetBrush() {
+    removeFilter(BrushedPoints)
     setBrushPoint(0)
     setBrushedPoint([])
     setCurrent(0)
@@ -63,7 +63,7 @@ export const AxisVertical = ({
     //the idea is to continuosly check which point we are brushing
     var min = 0 
     var max = 0
-    console.log([yClick, _brushPoint])
+
     if(brushCurrent < _brushPoint){
       min = yClick
       max = _brushPoint
@@ -86,11 +86,10 @@ export const AxisVertical = ({
       }
         
     }
-    console.log(brushedPoints)
     addFilter(brushedPoints)
     setBrushedPoint(brushedPoints)
-    document.getElementById(filterName)?.removeEventListener("click", () => resetBrush(BrushedPoints))
-    document.getElementById(filterName)?.addEventListener("click", () => resetBrush(brushedPoints))
+    // document.getElementById(filterName)?.removeEventListener("click", () => resetBrush(BrushedPoints))
+    // document.getElementById(filterName)?.addEventListener("click", () => resetBrush(brushedPoints))
   }
 
   const range = yScale.range();
@@ -111,6 +110,7 @@ export const AxisVertical = ({
       {
         brushCurrent !=  0 && brushPoint != 0 &&
         <rect 
+              onClick={resetBrush}
               id={filterName}
               transform={`translate(${-10}, 0)`}
               ref={brushRect}

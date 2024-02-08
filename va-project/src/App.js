@@ -65,24 +65,31 @@ function App() {
       addedFilters.push(filter)
     })
     setFilters(addedFilters)
-    setData(FilterData(DATA,addedFilters))
+    //setData(FilterData(DATA,addedFilters))
   }
 
   function removeFilter(filters) {
+    
+    console.log(filters)
     var newFilters = []
+  
     activeFilters.map(d => {
+      var push = true;
       filters.map( (filter) => {
 
-        if(!(d[0] === filter[0] && d[1] === filter[1])){
-          newFilters.push(d)
-        }    
+        if(d[0] === filter[0] && d[1] == filter[1])
+          push = false
       })
+
+      if(push)
+        newFilters.push(d)
     })
     setFilters(newFilters)
   }
 
   useEffect(() =>{
     if(iteration >=1) {
+      console.log(activeFilters)
         setData(FilterData(DATA,activeFilters))
     }else 
     {
