@@ -6,6 +6,7 @@ import { AxisLeft } from "./YAxis_scatterplot.tsx";
 import { InteractionData, Tooltip } from "./Tooltip.tsx";
 import "../Charts.css"
 import { brushX, select } from "d3";
+import usePrevious from "./usePrevious.js";
 
 type ScatterplotProps = {
     callbackMouseEnter: Function;
@@ -25,6 +26,8 @@ export const Scatterplot = ({callbackMouseEnter, margin = 40,data= [{x: 2,y: 4, 
     const [zoomFactor, setZoomFactor] = useState(1)
     const [zoomXOffset, setXoffset] = useState(0)
     const [zoomYOffset, setYoffset] = useState(0)
+    const [selection, setSelection] = useState([[0, 0], [0, 0]]);
+    const previousSelection = usePrevious(selection)
 
     function MoveCamera(e) { 
         
@@ -113,47 +116,108 @@ export const Scatterplot = ({callbackMouseEnter, margin = 40,data= [{x: 2,y: 4, 
                 color = "#cb1dd1"
         }
 
+    // Check if there's a selection (brushing window)
+    if (selection[0][0] !== selection[1][0] || selection[0][1] !== selection[1][1]) {
+        // If there's a selection, check if the current point is within the selection
+        const withinSelection =
+            x(d[0]) >= Math.min(x(selection[0][0]), x(selection[1][0])) &&
+            x(d[0]) <= Math.max(x(selection[0][0]), x(selection[1][0])) &&
+            y(d[1]) >= Math.min(y(selection[0][1]), y(selection[1][1])) &&
+            y(d[1]) <= Math.max(y(selection[0][1]), y(selection[1][1]));
+    
+        // Set stroke color based on whether the point is within the selection or not
         return (
-        <circle
-            key={i}
-            r={1}
-            cx={x(d[0])}
-            cy={y(d[1])}
-            opacity={1}
-            stroke={color}
-            fill={color}
-            fillOpacity={0.2}
-            strokeWidth={1}
-            onMouseEnter={() =>{
-                callbackMouseEnter();
-                setHovered({
-                  xPos: x(d[0]),
-                  yPos: y(d[1]),
-                  name: (
-                    <>
-                        Number of Causalities: {d[3]}<br />
-                        Number of Vehicles: {d[4]}<br />
-                        Speed limit: {d[5]}<br />
-                    </>
-                ),
-                })}
-              }
-              onMouseLeave={() => setHovered(null)}
-        />
+            <circle
+                key={i}
+                r={1}
+                cx={x(d[0])}
+                cy={y(d[1])}
+                opacity={1}
+                stroke={withinSelection ? color : "grey"}
+                fillOpacity={0.2}
+                strokeWidth={1}
+                onMouseEnter={() => {
+                    callbackMouseEnter();
+                    setHovered({
+                        xPos: x(d[0]),
+                        yPos: y(d[1]),
+                        name: (
+                            <>
+                                Number of Causalities: {d[3]}<br />
+                                Number of Vehicles: {d[4]}<br />
+                                Speed limit: {d[5]}<br />
+                            </>
+                        ),
+                    });
+                }}
+                onMouseLeave={() => setHovered(null)}
+            />
         );
+    } else {
+        // If there's no active selection, color all points with the same color
+        return (
+            <circle
+                key={i}
+                r={1}
+                cx={x(d[0])}
+                cy={y(d[1])}
+                opacity={1}
+                stroke={color} // Always use color for stroke
+                fillOpacity={0.2}
+                strokeWidth={1}
+                onMouseEnter={() => {
+                    callbackMouseEnter();
+                    setHovered({
+                        xPos: x(d[0]),
+                        yPos: y(d[1]),
+                        name: (
+                            <>
+                                Number of Causalities: {d[3]}<br />
+                                Number of Vehicles: {d[4]}<br />
+                                Speed limit: {d[5]}<br />
+                            </>
+                        ),
+                    });
+                }}
+                onMouseLeave={() => setHovered(null)}
+            />
+        );
+    }
     });
 
-    // Brush logic
-    const brush = brushX().extent([
-        [0, 0],
-        [boundsWidth, boundsHeight]
-    ]).on("start brush end", (event) => {
-        if(event.selection) {
-            const indexSelection = event.selection.map(x.invert)
-        }
-    })
+    let selectedPoints = []
 
-    svg.select(".brush").call(brush)
+    // Brush logic
+    const brush = d3.brush()
+        .extent([[0, 0], [boundsWidth, boundsHeight]])
+        .on("start brush end", (event) => {
+            // console.log("event: ", event.type);
+            if (event.selection) {
+                const [[x0, y0], [x1, y1]] = event.selection;
+                const indexSelection = [
+                    [x.invert(x0), y.invert(y0)],
+                    [x.invert(x1), y.invert(y1)]
+                ];
+                setSelection(indexSelection);
+
+                const selected = data.filter(d => {
+                    const xVal = x(d[0]);
+                    const yVal = y(d[1]);
+                    if (xVal >= x0 && xVal <= x1 && yVal >= y0 && yVal <= y1) {
+                        return d
+                    }
+                });
+                selectedPoints = selected
+                // console.log("Selected points: ", selectedPoints)
+            }
+        });
+
+    if (previousSelection === selection) {
+        svg.select(".brush")
+            .call(brush)
+            .call(brush.move, selection.map(d => [x(d[0]), y(d[1])]));
+    }
+
 
     //Rendering of the chart
     return(
