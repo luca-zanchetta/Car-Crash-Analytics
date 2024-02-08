@@ -4,12 +4,15 @@ import React from "react";
 import { useDimensions } from "../../Utilities/useDimensions.ts";
 import { InteractionDataHeatmap, TooltipHeatmap } from "./TooltipHeatmap.tsx";
 import "../Charts.css"
+import { columns } from "../../App.js";
 
-const Days = ["Monday","Tuesday",  "Wednesday", "Thursday", "Friday",  "Saturday", "Sunday"]
-const TimeBounds = ["0-3","3-6","6-9","9-12","12-15", "15-18", "18-21", "21-24"]
+const Days = ["Monday", "Tuesday",  "Wednesday", "Thursday", "Friday",  "Saturday", "Sunday"]
+const TimeBounds = ["0-3", "3-6", "6-9", "9-12", "12-15", "15-18", "18-21", "21-24"]
 type HeatmapProps = {
   Data: [];
   margin: number;
+  addFilter: Function;
+  removeFilter: Function;
 };
 
 type HeatmapData = {
@@ -18,15 +21,16 @@ type HeatmapData = {
     accidents: number;
 }
 
-export const Heatmap = ({Data, margin = 50}: HeatmapProps) => {
+export const Heatmap = ({Data, margin = 50, addFilter, removeFilter}: HeatmapProps) => {
   var data : HeatmapData[] = []
   const [hovered, setHovered] = useState<InteractionDataHeatmap | null>(null);
 
-  const [selectedDay, setSelectedDay] = useState<string | null>(null);
-  const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const [selectedDays, setSelectedDays] = useState<string[]>([]);
+  const [selectedTimes, setSelectedTimes] = useState<string[]>([]);
+  const [singleItemSelected, setSingleItemSelected] = useState<number | null>(null)
 
-  Days.map((D,i) => {
-      TimeBounds.map((T,i) => {data.push({time:T,day:D,accidents:0})})
+  Days.map((D,j) => {
+      TimeBounds.map((T,i) => {data.push({time:T, day:D, accidents:0})})
   })
 
   Data.map((d,i) => {
@@ -80,19 +84,25 @@ export const Heatmap = ({Data, margin = 50}: HeatmapProps) => {
     .domain([min, max]);
 
 
-  const clickItem = (d) => {
-    console.log("d: ", d)
+  const clickItem = (i) => {
+    if (singleItemSelected === i) {
+      setSingleItemSelected(null)
+    }
+    else {
+      setSingleItemSelected(i)
+    }
   }
   
 
   // Determine if filters are active
-  const isDayFiltered = selectedDay !== null;
-  const isTimeFiltered = selectedTime !== null;
+  const isDayFiltered = selectedDays.length > 0
+  const isTimeFiltered = selectedTimes.length > 0
+  const isSingleItemSelected = singleItemSelected !== null
 
   // Build the rectangles
   const allRects = data.map((d, i) => {
-    const isDaySelected = selectedDay && selectedDay === d.day;
-    const isTimeSelected = selectedTime && selectedTime === d.time;
+    const isDaySelected = selectedDays.includes(d.day);
+    const isTimeSelected = selectedTimes.includes(d.time);
 
     const isHighlighted = isDaySelected || isTimeSelected
 
@@ -101,7 +111,10 @@ export const Heatmap = ({Data, margin = 50}: HeatmapProps) => {
 
     // If day filter is active, highlight selected day's line
     // If time filter is active, highlight selected time's interval
-    if (isDayFiltered || isTimeFiltered) {
+    if (isSingleItemSelected) {
+      fill = singleItemSelected === i ? colorScale(d.accidents) : "grey";
+    }
+    else if (isDayFiltered || isTimeFiltered) {
       fill = isHighlighted ? colorScale(d.accidents) : "grey";
     }
     
@@ -128,7 +141,7 @@ export const Heatmap = ({Data, margin = 50}: HeatmapProps) => {
           ),
           })
         }}
-        onClick={() => clickItem(d)}
+        onClick={() => clickItem(i)}
         onMouseLeave={() => setHovered(null)}
       />
     );
@@ -136,12 +149,28 @@ export const Heatmap = ({Data, margin = 50}: HeatmapProps) => {
 
   const clickTimeBounds = (event) => {
     const name = event.target.textContent;
-    setSelectedTime((prev) => (prev === name ? null : name)); // Toggle selection
+    setSelectedTimes((prevTimes) => {
+      // Toggle selection
+      return prevTimes.includes(name)
+        ? prevTimes.filter((time) => time !== name)
+        : [...prevTimes, name];
+    });
   };
 
   const clickDays = (event) => {
     const name = event.target.textContent;
-    setSelectedDay((prev) => (prev === name ? null : name)); // Toggle selection
+    setSelectedDays((prevDays) => {
+      // Toggle selection
+      if (prevDays.includes(name)) {
+        removeFilter([[columns.Day, name]])
+      }
+      else {
+        addFilter([[columns.Day, name]])
+      }
+      return prevDays.includes(name)
+        ? prevDays.filter((day) => day !== name)
+        : [...prevDays, name];
+    });
   };
 
   const xLabels = allXGroups.map((name, i) => {
