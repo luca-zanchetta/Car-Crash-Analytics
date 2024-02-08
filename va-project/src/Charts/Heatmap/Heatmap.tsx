@@ -82,16 +82,6 @@ export const Heatmap = ({Data, margin = 50, addFilter, removeFilter}: HeatmapPro
     .scaleSequential()
     .interpolator(d3.interpolateInferno)
     .domain([min, max]);
-
-
-  const clickItem = (i) => {
-    if (singleItemSelected === i) {
-      setSingleItemSelected(null)
-    }
-    else {
-      setSingleItemSelected(i)
-    }
-  }
   
 
   // Determine if filters are active
@@ -141,7 +131,6 @@ export const Heatmap = ({Data, margin = 50, addFilter, removeFilter}: HeatmapPro
           ),
           })
         }}
-        onClick={() => clickItem(i)}
         onMouseLeave={() => setHovered(null)}
       />
     );
@@ -151,6 +140,12 @@ export const Heatmap = ({Data, margin = 50, addFilter, removeFilter}: HeatmapPro
     const name = event.target.textContent;
     setSelectedTimes((prevTimes) => {
       // Toggle selection
+      if(prevTimes.includes(name)) {
+        removeFilter([[columns.Time_Interval, name]])
+      }
+      else {
+        addFilter([[columns.Time_Interval, name]])
+      }
       return prevTimes.includes(name)
         ? prevTimes.filter((time) => time !== name)
         : [...prevTimes, name];
@@ -186,6 +181,7 @@ export const Heatmap = ({Data, margin = 50, addFilter, removeFilter}: HeatmapPro
         fill="white"
         cursor="pointer"
         onClick={clickTimeBounds}
+        className="heatmapText"
       >
         {name}
       </text>
@@ -205,6 +201,7 @@ export const Heatmap = ({Data, margin = 50, addFilter, removeFilter}: HeatmapPro
         fill="white"
         cursor="pointer"
         onClick={clickDays}
+        className="heatmapText"
       >
         {name}
       </text>

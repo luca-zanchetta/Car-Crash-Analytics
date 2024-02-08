@@ -58,3 +58,8 @@
     justify-content: center;
     flex-direction: column;
 }
+
+.heatmapText:hover {
+    fill: gold;
+    font-size: large;
+}
