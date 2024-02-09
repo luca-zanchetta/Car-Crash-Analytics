@@ -2,6 +2,19 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { filter, scaleLinear } from "d3";
 import React from "react";
 
+
+const junction_control_enc = ['Data missing or out of range', 'Give way or uncontrolled', 'Stop sign', 'Auto traffic signal', 'Authorised person'] 
+const junction_detail_enc = ['Roundabout' ,'Other junction' ,'Crossroads', 'Mini-roundabout', 'More than 4 arms (not roundabout)' ,'Not at junction or within 20 metres', 'Slip road', 'T or staggered junction', 'Private drive or entrance']
+const light_conditions_enc = ['Darkness - no lighting', 'Darkness - lights unlit', 'Darkness - lighting unknown', 'Daylight', 'Darkness - lights lit']
+const road_surface_conditions_enc = ['Frost or ice', 'Snow', 'Wet or damp', 'Dry']
+const road_type_enc = ['Roundabout', 'Dual carriageway', 'Single carriageway', 'One way street', 'Slip road']
+const weather_conditions_enc = ['Snowing no high winds', 'Raining + high winds', 'Raining no high winds', 'Other', 'Fine no high winds', "nan", 'Fine + high winds']
+const vehicle_Type_enc = ['Motorcycle', 'Car', 'Good', 'Other vehicle', 'Bus', 'Agricultural vehicle', 'Minibus']
+
+const encodes = {"Junction_Control": junction_control_enc,"Junction_Detail":junction_detail_enc
+, "Light_Conditions":light_conditions_enc,"Road_Surface_Conditions":road_surface_conditions_enc,"Road_Type": road_type_enc, "Weather_Conditions": weather_conditions_enc, "Vehicle_Type": vehicle_Type_enc}
+
+
 type AxisVerticalProps = {
   yScale: scaleLinear<number, number>;
   pixelsPerTick: number;
@@ -21,7 +34,6 @@ export const AxisVertical = ({
   removeFilter,
   filterName
 }: AxisVerticalProps) => {
-  
   const [brushPoint, setBrushPoint] = useState(0)
   const [BrushedPoints, setBrushedPoint] = useState([])
   const [brushCurrent, setCurrent] = useState(0)
@@ -104,7 +116,6 @@ export const AxisVertical = ({
     }));
   }, [yScale]);
 
-
   return (
     <>
       {
@@ -157,19 +168,19 @@ export const AxisVertical = ({
           shapeRendering={"crispEdges"}   
         >
           <line x1={-TICK_LENGTH} x2={0} stroke="white" strokeWidth={1} />
-          <text
-            key={value}
-            
-            style={{
-              fontSize: ".5vw",
-              textAnchor: "middle",
-              alignmentBaseline: "central",
-              transform: "translateX(-.5vw)",
-              fill:"white",
-            }}
-          >
-            {value}
-          </text>
+        <text
+          key={value}
+          
+          style={{
+            fontSize: ".5vw",
+            textAnchor: "middle",
+            alignmentBaseline: "central",
+            transform: "translateX(-.5vw)",
+            fill:"white",
+          }}
+        >
+           {encodes[name][value]}
+        </text>
         </g>
       ))}
     </>

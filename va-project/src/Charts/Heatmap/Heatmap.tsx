@@ -6,11 +6,13 @@ import { InteractionDataHeatmap, TooltipHeatmap } from "./TooltipHeatmap.tsx";
 import "../Charts.css"
 import { columns } from "../../App.js";
 
+
+const MARGIN = { top: 10, right: 10, bottom: 30, left: 40 };
+
 const Days = ["Monday", "Tuesday",  "Wednesday", "Thursday", "Friday",  "Saturday", "Sunday"]
 const TimeBounds = ["0-3", "3-6", "6-9", "9-12", "12-15", "15-18", "18-21", "21-24"]
 type HeatmapProps = {
   Data: [];
-  margin: number;
   addFilter: Function;
   removeFilter: Function;
 };
@@ -21,7 +23,7 @@ type HeatmapData = {
     accidents: number;
 }
 
-export const Heatmap = ({Data, margin = 50, addFilter, removeFilter}: HeatmapProps) => {
+export const Heatmap = ({Data, addFilter, removeFilter}: HeatmapProps) => {
   var data : HeatmapData[] = []
   const [hovered, setHovered] = useState<InteractionDataHeatmap | null>(null);
 
@@ -46,8 +48,8 @@ export const Heatmap = ({Data, margin = 50, addFilter, removeFilter}: HeatmapPro
   const chartSize = useDimensions(chartRef);
 
   // bounds = area inside the axis
-  const boundsWidth = chartSize.width - margin - margin;
-  const boundsHeight = chartSize.height - margin - margin;
+  const boundsWidth = chartSize.width - MARGIN.right - MARGIN.left;
+  const boundsHeight = chartSize.height - MARGIN.top - MARGIN.bottom;
 
   // groups
   const allYGroups = useMemo(() => [...new Set(data.map((d) => d.day))], [data]);
@@ -153,7 +155,7 @@ export const Heatmap = ({Data, margin = 50, addFilter, removeFilter}: HeatmapPro
   };
 
   const clickDays = (event) => {
-    const name = event.target.textContent;
+    const name = event.target.id;
     setSelectedDays((prevDays) => {
       // Toggle selection
       if (prevDays.includes(name)) {
@@ -192,6 +194,7 @@ export const Heatmap = ({Data, margin = 50, addFilter, removeFilter}: HeatmapPro
     const yPos = yScale(name) ?? 0;
     return (
       <text
+        id={name}
         key={i}
         x={-5}
         y={yPos + yScale.bandwidth() / 2}
@@ -203,7 +206,7 @@ export const Heatmap = ({Data, margin = 50, addFilter, removeFilter}: HeatmapPro
         onClick={clickDays}
         className="heatmapText"
       >
-        {name}
+        {(name.charAt(0) + name.charAt(1) + name.charAt(2)).toUpperCase() }
       </text>
     );
   });
@@ -224,7 +227,7 @@ export const Heatmap = ({Data, margin = 50, addFilter, removeFilter}: HeatmapPro
           <g
             width={boundsWidth}
             height={boundsHeight}
-            transform={`translate(${[margin, margin].join(",")})`}
+            transform={`translate(${[MARGIN.left, MARGIN.top].join(",")})`}
           >
             {allRects}
             {xLabels}
@@ -238,7 +241,7 @@ export const Heatmap = ({Data, margin = 50, addFilter, removeFilter}: HeatmapPro
             height: "-webkit-fill-available",
             position: "absolute",
             pointerEvents: "none",
-            margin:margin
+            margin:50
             }}
         >
             <TooltipHeatmap interactionData={hovered} />    

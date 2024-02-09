@@ -9,14 +9,13 @@ import { brushX, select } from "d3";
 import usePrevious from "./usePrevious.js";
 
 type ScatterplotProps = {
-    callbackMouseEnter: Function;
     margin : number;
     data : {x:number, y:number, severity:number}[];
     name?: string
 };
 
 
-export const Scatterplot = ({callbackMouseEnter, margin = 40,data= [{x: 2,y: 4, severity: 0},{x: 8,y: 5, severity: 0}]}:ScatterplotProps) => {
+export const Scatterplot = ({ margin = 40,data= [{x: 2,y: 4, severity: 0},{x: 8,y: 5, severity: 0}]}:ScatterplotProps) => {
 
     const zoomContant = 1.1
     const scrollK = .1
@@ -137,7 +136,6 @@ export const Scatterplot = ({callbackMouseEnter, margin = 40,data= [{x: 2,y: 4, 
                 fillOpacity={0.2}
                 strokeWidth={1}
                 onMouseEnter={() => {
-                    callbackMouseEnter();
                     setHovered({
                         xPos: x(d[0]),
                         yPos: y(d[1]),
@@ -166,7 +164,7 @@ export const Scatterplot = ({callbackMouseEnter, margin = 40,data= [{x: 2,y: 4, 
                 fillOpacity={0.2}
                 strokeWidth={1}
                 onMouseEnter={() => {
-                    callbackMouseEnter();
+                    
                     setHovered({
                         xPos: x(d[0]),
                         yPos: y(d[1]),

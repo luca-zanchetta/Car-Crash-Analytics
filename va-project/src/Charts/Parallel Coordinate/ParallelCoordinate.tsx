@@ -3,6 +3,7 @@ import { AxisVertical } from "./AxisVertical.tsx";
 import React, { useRef } from "react";
 import { useDimensions } from "../../Utilities/useDimensions.ts";
 import "../Charts.css"
+
 const MARGIN = { top: 60, right: 80, bottom: 30, left: 80 };
 
 const COLORS = [
@@ -13,8 +14,10 @@ const COLORS = [
   "#a53253",
   "#69b3a2",
 ];
+
 //DATA TYPES
 type Variable = "Junction_Control" | "Junction_Detail" | "Light_Conditions" | "Road_Surface_Conditions" | "Road_Type" | "Vehicle_Type" | "Weather_Conditions"
+
 
 type ParallelCoordinateProps = {
   margin: number;

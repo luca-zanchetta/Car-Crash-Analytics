@@ -43,8 +43,7 @@ const light_conditions_enc = {'Darkness - no lighting': 0, 'Darkness - lights un
 const road_surface_conditions_enc = {'Frost or ice': 0, 'Snow': 1, 'Wet or damp': 2, 'Dry': 3}
 const road_type_enc = {'Roundabout': 0, 'Dual carriageway': 1, 'Single carriageway': 2, 'One way street': 3, 'Slip road': 4}
 const weather_conditions_enc = {'Snowing no high winds': 0, 'Raining + high winds': 1, 'Raining no high winds': 2, 'Other': 3, 'Fine no high winds': 4, nan: 5, 'Fine + high winds': 6}
-
-
+const vehicle_Type_enc = {'Motorcycle': 0, 'Car': 1, 'Good': 2, 'Other vehicle': 3, 'Bus': 4, 'Agricultural vehicle': 5, 'Minibus': 6}
 export const filters = [[columns.JControl,junction_control_enc], [columns.JDetail,junction_detail_enc],[columns.Light,light_conditions_enc],[columns.Road_Surface_Conditions,road_surface_conditions_enc],[columns.Road_Type,road_type_enc],[columns.Weather_Conditions,weather_conditions_enc]]
 
 function App() {
@@ -53,7 +52,7 @@ function App() {
   const [activeFilters, setFilters] = useState([])
   const [data,setData] = useState([])
   const [iteration,setIteration] = useState(0)
-
+  const [Severity, setSeverity] = useState({0: false, 1: false, 2: false})
 
   function addFilter(filters) {
     var addedFilters= []
@@ -102,9 +101,19 @@ function App() {
   },[activeFilters])
  
   
-  function Hey() {
-    //console.log("frochoni")
+  function ToggleServerity(s) {
+    console.log(Severity)
+    if(Severity[s]){
+      removeFilter([[columns.Severity, s]])
+      setSeverity({...Severity, [s] : false})
+    }  
+    else {
+      addFilter([[columns.Severity, s]])
+      setSeverity({...Severity, [s]: true})
   }
+    
+  }
+
   return (
     <div className="App">
       <div className='TopBar'>
@@ -117,21 +126,25 @@ function App() {
         <div className='Map'>
           <MapComponent data={ExtractFeatures(data,[columns.Latitude,columns.Longitude,columns.Severity,columns.Date, columns.Number_of_Vehicles])}></MapComponent>
           <div className='MapLegend'>
-            <img src={redcircle} style={{aspectRatio:1/1,width:"1rem", paddingRight:".5rem", paddingLeft:".5rem"}}></img>
-            Fatal Accident
-            <img src={yellowCircle} style={{aspectRatio:1/1,width:"1rem", paddingRight:".5rem", paddingLeft:".5rem"}}></img>
-            Serious Accident
-            <img src={greenCircle} style={{aspectRatio:1/1,width:"1rem", paddingRight:".5rem", paddingLeft:".5rem"}}></img>
-            Slight Accident
+            <img src={redcircle} style={{aspectRatio:1/1,width:"1rem", paddingRight:".5rem", paddingLeft:".5rem"}} onClick={() => ToggleServerity(2)}></img>
+            <text fill={Severity[2]? "Yellow": "White"}>Fatal Accident</text>
+            <img src={yellowCircle} style={{aspectRatio:1/1,width:"1rem", paddingRight:".5rem", paddingLeft:".5rem"}} onClick={() => ToggleServerity(1)}></img>
+            <text fill={Severity[1]? "Yellow": "White"}>Serious Accident</text>
+            <img src={greenCircle} style={{aspectRatio:1/1,width:"1rem", paddingRight:".5rem", paddingLeft:".5rem"}} onClick={() => ToggleServerity(0)}></img>
+            <text fill={Severity[0]? "Yellow": "White"}>Slight Accident</text>
           </div>
         </div>
       </div>
       <div className='ScreenBottom'>
         <div className='DimReduction'>
-          <Scatterplot 
-            callbackMouseEnter={Hey} 
-            data={ExtractFeatures(data,[columns.tsne_x, columns.tsne_y, columns.Severity, columns.Number_of_Casualties, columns.Number_of_Vehicles, columns.Speed_limit, columns.Latitude, columns.Longitude, columns.Id])}
+          <div className='ScatterplotLegend'>
+            <div color='Red'>Fatal</div>
+            <div color='Red'>Serious</div>
+            <div color='Red'>Slight</div>
+          </div>
+          <Scatterplot data={ExtractFeatures(data,[columns.tsne_x, columns.tsne_y, columns.Severity, columns.Number_of_Casualties, columns.Number_of_Vehicles, columns.Speed_limit, columns.Latitude, columns.Longitude, columns.Id])}
           ></Scatterplot>
+          
         </div>
         <div className='ParallelCoordinates'>
           <ParallelCoordinate Data={ExtractFeatures(data, [columns.JControl,columns.JDetail,columns.Light,columns.Road_Surface_Conditions,columns.Road_Type,columns.Vehicle_Type,columns.Weather_Conditions])} addFilter={addFilter} removeFilter={removeFilter}></ParallelCoordinate>
