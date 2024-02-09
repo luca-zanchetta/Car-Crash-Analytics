@@ -101,26 +101,23 @@ function App() {
   },[activeFilters])
  
   
-  function Hey(points) {
-    if (!points)  {
-      setData(FilterData(DATA, activeFilters))
-      return
-    }
-    
+  function limitData(selectedPoints) {
     let restrictedData = []
-    let modified = false
+    let check = false
 
-    data.map((d, i) => {
-      if(points) {
-        if(d.Id in points) {
+    if(selectedPoints) {
+      data.map((d, i) => {
+        if(Number(d.Id) in selectedPoints) {
           restrictedData.push(d)
-          modified = true
         }
-      }
-    })
-    if (modified) setData(FilterData(restrictedData, activeFilters))
-    
+      })
+    }
+
+    if(restrictedData.length === 0) setData(DATA, activeFilters)
+    else setData(restrictedData, activeFilters)
   }
+
+
   return (
     <div className="App">
       <div className='TopBar'>
@@ -145,7 +142,7 @@ function App() {
       <div className='ScreenBottom'>
         <div className='DimReduction'>
           <Scatterplot 
-            callbackMouseEnter={Hey} 
+            callbackMouseEnter={limitData} 
             data={ExtractFeatures(DATA,[columns.tsne_x, columns.tsne_y, columns.Severity, columns.Number_of_Casualties, columns.Number_of_Vehicles, columns.Speed_limit, columns.Id])}
             addFilter={addFilter} removeFilter={removeFilter}
           ></Scatterplot>

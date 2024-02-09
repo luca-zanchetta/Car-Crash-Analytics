@@ -31,15 +31,6 @@ export const Scatterplot = ({callbackMouseEnter, margin = 40,data= [{x: 2,y: 4, 
     const [zoomYOffset, setYoffset] = useState(0)
     const [selection, setSelection] = useState([[0, 0], [0, 0]]);
     const previousSelection = usePrevious(selection)
-    const [selectedPoints, setSelectedPoints] = useState([])
-
-    useEffect(() => {
-        if (selectedPoints.length !== 0) {
-            callbackMouseEnter(selectedPoints)
-        } else {
-            callbackMouseEnter([])
-        }
-    }, [selectedPoints, addFilter, removeFilter]);
 
     function MoveCamera(e) { 
         
@@ -148,21 +139,20 @@ export const Scatterplot = ({callbackMouseEnter, margin = 40,data= [{x: 2,y: 4, 
                 stroke={withinSelection ? color : "grey"}
                 fillOpacity={0.2}
                 strokeWidth={1}
-                onMouseEnter={() => {
-                    callbackMouseEnter();
-                    setHovered({
-                        xPos: x(d[0]),
-                        yPos: y(d[1]),
-                        name: (
-                            <>
-                                Number of Causalities: {d[3]}<br />
-                                Number of Vehicles: {d[4]}<br />
-                                Speed limit: {d[5]}<br />
-                            </>
-                        ),
-                    });
-                }}
-                onMouseLeave={() => setHovered(null)}
+                // onMouseEnter={() => {
+                //     setHovered({
+                //         xPos: x(d[0]),
+                //         yPos: y(d[1]),
+                //         name: (
+                //             <>
+                //                 Number of Causalities: {d[3]}<br />
+                //                 Number of Vehicles: {d[4]}<br />
+                //                 Speed limit: {d[5]}<br />
+                //             </>
+                //         ),
+                //     });
+                // }}
+                // onMouseLeave={() => setHovered(null)}
             />
         );
     } else {
@@ -177,21 +167,20 @@ export const Scatterplot = ({callbackMouseEnter, margin = 40,data= [{x: 2,y: 4, 
                 stroke={color} // Always use color for stroke
                 fillOpacity={0.2}
                 strokeWidth={1}
-                onMouseEnter={() => {
-                    callbackMouseEnter();
-                    setHovered({
-                        xPos: x(d[0]),
-                        yPos: y(d[1]),
-                        name: (
-                            <>
-                                Number of Causalities: {d[3]}<br />
-                                Number of Vehicles: {d[4]}<br />
-                                Speed limit: {d[5]}<br />
-                            </>
-                        ),
-                    });
-                }}
-                onMouseLeave={() => setHovered(null)}
+                // onMouseEnter={() => {
+                //     setHovered({
+                //         xPos: x(d[0]),
+                //         yPos: y(d[1]),
+                //         name: (
+                //             <>
+                //                 Number of Causalities: {d[3]}<br />
+                //                 Number of Vehicles: {d[4]}<br />
+                //                 Speed limit: {d[5]}<br />
+                //             </>
+                //         ),
+                //     });
+                // }}
+                // onMouseLeave={() => setHovered(null)}
             />
         );
     }
@@ -217,8 +206,8 @@ export const Scatterplot = ({callbackMouseEnter, margin = 40,data= [{x: 2,y: 4, 
                         return xVal >= x0 && xVal <= x1 && yVal >= y0 && yVal <= y1;
                     })
                     .map(d =>  Number(d[6]));
-
-                setSelectedPoints(selected)
+                
+                callbackMouseEnter(selected)
             }
         });
 
