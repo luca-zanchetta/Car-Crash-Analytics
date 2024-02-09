@@ -69,8 +69,7 @@ function App() {
   }
 
   function removeFilter(filters) {
-    
-    console.log(filters)
+    // console.log(filters)
     var newFilters = []
   
     activeFilters.map(d => {
@@ -89,7 +88,7 @@ function App() {
 
   useEffect(() =>{
     if(iteration >=1) {
-      console.log(activeFilters)
+      // console.log(activeFilters)
         setData(FilterData(DATA,activeFilters))
     }else 
     {
@@ -102,8 +101,25 @@ function App() {
   },[activeFilters])
  
   
-  function Hey() {
-    //console.log("frochoni")
+  function Hey(points) {
+    if (!points)  {
+      setData(FilterData(DATA, activeFilters))
+      return
+    }
+    
+    let restrictedData = []
+    let modified = false
+
+    data.map((d, i) => {
+      if(points) {
+        if(d.Id in points) {
+          restrictedData.push(d)
+          modified = true
+        }
+      }
+    })
+    if (modified) setData(FilterData(restrictedData, activeFilters))
+    
   }
   return (
     <div className="App">
@@ -130,7 +146,8 @@ function App() {
         <div className='DimReduction'>
           <Scatterplot 
             callbackMouseEnter={Hey} 
-            data={ExtractFeatures(data,[columns.tsne_x, columns.tsne_y, columns.Severity, columns.Number_of_Casualties, columns.Number_of_Vehicles, columns.Speed_limit, columns.Latitude, columns.Longitude, columns.Id])}
+            data={ExtractFeatures(DATA,[columns.tsne_x, columns.tsne_y, columns.Severity, columns.Number_of_Casualties, columns.Number_of_Vehicles, columns.Speed_limit, columns.Id])}
+            addFilter={addFilter} removeFilter={removeFilter}
           ></Scatterplot>
         </div>
         <div className='ParallelCoordinates'>
