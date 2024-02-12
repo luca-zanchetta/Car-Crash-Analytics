@@ -51,8 +51,11 @@ function App() {
   const [DATA, setDATA] = useState([])
   const [activeFilters, setFilters] = useState([])
   const [data,setData] = useState([])
+  const [dataScatterplot, setDataScatterplot] = useState([])
   const [iteration,setIteration] = useState(0)
   const [Severity, setSeverity] = useState({0: false, 1: false, 2: false})
+  const [selectedItem, setSelectedItem] = useState(false)
+
 
   function addFilter(filters) {
     var addedFilters= []
@@ -68,8 +71,7 @@ function App() {
   }
 
   function removeFilter(filters) {
-    
-    console.log(filters)
+    // console.log(filters)
     var newFilters = []
   
     activeFilters.map(d => {
@@ -88,13 +90,15 @@ function App() {
 
   useEffect(() =>{
     if(iteration >=1) {
-      console.log(activeFilters)
+      // console.log(activeFilters)
         setData(FilterData(DATA,activeFilters))
+        setDataScatterplot(FilterData(dataScatterplot,activeFilters))
     }else 
     {
       d3.csv("dataset.csv").then(data => {
         setDATA(data)
         setData(data)
+        setDataScatterplot(data)
         setIteration(1)
       });
   }
@@ -114,6 +118,41 @@ function App() {
     
   }
 
+  function limitDataScatterplot(selectedPoints) {
+    let restrictedData = []
+
+    if(selectedPoints) {
+      dataScatterplot.map((d, i) => {
+        if(Number(d.Id) in selectedPoints) {
+          restrictedData.push(d)
+        }
+      })
+    }
+
+    if(restrictedData.length === 0) {
+      setData(data, activeFilters)
+      setDataScatterplot(data, activeFilters)
+    } 
+    else setData(restrictedData, activeFilters)
+  }
+
+  function limitDataMap(d) {
+    if(selectedItem) {
+      setSelectedItem(false)
+      setData(DATA)
+      setDataScatterplot(DATA)
+    }
+    else {
+      DATA.filter(element => Number(element.Id) === Number(d[6])).map(filteredElement => {
+        setFilters([])
+        setData([filteredElement])
+        setDataScatterplot([filteredElement])
+        setSelectedItem(true)
+      })
+    }
+  }
+
+
   return (
     <div className="App">
       <div className='TopBar'>
@@ -124,7 +163,7 @@ function App() {
           <Filters addFilter={addFilter} removeFilter={removeFilter}></Filters>
         </div>
         <div className='Map'>
-          <MapComponent data={ExtractFeatures(data,[columns.Latitude,columns.Longitude,columns.Severity,columns.Date, columns.Number_of_Vehicles])}></MapComponent>
+          <MapComponent callback={limitDataMap} data={ExtractFeatures(data,[columns.Latitude,columns.Longitude,columns.Severity, columns.Number_of_Casualties, columns.Number_of_Vehicles, columns.Speed_limit, columns.Id])}></MapComponent>
           <div className='MapLegend'>
             <img src={redcircle} style={{aspectRatio:1/1,width:"1rem", paddingRight:".5rem", paddingLeft:".5rem"}} onClick={() => ToggleServerity(2)}></img>
             <text fill={Severity[2]? "Yellow": "White"}>Fatal Accident</text>
@@ -142,7 +181,10 @@ function App() {
             <div color='Red'>Serious</div>
             <div color='Red'>Slight</div>
           </div>
-          <Scatterplot data={ExtractFeatures(data,[columns.tsne_x, columns.tsne_y, columns.Severity, columns.Number_of_Casualties, columns.Number_of_Vehicles, columns.Speed_limit, columns.Latitude, columns.Longitude, columns.Id])}
+          <Scatterplot 
+            callbackMouseEnter={limitDataScatterplot} 
+            data={ExtractFeatures(dataScatterplot,[columns.tsne_x, columns.tsne_y, columns.Severity, columns.Number_of_Casualties, columns.Number_of_Vehicles, columns.Speed_limit, columns.Id])}
+            addFilter={addFilter} removeFilter={removeFilter}
           ></Scatterplot>
           
         </div>

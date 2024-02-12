@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import React, { useReducer, useRef, useState } from "react";
+import React, { useEffect, useReducer, useRef, useState } from "react";
 import { useDimensions } from "../../Utilities/useDimensions.ts";
 import { AxisBottom } from "./XAxis_scatterplot.tsx";
 import { AxisLeft } from "./YAxis_scatterplot.tsx";
@@ -7,15 +7,18 @@ import { InteractionData, Tooltip } from "./Tooltip.tsx";
 import "../Charts.css"
 import { brushX, select } from "d3";
 import usePrevious from "./usePrevious.js";
+import { columns } from "../../App.js";
 
 type ScatterplotProps = {
     margin : number;
     data : {x:number, y:number, severity:number}[];
-    name?: string
+    name?: string;
+    addFilter: Function;
+    removeFilter: Function;
 };
 
 
-export const Scatterplot = ({ margin = 40,data= [{x: 2,y: 4, severity: 0},{x: 8,y: 5, severity: 0}]}:ScatterplotProps) => {
+export const Scatterplot = ({callbackMouseEnter, margin = 40,data= [{x: 2,y: 4, severity: 0},{x: 8,y: 5, severity: 0}], addFilter, removeFilter}:ScatterplotProps) => {
 
     const zoomContant = 1.1
     const scrollK = .1
@@ -135,20 +138,20 @@ export const Scatterplot = ({ margin = 40,data= [{x: 2,y: 4, severity: 0},{x: 8,
                 stroke={withinSelection ? color : "grey"}
                 fillOpacity={0.2}
                 strokeWidth={1}
-                onMouseEnter={() => {
-                    setHovered({
-                        xPos: x(d[0]),
-                        yPos: y(d[1]),
-                        name: (
-                            <>
-                                Number of Causalities: {d[3]}<br />
-                                Number of Vehicles: {d[4]}<br />
-                                Speed limit: {d[5]}<br />
-                            </>
-                        ),
-                    });
-                }}
-                onMouseLeave={() => setHovered(null)}
+                // onMouseEnter={() => {
+                //     setHovered({
+                //         xPos: x(d[0]),
+                //         yPos: y(d[1]),
+                //         name: (
+                //             <>
+                //                 Number of Causalities: {d[3]}<br />
+                //                 Number of Vehicles: {d[4]}<br />
+                //                 Speed limit: {d[5]}<br />
+                //             </>
+                //         ),
+                //     });
+                // }}
+                // onMouseLeave={() => setHovered(null)}
             />
         );
     } else {
@@ -163,32 +166,29 @@ export const Scatterplot = ({ margin = 40,data= [{x: 2,y: 4, severity: 0},{x: 8,
                 stroke={color} // Always use color for stroke
                 fillOpacity={0.2}
                 strokeWidth={1}
-                onMouseEnter={() => {
-                    
-                    setHovered({
-                        xPos: x(d[0]),
-                        yPos: y(d[1]),
-                        name: (
-                            <>
-                                Number of Causalities: {d[3]}<br />
-                                Number of Vehicles: {d[4]}<br />
-                                Speed limit: {d[5]}<br />
-                            </>
-                        ),
-                    });
-                }}
-                onMouseLeave={() => setHovered(null)}
+                // onMouseEnter={() => {
+                //     setHovered({
+                //         xPos: x(d[0]),
+                //         yPos: y(d[1]),
+                //         name: (
+                //             <>
+                //                 Number of Causalities: {d[3]}<br />
+                //                 Number of Vehicles: {d[4]}<br />
+                //                 Speed limit: {d[5]}<br />
+                //             </>
+                //         ),
+                //     });
+                // }}
+                // onMouseLeave={() => setHovered(null)}
             />
         );
     }
     });
 
-    let selectedPoints = []
-
     // Brush logic
     const brush = d3.brush()
         .extent([[0, 0], [boundsWidth, boundsHeight]])
-        .on("start brush end", (event) => {
+        .on("start end", (event) => {
             // console.log("event: ", event.type);
             if (event.selection) {
                 const [[x0, y0], [x1, y1]] = event.selection;
@@ -198,15 +198,15 @@ export const Scatterplot = ({ margin = 40,data= [{x: 2,y: 4, severity: 0},{x: 8,
                 ];
                 setSelection(indexSelection);
 
-                const selected = data.filter(d => {
-                    const xVal = x(d[0]);
-                    const yVal = y(d[1]);
-                    if (xVal >= x0 && xVal <= x1 && yVal >= y0 && yVal <= y1) {
-                        return d
-                    }
-                });
-                selectedPoints = selected
-                // console.log("Selected points: ", selectedPoints)
+                const selected = data
+                    .filter(d => {
+                        const xVal = x(d[0]);
+                        const yVal = y(d[1]);
+                        return xVal >= x0 && xVal <= x1 && yVal >= y0 && yVal <= y1;
+                    })
+                    .map(d =>  Number(d[6]));
+                
+                callbackMouseEnter(selected)
             }
         });
 
@@ -215,7 +215,6 @@ export const Scatterplot = ({ margin = 40,data= [{x: 2,y: 4, severity: 0},{x: 8,
             .call(brush)
             .call(brush.move, selection.map(d => [x(d[0]), y(d[1])]));
     }
-
 
     //Rendering of the chart
     return(
