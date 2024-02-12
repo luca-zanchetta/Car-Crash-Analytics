@@ -54,6 +54,7 @@ function App() {
   const [data,setData] = useState([])
   const [dataScatterplot, setDataScatterplot] = useState([])
   const [iteration,setIteration] = useState(0)
+  const [selectedItem, setSelectedItem] = useState(false)
 
 
   function addFilter(filters) {
@@ -123,7 +124,19 @@ function App() {
   }
 
   function limitDataMap(d) {
-
+    if(selectedItem) {
+      setSelectedItem(false)
+      setData(DATA)
+      setDataScatterplot(DATA)
+    }
+    else {
+      DATA.filter(element => Number(element.Id) === Number(d[6])).map(filteredElement => {
+        setFilters([])
+        setData([filteredElement])
+        setDataScatterplot([filteredElement])
+        setSelectedItem(true)
+      })
+    }
   }
 
 
@@ -137,7 +150,7 @@ function App() {
           <Filters addFilter={addFilter} removeFilter={removeFilter}></Filters>
         </div>
         <div className='Map'>
-          <MapComponent callback={limitDataMap} data={ExtractFeatures(data,[columns.Latitude,columns.Longitude,columns.Severity,columns.Date, columns.Number_of_Vehicles])}></MapComponent>
+          <MapComponent callback={limitDataMap} data={ExtractFeatures(data,[columns.Latitude,columns.Longitude,columns.Severity, columns.Number_of_Casualties, columns.Number_of_Vehicles, columns.Speed_limit, columns.Id])}></MapComponent>
           <div className='MapLegend'>
             <img src={redcircle} style={{aspectRatio:1/1,width:"1rem", paddingRight:".5rem", paddingLeft:".5rem"}}></img>
             Fatal Accident

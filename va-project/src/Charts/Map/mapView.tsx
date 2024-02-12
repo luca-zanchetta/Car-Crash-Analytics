@@ -32,8 +32,8 @@ const MapComponent = ({callback, data}:MapProps) => {
           position: [d[0], d[1]],
           popup: "Quack!",
           popupOpen: false, // if popup has to be open by default
-          //onClick: () => alert("marker clicked"),
-          tooltip: d[2] + " accident;<br> date: " + d[3] + "<br>Number of veichles involved: " + d[4],
+          onClick: () => callback(d),
+          tooltip: "Causalities: " + d[3] + "<br> Veichles involved: " + d[4] + "<br> Speed limit: " + d[5],
           customIcon:icons[d[2]],
         }
       )
