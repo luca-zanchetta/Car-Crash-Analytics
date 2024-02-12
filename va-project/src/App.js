@@ -51,7 +51,7 @@ function App() {
   const [DATA, setDATA] = useState([])
   const [activeFilters, setFilters] = useState([])
   const [data,setData] = useState([])
-  const [dataScatterplot, setDataScatterplot] = useState([])
+  const [scatterplotFilter, setScatterplotFilter] = useState([])
   const [iteration,setIteration] = useState(0)
   const [Severity, setSeverity] = useState({0: false, 1: false, 2: false})
   const [selectedItem, setSelectedItem] = useState(false)
@@ -92,13 +92,13 @@ function App() {
     if(iteration >=1) {
       // console.log(activeFilters)
         setData(FilterData(DATA,activeFilters))
-        setDataScatterplot(FilterData(dataScatterplot,activeFilters))
+        // setDataScatterplot(FilterData(dataScatterplot,activeFilters))
     }else 
     {
       d3.csv("dataset.csv").then(data => {
         setDATA(data)
         setData(data)
-        setDataScatterplot(data)
+        // setDataScatterplot(data)
         setIteration(1)
       });
   }
@@ -122,16 +122,18 @@ function App() {
     let restrictedData = []
 
     if(selectedPoints) {
-      dataScatterplot.map((d, i) => {
-        if(Number(d.Id) in selectedPoints) {
-          restrictedData.push(d)
-        }
-      })
+      if(selectedPoints.length !== 0) {
+        selectedPoints.forEach(element => {
+          data.filter(elem => Number(elem.Id) === Number(element)).map(filteredElement => {
+            restrictedData.push(filteredElement)
+          })
+        });
+      }
     }
 
     if(restrictedData.length === 0) {
       setData(data, activeFilters)
-      setDataScatterplot(data, activeFilters)
+      // setDataScatterplot(data, activeFilters)
     } 
     else setData(restrictedData, activeFilters)
   }
@@ -140,13 +142,13 @@ function App() {
     if(selectedItem) {
       setSelectedItem(false)
       setData(DATA)
-      setDataScatterplot(DATA)
+      // setDataScatterplot(DATA)
     }
     else {
       DATA.filter(element => Number(element.Id) === Number(d[6])).map(filteredElement => {
         setFilters([])
         setData([filteredElement])
-        setDataScatterplot([filteredElement])
+        // setDataScatterplot([filteredElement])
         setSelectedItem(true)
       })
     }
@@ -183,7 +185,7 @@ function App() {
           </div>
           <Scatterplot 
             callbackMouseEnter={limitDataScatterplot} 
-            data={ExtractFeatures(dataScatterplot,[columns.tsne_x, columns.tsne_y, columns.Severity, columns.Number_of_Casualties, columns.Number_of_Vehicles, columns.Speed_limit, columns.Id])}
+            data={ExtractFeatures(data, [columns.tsne_x, columns.tsne_y, columns.Severity, columns.Number_of_Casualties, columns.Number_of_Vehicles, columns.Speed_limit, columns.Id])}
             addFilter={addFilter} removeFilter={removeFilter}
           ></Scatterplot>
           

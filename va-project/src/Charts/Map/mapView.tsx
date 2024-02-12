@@ -33,7 +33,7 @@ const MapComponent = ({callback, data}:MapProps) => {
           popup: "Quack!",
           popupOpen: false, // if popup has to be open by default
           onClick: () => callback(d),
-          tooltip: "Causalities: " + d[3] + "<br> Veichles involved: " + d[4] + "<br> Speed limit: " + d[5],
+          tooltip: "Id: "+ d[6] + "<br>Causalities: " + d[3] + "<br> Veichles involved: " + d[4] + "<br> Speed limit: " + d[5],
           customIcon:icons[d[2]],
         }
       )
