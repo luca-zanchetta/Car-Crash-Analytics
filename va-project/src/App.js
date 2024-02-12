@@ -52,6 +52,7 @@ function App() {
   const [DATA, setDATA] = useState([])
   const [activeFilters, setFilters] = useState([])
   const [data,setData] = useState([])
+  const [dataScatterplot, setDataScatterplot] = useState([])
   const [iteration,setIteration] = useState(0)
 
 
@@ -90,31 +91,39 @@ function App() {
     if(iteration >=1) {
       // console.log(activeFilters)
         setData(FilterData(DATA,activeFilters))
+        setDataScatterplot(FilterData(dataScatterplot,activeFilters))
     }else 
     {
       d3.csv("dataset.csv").then(data => {
         setDATA(data)
         setData(data)
+        setDataScatterplot(data)
         setIteration(1)
       });
   }
   },[activeFilters])
  
   
-  function limitData(selectedPoints) {
+  function limitDataScatterplot(selectedPoints) {
     let restrictedData = []
-    let check = false
 
     if(selectedPoints) {
-      data.map((d, i) => {
+      dataScatterplot.map((d, i) => {
         if(Number(d.Id) in selectedPoints) {
           restrictedData.push(d)
         }
       })
     }
 
-    if(restrictedData.length === 0) setData(DATA, activeFilters)
+    if(restrictedData.length === 0) {
+      setData(data, activeFilters)
+      setDataScatterplot(data, activeFilters)
+    } 
     else setData(restrictedData, activeFilters)
+  }
+
+  function limitDataMap(d) {
+
   }
 
 
@@ -128,7 +137,7 @@ function App() {
           <Filters addFilter={addFilter} removeFilter={removeFilter}></Filters>
         </div>
         <div className='Map'>
-          <MapComponent data={ExtractFeatures(data,[columns.Latitude,columns.Longitude,columns.Severity,columns.Date, columns.Number_of_Vehicles])}></MapComponent>
+          <MapComponent callback={limitDataMap} data={ExtractFeatures(data,[columns.Latitude,columns.Longitude,columns.Severity,columns.Date, columns.Number_of_Vehicles])}></MapComponent>
           <div className='MapLegend'>
             <img src={redcircle} style={{aspectRatio:1/1,width:"1rem", paddingRight:".5rem", paddingLeft:".5rem"}}></img>
             Fatal Accident
@@ -142,8 +151,8 @@ function App() {
       <div className='ScreenBottom'>
         <div className='DimReduction'>
           <Scatterplot 
-            callbackMouseEnter={limitData} 
-            data={ExtractFeatures(DATA,[columns.tsne_x, columns.tsne_y, columns.Severity, columns.Number_of_Casualties, columns.Number_of_Vehicles, columns.Speed_limit, columns.Id])}
+            callbackMouseEnter={limitDataScatterplot} 
+            data={ExtractFeatures(dataScatterplot,[columns.tsne_x, columns.tsne_y, columns.Severity, columns.Number_of_Casualties, columns.Number_of_Vehicles, columns.Speed_limit, columns.Id])}
             addFilter={addFilter} removeFilter={removeFilter}
           ></Scatterplot>
         </div>
