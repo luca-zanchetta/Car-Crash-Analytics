@@ -43,6 +43,7 @@ export const AxisVertical = ({
   var rect = (<div></div>)
 
   function onMouseDown(e) {
+    resetBrush()
     setBrushing(true)
     //store the first point clicked by the user
     var yClick = e["clientY"]
@@ -98,8 +99,12 @@ export const AxisVertical = ({
       }
         
     }
-    addFilter(brushedPoints)
-    setBrushedPoint(brushedPoints)
+    if(brushedPoints.length === 0)
+      resetBrush()
+    else{
+      addFilter(brushedPoints)
+      setBrushedPoint(brushedPoints)
+    }
     // document.getElementById(filterName)?.removeEventListener("click", () => resetBrush(BrushedPoints))
     // document.getElementById(filterName)?.addEventListener("click", () => resetBrush(brushedPoints))
   }
@@ -116,6 +121,8 @@ export const AxisVertical = ({
     }));
   }, [yScale]);
 
+
+
   return (
     <>
       {
@@ -125,7 +132,7 @@ export const AxisVertical = ({
               id={filterName}
               transform={`translate(${-10}, 0)`}
               ref={brushRect}
-              cursor={"move"}
+              cursor={"pointer"}
               fill="rgb(119, 119, 119)"
               fillOpacity="0.3"
               stroke= "rgb(255, 255, 255)"
@@ -148,6 +155,7 @@ export const AxisVertical = ({
       </text>
 
       {/* Vertical line */}
+
       <line
         x1={0}
         x2={0}
@@ -155,12 +163,22 @@ export const AxisVertical = ({
         y2={yScale(range[1])}
         stroke="white"
         strokeWidth={2}
-        onMouseDown={onMouseDown}
         cursor={"pointer"}
         ref={xy}
-        
       />
-
+      { xy.current &&
+      <rect
+        onMouseDown={onMouseDown}
+        fill="rgb(119, 119, 119)"
+        cursor={"pointer"}
+        fillOpacity="0"
+        stroke= "rgb(255, 255, 255,0)"
+        width={20}
+        y={0}
+        height={xy.current.getBoundingClientRect()["bottom"] - xy.current.getBoundingClientRect()["y"]}
+        transform={`translate(${-10}, 0)`}
+      >
+      </rect> }
       {/* Ticks and labels */}
       {ticks.map(({ value, yOffset }) => (
         <g
