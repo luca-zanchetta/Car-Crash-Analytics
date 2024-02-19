@@ -55,6 +55,7 @@ function App() {
   const [iteration,setIteration] = useState(0)
   const [Severity, setSeverity] = useState({0: false, 1: false, 2: false})
   const [selectedItem, setSelectedItem] = useState(false)
+  const [dataScatterplot, setDataScatterplot] = useState([])
 
 
   function addFilter(filters) {
@@ -91,18 +92,19 @@ function App() {
   useEffect(() =>{
     if(iteration >=1) {
       // console.log(activeFilters)
-      if(!selectedItem)
+      if(!selectedItem) {
         setData(FilterData(DATA, activeFilters))
-        // setDataScatterplot(FilterData(dataScatterplot,activeFilters))
-    }else 
-    {
+        setDataScatterplot(FilterData(DATA,activeFilters))
+      }
+    }
+    else {
       d3.csv("dataset.csv").then(data => {
         setDATA(data)
         setData(data)
-        // setDataScatterplot(data)
+        setDataScatterplot(data)
         setIteration(1)
       });
-  }
+    }
   },[activeFilters])
  
   
@@ -144,14 +146,14 @@ function App() {
     if(selectedItem) {
       setSelectedItem(false)
       setData(DATA)
-      // setDataScatterplot(DATA)
+      setDataScatterplot(DATA)
     }
     else {
       DATA.filter(element => Number(element.Id) === Number(d[6])).map(filteredElement => {
         console.log("Filtered element: ", filteredElement)
         setFilters([])
         setData([filteredElement])
-        // setDataScatterplot([filteredElement])
+        setDataScatterplot([filteredElement])
         setSelectedItem(true)
       })
     }
@@ -188,7 +190,7 @@ function App() {
           </div>
           <Scatterplot 
             callbackMouseEnter={limitDataScatterplot} 
-            data={ExtractFeatures(data, [columns.tsne_x, columns.tsne_y, columns.Severity, columns.Number_of_Casualties, columns.Number_of_Vehicles, columns.Speed_limit, columns.Id])}
+            data={ExtractFeatures(dataScatterplot, [columns.tsne_x, columns.tsne_y, columns.Severity, columns.Number_of_Casualties, columns.Number_of_Vehicles, columns.Speed_limit, columns.Id])}
             addFilter={addFilter} removeFilter={removeFilter}
           ></Scatterplot>
           
