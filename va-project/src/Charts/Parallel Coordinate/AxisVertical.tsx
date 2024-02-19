@@ -128,6 +128,7 @@ export const AxisVertical = ({
       {
         brushCurrent !=  0 && brushPoint != 0 &&
         <rect 
+        style={{zIndex:'10'}}
               onClick={resetBrush}
               id={filterName}
               transform={`translate(${-10}, 0)`}

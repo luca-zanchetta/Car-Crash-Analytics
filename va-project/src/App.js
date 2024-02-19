@@ -1,7 +1,7 @@
 import './App.css';
 import * as d3 from "d3"
 import MapComponent from './Charts/Map/mapView.tsx';
-import { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { ExtractFeatures, CreateTooltipStringFromData } from './Utilities/SliceColumns.js';
 import { Scatterplot } from './Charts/Scatterplot/Scatterplot.tsx';
 import { Heatmap } from './Charts/Heatmap/Heatmap.tsx';
@@ -58,7 +58,7 @@ function App() {
   const [dataScatterplot, setDataScatterplot] = useState([])
 
 
-  function addFilter(filters) {
+  const addFilter =  useCallback( (filters) => {
     var addedFilters= []
     filters.map( (filter) => {
       if(!activeFilters.includes(filter))
@@ -69,9 +69,9 @@ function App() {
     })
     setFilters(addedFilters)
     //setData(FilterData(DATA,addedFilters))
-  }
+  })
 
-  function removeFilter(filters) {
+  const removeFilter = useCallback( (filters) => {
     // console.log(filters)
     var newFilters = []
   
@@ -87,7 +87,9 @@ function App() {
         newFilters.push(d)
     })
     setFilters(newFilters)
-  }
+  })
+
+
 
   useEffect(() =>{
     if(iteration >=1) {
@@ -188,11 +190,7 @@ function App() {
             <div color='Red'>Serious</div>
             <div color='Red'>Slight</div>
           </div>
-          <Scatterplot 
-            callbackMouseEnter={limitDataScatterplot} 
-            data={ExtractFeatures(dataScatterplot, [columns.tsne_x, columns.tsne_y, columns.Severity, columns.Number_of_Casualties, columns.Number_of_Vehicles, columns.Speed_limit, columns.Id])}
-            addFilter={addFilter} removeFilter={removeFilter}
-          ></Scatterplot>
+          <__Scatterplot limitDataScatterplot={limitDataScatterplot} dataScatterplot={dataScatterplot} addFilter= {addFilter} removeFilter={removeFilter}></__Scatterplot>
           
         </div>
         <div className='ParallelCoordinates'>
@@ -207,5 +205,17 @@ function App() {
 }
 
 
+const __Scatterplot = React.memo(({limitDataScatterplot, dataScatterplot, addFilter, removeFilter}) => {
+  console.log("re render")
+  return(
+    <Scatterplot 
+      callbackMouseEnter={limitDataScatterplot} 
+      data={ExtractFeatures(dataScatterplot, [columns.tsne_x, columns.tsne_y, columns.Severity, columns.Number_of_Casualties, columns.Number_of_Vehicles, columns.Speed_limit, columns.Id])}
+      addFilter={addFilter} removeFilter={removeFilter}
+    ></Scatterplot>
+  )
+}, (prev, next) => {
+  return prev.dataScatterplot.length === next.dataScatterplot.length
+})
 
 export default App;
