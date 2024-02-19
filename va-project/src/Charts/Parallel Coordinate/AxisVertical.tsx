@@ -37,14 +37,14 @@ export const AxisVertical = ({
   const [brushPoint, setBrushPoint] = useState(0)
   const [BrushedPoints, setBrushedPoint] = useState([])
   const [brushCurrent, setCurrent] = useState(0)
-  const [isBrushing, setBrushing] = useState(false)
+  const [endBrush, setBrushing] = useState(false)
   const xy = useRef(null)
   const brushRect = useRef(null)
   var rect = (<div></div>)
 
   function onMouseDown(e) {
-    resetBrush()
-    setBrushing(true)
+
+    
     //store the first point clicked by the user
     var yClick = e["clientY"]
     setBrushPoint(yClick)
@@ -63,6 +63,7 @@ export const AxisVertical = ({
 
   function resetBrush() {
     removeFilter(BrushedPoints)
+    setBrushing(false)
     setBrushPoint(0)
     setBrushedPoint([])
     setCurrent(0)
@@ -70,7 +71,7 @@ export const AxisVertical = ({
 
   function onMouseUp(e,yClick) {
     document.removeEventListener("mousemove",brushing)
-    
+    setBrushing(true)
     var yLine = xy.current.getBoundingClientRect()["y"]
     var _brushPoint = e['clientY']
     //the idea is to continuosly check which point we are brushing
@@ -128,7 +129,7 @@ export const AxisVertical = ({
       {
         brushCurrent !=  0 && brushPoint != 0 &&
         <rect 
-        style={{zIndex:'10'}}
+        style={{zIndex:'500000'}}
               onClick={resetBrush}
               id={filterName}
               transform={`translate(${-10}, 0)`}

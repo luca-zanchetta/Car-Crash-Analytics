@@ -58,7 +58,7 @@ function App() {
   const [dataScatterplot, setDataScatterplot] = useState([])
 
 
-  const addFilter =  useCallback( (filters) => {
+  function addFilter (filters)  {
     var addedFilters= []
     filters.map( (filter) => {
       if(!activeFilters.includes(filter))
@@ -69,9 +69,9 @@ function App() {
     })
     setFilters(addedFilters)
     //setData(FilterData(DATA,addedFilters))
-  })
+  }
 
-  const removeFilter = useCallback( (filters) => {
+  function removeFilter(filters) {
     // console.log(filters)
     var newFilters = []
   
@@ -87,7 +87,7 @@ function App() {
         newFilters.push(d)
     })
     setFilters(newFilters)
-  })
+  }
 
 
 
