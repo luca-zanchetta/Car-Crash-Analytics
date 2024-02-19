@@ -91,7 +91,7 @@ function App() {
   useEffect(() =>{
     if(iteration >=1) {
       // console.log(activeFilters)
-        setData(FilterData(DATA,activeFilters))
+        setData(FilterData(data, activeFilters))
         // setDataScatterplot(FilterData(dataScatterplot,activeFilters))
     }else 
     {
@@ -139,6 +139,7 @@ function App() {
   }
 
   function limitDataMap(d) {
+    console.log("Selected item: ", d)
     if(selectedItem) {
       setSelectedItem(false)
       setData(DATA)
@@ -146,6 +147,7 @@ function App() {
     }
     else {
       DATA.filter(element => Number(element.Id) === Number(d[6])).map(filteredElement => {
+        console.log("Filtered element: ", filteredElement)
         setFilters([])
         setData([filteredElement])
         // setDataScatterplot([filteredElement])
