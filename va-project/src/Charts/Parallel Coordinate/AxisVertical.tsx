@@ -132,6 +132,7 @@ export const AxisVertical = ({
               width={20}
               height={ Math.abs(brushCurrent - brushPoint)}
               y = {(Math.min(brushCurrent,brushPoint) - xy.current.getBoundingClientRect()["y"])}
+              z={2000}
             ></rect>}
       {/* Title */}
       <text
