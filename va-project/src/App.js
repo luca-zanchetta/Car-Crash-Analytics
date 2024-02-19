@@ -91,7 +91,8 @@ function App() {
   useEffect(() =>{
     if(iteration >=1) {
       // console.log(activeFilters)
-        setData(FilterData(data, activeFilters))
+      if(!selectedItem)
+        setData(FilterData(DATA, activeFilters))
         // setDataScatterplot(FilterData(dataScatterplot,activeFilters))
     }else 
     {
