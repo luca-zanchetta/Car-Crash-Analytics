@@ -68,7 +68,6 @@ function App() {
       addedFilters.push(filter)
     })
     setFilters(addedFilters)
-    //setData(FilterData(DATA,addedFilters))
   }
 
   function removeFilter(filters) {
@@ -93,10 +92,9 @@ function App() {
 
   useEffect(() =>{
     if(iteration >=1) {
-      console.log("duce")
       if(!selectedItem) {
         setData(FilterData(DATA, activeFilters))
-        setDataScatterplot(FilterData(DATA,activeFilters))
+        setDataScatterplot(FilterData(DATA, activeFilters))
       }
     }
     else {
@@ -136,13 +134,36 @@ function App() {
       }
     }
 
-    console.log("restrictedData.length: ", restrictedData.length)
-
     if(restrictedData.length === 0) {
       setData(data, activeFilters)
     } 
-    else setData(restrictedData, activeFilters)
+    else {
+      setData(restrictedData, activeFilters)
+    }
   }
+
+  // It is called if there is an active selection
+  function limitDataScatterplot2(selectedPoints) {
+    let restrictedData = []
+
+    if(selectedPoints) {
+      if(selectedPoints.length !== 0) {
+        selectedPoints.forEach(element => {
+          data.filter(elem => Number(elem.Id) === Number(element)).map(filteredElement => {
+            restrictedData.push(filteredElement)
+          })
+        });
+      }
+    }
+
+    if(restrictedData.length === 0) {
+      setData([])
+    } 
+    else {
+      setData(restrictedData, activeFilters)
+    }
+  }
+
 
 
   function limitDataMap(d) {
@@ -190,7 +211,7 @@ function App() {
             <div color='Red'>Serious</div>
             <div color='Red'>Slight</div>
           </div>
-          <__Scatterplot limitDataScatterplot={limitDataScatterplot} dataScatterplot={dataScatterplot} addFilter= {addFilter} removeFilter={removeFilter}></__Scatterplot>
+          <__Scatterplot limitDataScatterplot={limitDataScatterplot} limitDataScatterplot2={limitDataScatterplot2} dataScatterplot={dataScatterplot} addFilter= {addFilter} removeFilter={removeFilter}></__Scatterplot>
           
         </div>
         <div className='ParallelCoordinates'>
@@ -205,11 +226,12 @@ function App() {
 }
 
 
-const __Scatterplot = React.memo(({limitDataScatterplot, dataScatterplot, addFilter, removeFilter}) => {
+const __Scatterplot = React.memo(({limitDataScatterplot, limitDataScatterplot2, dataScatterplot, addFilter, removeFilter}) => {
   console.log("re render")
   return(
     <Scatterplot 
       callbackMouseEnter={limitDataScatterplot} 
+      callbackMouseEnter2={limitDataScatterplot2}
       data={ExtractFeatures(dataScatterplot, [columns.tsne_x, columns.tsne_y, columns.Severity, columns.Number_of_Casualties, columns.Number_of_Vehicles, columns.Speed_limit, columns.Id])}
       addFilter={addFilter} removeFilter={removeFilter}
     ></Scatterplot>

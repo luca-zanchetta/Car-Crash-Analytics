@@ -18,7 +18,7 @@ type ScatterplotProps = {
 };
 
 
-export const Scatterplot = ({callbackMouseEnter, margin = 40,data= [{x: 2,y: 4, severity: 0},{x: 8,y: 5, severity: 0}], addFilter, removeFilter}:ScatterplotProps) => {
+export const Scatterplot = ({callbackMouseEnter, callbackMouseEnter2, margin = 40,data= [{x: 2,y: 4, severity: 0},{x: 8,y: 5, severity: 0}], addFilter, removeFilter}:ScatterplotProps) => {
 
     const zoomContant = 1.1
     const scrollK = .1
@@ -30,6 +30,8 @@ export const Scatterplot = ({callbackMouseEnter, margin = 40,data= [{x: 2,y: 4, 
     const [zoomYOffset, setYoffset] = useState(0)
     const [selection, setSelection] = useState([[0, 0], [0, 0]]);
     const previousSelection = usePrevious(selection)
+
+    var isThereBrushingWindow = false
 
     function MoveCamera(e) { 
         
@@ -120,6 +122,8 @@ export const Scatterplot = ({callbackMouseEnter, margin = 40,data= [{x: 2,y: 4, 
 
     // Check if there's a selection (brushing window)
     if (selection[0][0] !== selection[1][0] || selection[0][1] !== selection[1][1]) {
+        isThereBrushingWindow = true
+        
         // If there's a selection, check if the current point is within the selection
         const withinSelection =
             x(d[0]) >= Math.min(x(selection[0][0]), x(selection[1][0])) &&
@@ -156,6 +160,7 @@ export const Scatterplot = ({callbackMouseEnter, margin = 40,data= [{x: 2,y: 4, 
         );
     } else {
         // If there's no active selection, color all points with the same color
+        isThereBrushingWindow = false
         return (
             <circle
                 key={i}
@@ -205,8 +210,13 @@ export const Scatterplot = ({callbackMouseEnter, margin = 40,data= [{x: 2,y: 4, 
                         return xVal >= x0 && xVal <= x1 && yVal >= y0 && yVal <= y1;
                     })
                     .map(d =>  Number(d[6]));
-                
-                callbackMouseEnter(selected)
+
+                if(isThereBrushingWindow) {
+                    callbackMouseEnter2(selected)
+                }
+                else {
+                    callbackMouseEnter(selected)
+                }
             }
         });
 
