@@ -30,8 +30,13 @@ export const Scatterplot = ({callbackMouseEnter, callbackMouseEnter2, margin = 4
     const [zoomYOffset, setYoffset] = useState(0)
     const [selection, setSelection] = useState([[0, 0], [0, 0]]);
     const previousSelection = usePrevious(selection)
+    const [previousEvent, setPreviousEvent] = useState("start")
 
     var isThereBrushingWindow = false
+
+    useEffect(() =>{
+        setPreviousEvent("start")
+      },[])
 
     function MoveCamera(e) { 
         
@@ -193,7 +198,7 @@ export const Scatterplot = ({callbackMouseEnter, callbackMouseEnter2, margin = 4
     // Brush logic
     const brush = d3.brush()
         .extent([[0, 0], [boundsWidth, boundsHeight]])
-        .on("start end", (event) => {
+        .on("start brush end", (event) => {
             // console.log("event: ", event.type);
             if (event.selection) {
                 const [[x0, y0], [x1, y1]] = event.selection;
@@ -211,12 +216,32 @@ export const Scatterplot = ({callbackMouseEnter, callbackMouseEnter2, margin = 4
                     })
                     .map(d =>  Number(d[6]));
 
+                setPreviousEvent(event.type);
+                console.log("current: ", event.type)
+                console.log("previous: ", previousEvent)
+
                 if(isThereBrushingWindow) {
-                    callbackMouseEnter2(selected)
+                    console.log("BRUSH")
+                    if (previousEvent === "end" && event.type === "start") {
+                        callbackMouseEnter2(selected, false)
+                    }
+                    else {
+                        callbackMouseEnter2(selected, true)
+                    }
                 }
                 else {
-                    callbackMouseEnter(selected)
+                    
+                    if (previousEvent === "start" && event.type === "brush") {
+                        console.log("NOT BRUSH end end")
+                        callbackMouseEnter(selected, true)
+                    }
+                    else {
+                        console.log("NOT BRUSH else")
+                        callbackMouseEnter(selected, false)
+                    }
                 }
+
+
             }
         });
 

@@ -121,7 +121,7 @@ function App() {
     
   }
 
-  function limitDataScatterplot(selectedPoints) {
+  function limitDataScatterplot(selectedPoints, dataNull) {
     let restrictedData = []
 
     if(selectedPoints) {
@@ -135,7 +135,14 @@ function App() {
     }
 
     if(restrictedData.length === 0) {
-      setData(data, activeFilters)
+      if(dataNull) {
+        console.log("limit1 null")
+        setData([], activeFilters)
+      }
+      else {
+        console.log("limit1 OK")
+        setData(dataScatterplot, activeFilters)
+      }
     } 
     else {
       setData(restrictedData, activeFilters)
@@ -143,7 +150,7 @@ function App() {
   }
 
   // It is called if there is an active selection
-  function limitDataScatterplot2(selectedPoints) {
+  function limitDataScatterplot2(selectedPoints, dataNull) {
     let restrictedData = []
 
     if(selectedPoints) {
@@ -157,7 +164,14 @@ function App() {
     }
 
     if(restrictedData.length === 0) {
-      setData([])
+      if(dataNull) {
+        console.log("limit2 null")
+        setData([])
+      }
+      else {
+        console.log("limit2 OK")
+        setData(dataScatterplot, activeFilters)
+      }      
     } 
     else {
       setData(restrictedData, activeFilters)
