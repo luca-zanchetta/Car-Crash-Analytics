@@ -37,13 +37,13 @@ export const AxisVertical = ({
   const [brushPoint, setBrushPoint] = useState(0)
   const [BrushedPoints, setBrushedPoint] = useState([])
   const [brushCurrent, setCurrent] = useState(0)
-  const [endBrush, setBrushing] = useState(false)
+  const [brushOn, setBrushing] = useState(false)
   const xy = useRef(null)
   const brushRect = useRef(null)
   var rect = (<div></div>)
 
   function onMouseDown(e) {
-
+    if(brushOn) return
     
     //store the first point clicked by the user
     var yClick = e["clientY"]
@@ -100,9 +100,10 @@ export const AxisVertical = ({
       }
         
     }
-    if(brushedPoints.length === 0)
+    if(brushedPoints.length === 0){
+      setBrushing(false)
       resetBrush()
-    else{
+    }else{
       addFilter(brushedPoints)
       setBrushedPoint(brushedPoints)
     }
@@ -122,27 +123,42 @@ export const AxisVertical = ({
     }));
   }, [yScale]);
 
+  // Brush moving
+  function onBrushClick(e) {
+    var startTime = new Date().getTime();
+    console.log(startTime)
+    console.log("a")
+  }
 
+  function onBrushEndClick(e) {
+    var endTime = new Date().getTime();
+    console.log(endTime)
+    console.log("b")
+    //resetBrush()
+  }
 
   return (
     <>
       {
         brushCurrent !=  0 && brushPoint != 0 &&
         <rect 
-        style={{zIndex:'500000'}}
-              onClick={resetBrush}
-              id={filterName}
-              transform={`translate(${-10}, 0)`}
-              ref={brushRect}
-              cursor={"pointer"}
-              fill="rgb(119, 119, 119)"
-              fillOpacity="0.3"
-              stroke= "rgb(255, 255, 255)"
-              width={20}
-              height={ Math.abs(brushCurrent - brushPoint)}
-              y = {(Math.min(brushCurrent,brushPoint) - xy.current.getBoundingClientRect()["y"])}
-              z={2000}
-            ></rect>}
+        style={{zIndex:'10',position:"relative"}}
+              
+        onClick={resetBrush}
+        onMouseDown={onBrushClick}
+        onMouseUp={onBrushEndClick}
+        id={filterName}
+        transform={`translate(${-10}, 0)`}
+        ref={brushRect}
+        cursor={"pointer"}
+        fill="rgb(119, 119, 119)"
+        fillOpacity="0.3"
+        stroke= "rgb(255, 255, 255)"
+        width={20}
+        height={ Math.abs(brushCurrent - brushPoint)}
+        y = {(Math.min(brushCurrent,brushPoint) - xy.current.getBoundingClientRect()["y"])}
+        
+      ></rect>}
       {/* Title */}
       <text
         x={0}
@@ -170,6 +186,7 @@ export const AxisVertical = ({
       />
       { xy.current &&
       <rect
+        style={{zIndex:"1",position:"relative"}}
         onMouseDown={onMouseDown}
         fill="rgb(119, 119, 119)"
         cursor={"pointer"}

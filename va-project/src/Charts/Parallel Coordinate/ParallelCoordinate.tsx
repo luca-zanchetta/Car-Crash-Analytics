@@ -102,7 +102,7 @@ export const ParallelCoordinate = ({
       return;
     }
 
-    return <path key={i} d={d} stroke={colorScale(series.group)} fill="none" />;
+    return <path key={i} d={d} stroke={colorScale(series.group)} fill="none"/>;
   });
 
   // Compute Axes
