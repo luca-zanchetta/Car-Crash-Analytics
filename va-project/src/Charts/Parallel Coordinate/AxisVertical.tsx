@@ -25,7 +25,7 @@ type AxisVerticalProps = {
 };
 
 const TICK_LENGTH = 3;
-
+const CLICK_SENSITIVITY = 200;
 export const AxisVertical = ({
   yScale,
   pixelsPerTick,
@@ -38,9 +38,9 @@ export const AxisVertical = ({
   const [BrushedPoints, setBrushedPoint] = useState([])
   const [brushCurrent, setCurrent] = useState(0)
   const [brushOn, setBrushing] = useState(false)
+  const [movingBrush,setMovingBrush] = useState(false)
   const xy = useRef(null)
   const brushRect = useRef(null)
-  var rect = (<div></div>)
 
   function onMouseDown(e) {
     if(brushOn) return
@@ -126,15 +126,69 @@ export const AxisVertical = ({
   // Brush moving
   function onBrushClick(e) {
     var startTime = new Date().getTime();
-    console.log(startTime)
-    console.log("a")
+    e.target.addEventListener("mouseup",(e) => onBrushEndClick(e,startTime), {once:true})
+
+    var cursorAbsY = e["clientY"]
+    
+    var offset = cursorAbsY - Math.min(brushCurrent,brushPoint) 
+    setMovingBrush(true)
+    document.addEventListener("mousemove", (e) => MoveBrush(e,offset,startTime),{once:true});
   }
 
-  function onBrushEndClick(e) {
+  function MoveBrush(e,offset,startTime) {
+    var currTime = new Date().getTime();
+    var elapsedTime = currTime - startTime
+    if(elapsedTime < CLICK_SENSITIVITY)
+      return
+
+    //make the brush move
+    var clickY = e["clientY"]
+    var y = Math.min(brushCurrent,brushPoint)
+    
+    var movement = clickY - y
+    setBrushPoint(brushPoint + movement - offset)
+    setCurrent(brushCurrent + movement - offset)
+    if(movingBrush)
+      document.addEventListener("mousemove", (e) => MoveBrush(e,offset,startTime),{once:true});
+  }
+
+  function onBrushEndClick(e,startTime) {
+    setMovingBrush(false)
     var endTime = new Date().getTime();
-    console.log(endTime)
-    console.log("b")
-    //resetBrush()
+    var elapsedTime = endTime - startTime
+    if(elapsedTime < CLICK_SENSITIVITY)
+      resetBrush() 
+    else {
+      var min = 0 
+      var max = 0
+
+      if(brushCurrent < brushPoint){
+        min = brushCurrent
+        max = brushPoint
+      }else {
+        min = brushPoint
+        max = brushCurrent
+      }
+      
+      var brushedPoints = []
+      var yLine = xy.current.getBoundingClientRect()["y"]
+
+      for (let index = 0; index < ticks.length; index++) {
+        const element = ticks[index];
+        var value = element["value"]
+        var yOffset = element["yOffset"]
+
+        var tickPosition = yLine + yOffset
+        
+        if(tickPosition <= max && tickPosition >= min){
+          brushedPoints.push([filterName,value])
+        }
+          
+      }
+      removeFilter(BrushedPoints)
+      addFilter(brushedPoints)
+      setBrushedPoint(brushedPoints)
+    }
   }
 
   return (
@@ -143,10 +197,7 @@ export const AxisVertical = ({
         brushCurrent !=  0 && brushPoint != 0 &&
         <rect 
         style={{zIndex:'10',position:"relative"}}
-              
-        onClick={resetBrush}
         onMouseDown={onBrushClick}
-        onMouseUp={onBrushEndClick}
         id={filterName}
         transform={`translate(${-10}, 0)`}
         ref={brushRect}
@@ -175,6 +226,7 @@ export const AxisVertical = ({
       {/* Vertical line */}
 
       <line
+        pointerEvents={"none"}
         x1={0}
         x2={0}
         y1={0}
@@ -184,7 +236,7 @@ export const AxisVertical = ({
         cursor={"pointer"}
         ref={xy}
       />
-      { xy.current &&
+      { xy.current && !brushOn &&
       <rect
         style={{zIndex:"1",position:"relative"}}
         onMouseDown={onMouseDown}
