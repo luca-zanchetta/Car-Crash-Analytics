@@ -71,7 +71,6 @@ function App() {
   }
 
   function removeFilter(filters) {
-    // console.log(filters)
     var newFilters = []
   
     activeFilters.map(d => {
@@ -109,7 +108,6 @@ function App() {
  
   
   function ToggleServerity(s) {
-    console.log(Severity)
     if(Severity[s]){
       removeFilter([[columns.Severity, s]])
       setSeverity({...Severity, [s] : false})
@@ -136,11 +134,9 @@ function App() {
 
     if(restrictedData.length === 0) {
       if(dataNull) {
-        console.log("limit1 null")
         setData([], activeFilters)
       }
       else {
-        console.log("limit1 OK")
         setData(dataScatterplot, activeFilters)
       }
     } 
@@ -165,11 +161,9 @@ function App() {
 
     if(restrictedData.length === 0) {
       if(dataNull) {
-        console.log("limit2 null")
         setData([])
       }
       else {
-        console.log("limit2 OK")
         setData(dataScatterplot, activeFilters)
       }      
     } 
@@ -241,7 +235,6 @@ function App() {
 
 
 const __Scatterplot = React.memo(({limitDataScatterplot, limitDataScatterplot2, dataScatterplot, addFilter, removeFilter}) => {
-  console.log("re render")
   return(
     <Scatterplot 
       callbackMouseEnter={limitDataScatterplot} 

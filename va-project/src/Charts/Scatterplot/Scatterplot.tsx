@@ -59,7 +59,6 @@ export const Scatterplot = ({callbackMouseEnter, callbackMouseEnter2, margin = 4
     function OnMouseDown(e) {
         if(e["button"] != 1 ) return
         setDown(true)
-        console.log(e)
         setStartingCoord([e["clientX"] ,e["clientY"]])
         setStartingOff([zoomXOffset,zoomYOffset])
     }
@@ -147,20 +146,6 @@ export const Scatterplot = ({callbackMouseEnter, callbackMouseEnter2, margin = 4
                 stroke={withinSelection ? color : "grey"}
                 fillOpacity={0.2}
                 strokeWidth={1}
-                // onMouseEnter={() => {
-                //     setHovered({
-                //         xPos: x(d[0]),
-                //         yPos: y(d[1]),
-                //         name: (
-                //             <>
-                //                 Number of Causalities: {d[3]}<br />
-                //                 Number of Vehicles: {d[4]}<br />
-                //                 Speed limit: {d[5]}<br />
-                //             </>
-                //         ),
-                //     });
-                // }}
-                // onMouseLeave={() => setHovered(null)}
             />
         );
     } else {
@@ -176,20 +161,6 @@ export const Scatterplot = ({callbackMouseEnter, callbackMouseEnter2, margin = 4
                 stroke={color} // Always use color for stroke
                 fillOpacity={0.2}
                 strokeWidth={1}
-                // onMouseEnter={() => {
-                //     setHovered({
-                //         xPos: x(d[0]),
-                //         yPos: y(d[1]),
-                //         name: (
-                //             <>
-                //                 Number of Causalities: {d[3]}<br />
-                //                 Number of Vehicles: {d[4]}<br />
-                //                 Speed limit: {d[5]}<br />
-                //             </>
-                //         ),
-                //     });
-                // }}
-                // onMouseLeave={() => setHovered(null)}
             />
         );
     }
@@ -199,7 +170,6 @@ export const Scatterplot = ({callbackMouseEnter, callbackMouseEnter2, margin = 4
     const brush = d3.brush()
         .extent([[0, 0], [boundsWidth, boundsHeight]])
         .on("start brush end", (event) => {
-            // console.log("event: ", event.type);
             if (event.selection) {
                 const [[x0, y0], [x1, y1]] = event.selection;
                 const indexSelection = [
@@ -217,8 +187,6 @@ export const Scatterplot = ({callbackMouseEnter, callbackMouseEnter2, margin = 4
                     .map(d =>  Number(d[6]));
 
                 setPreviousEvent(event.type);
-                console.log("current: ", event.type)
-                console.log("previous: ", previousEvent)
 
                 if(isThereBrushingWindow) {
                     console.log("BRUSH")
@@ -232,11 +200,9 @@ export const Scatterplot = ({callbackMouseEnter, callbackMouseEnter2, margin = 4
                 else {
                     
                     if (previousEvent === "start" && event.type === "brush") {
-                        console.log("NOT BRUSH end end")
                         callbackMouseEnter(selected, true)
                     }
                     else {
-                        console.log("NOT BRUSH else")
                         callbackMouseEnter(selected, false)
                     }
                 }
