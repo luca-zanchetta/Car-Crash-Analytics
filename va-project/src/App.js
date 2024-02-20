@@ -191,6 +191,11 @@ function App() {
   }
 
 
+  function highlightDataParallel(d) {
+    console.log("SELECTED: ", d)
+  }
+
+
   return (
     <div className="App">
       <div className='TopBar'>
@@ -223,7 +228,12 @@ function App() {
           
         </div>
         <div className='ParallelCoordinates'>
-          <ParallelCoordinate Data={ExtractFeatures(data, [columns.JControl,columns.JDetail,columns.Light,columns.Road_Surface_Conditions,columns.Road_Type,columns.Vehicle_Type,columns.Weather_Conditions])} addFilter={addFilter} removeFilter={removeFilter}></ParallelCoordinate>
+          <ParallelCoordinate 
+            Data={ExtractFeatures(data, [columns.JControl,columns.JDetail,columns.Light,columns.Road_Surface_Conditions,columns.Road_Type,columns.Vehicle_Type,columns.Weather_Conditions,columns.Id])} 
+            addFilter={addFilter} 
+            removeFilter={removeFilter}
+            callbackMouseEnter={highlightDataParallel}
+          ></ParallelCoordinate>
         </div>
         <div className='Heatmap'>
           <Heatmap Data={ExtractFeatures(data, [columns.Time_Interval, columns.Day])} addFilter={addFilter} removeFilter={removeFilter}></Heatmap>

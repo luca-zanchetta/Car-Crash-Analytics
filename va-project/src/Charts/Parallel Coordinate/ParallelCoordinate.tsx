@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import { AxisVertical } from "./AxisVertical.tsx";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { useDimensions } from "../../Utilities/useDimensions.ts";
 import "../Charts.css"
 
@@ -20,6 +20,7 @@ type Variable = "Junction_Control" | "Junction_Detail" | "Light_Conditions" | "R
 
 
 type ParallelCoordinateProps = {
+  callbackMouseEnter: Function;
   margin: number;
   variables: Variable[];
   Data: [];
@@ -38,6 +39,7 @@ type Data = DataItem<Variable>[]
 type YScale = d3.ScaleLinear<number, number, never>;
 
 export const ParallelCoordinate = ({
+  callbackMouseEnter,
   margin = 20,
   variables = ["Junction_Control","Junction_Detail","Light_Conditions","Road_Surface_Conditions","Road_Type","Vehicle_Type","Weather_Conditions"],
   Data,
@@ -45,8 +47,9 @@ export const ParallelCoordinate = ({
   removeFilter
 }: ParallelCoordinateProps) => {
   var data : DataItem<Variable>[] = []
-  //Model data 
+  const [hoveredLine, setHoveredLine] = useState(null);
   
+  //Model data 
   Data.map((d,i) => {
     var newEntry:DataItem<Variable> = {"Junction_Control":0,"Junction_Detail":0,"Light_Conditions":0,"Road_Surface_Conditions":0,"Road_Type":0,"Vehicle_Type":0,"Weather_Conditions":0,"group":"AE"}
     variables.map((v,i) => {
@@ -102,7 +105,24 @@ export const ParallelCoordinate = ({
       return;
     }
 
-    return <path key={i} d={d} stroke={colorScale(series.group)} fill="none" />;
+    return (
+    <path
+        key={i}
+        d={d}
+        stroke={hoveredLine === i ? "red" : colorScale(series.group)} // Change stroke color if line is hovered
+        fill="none"
+        onMouseEnter={() => {
+          setHoveredLine(i)
+          Data.map((dato, j) => {
+            if (j===i) callbackMouseEnter(dato[7])
+          })
+        }} // Set hoveredLine state when mouse enters
+        onMouseLeave={() => setHoveredLine(null)} // Reset hoveredLine state when mouse leaves
+        strokeWidth={hoveredLine === i ? 5 : 1}
+        style={{position: "relative", zIndex: hoveredLine === i ? 9000 : 0}}
+      />
+    )
+    
   });
 
   // Compute Axes
