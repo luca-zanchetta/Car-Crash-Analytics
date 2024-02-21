@@ -18,7 +18,7 @@ type ScatterplotProps = {
 };
 
 
-export const Scatterplot = ({callbackMouseEnter, callbackMouseEnter2, margin = 40,data= [{x: 2,y: 4, severity: 0},{x: 8,y: 5, severity: 0}], addFilter, removeFilter}:ScatterplotProps) => {
+export const Scatterplot = ({callbackMouseEnter, margin = 40,data= [{x: 2,y: 4, severity: 0},{x: 8,y: 5, severity: 0}], addFilter, removeFilter}:ScatterplotProps) => {
 
     const zoomContant = 1.1
     const scrollK = .1
@@ -189,13 +189,14 @@ export const Scatterplot = ({callbackMouseEnter, callbackMouseEnter2, margin = 4
 
                 setPreviousEvent(event.type);
 
+                console.log("isThereBrushingWindow: ", isThereBrushingWindow)
+
                 if(isThereBrushingWindow) {
-                    console.log("BRUSH")
                     if (previousEvent === "end" && event.type === "start") {
-                        callbackMouseEnter2(selected, false)
+                        callbackMouseEnter(selected, false)
                     }
                     else {
-                        callbackMouseEnter2(selected, true)
+                        callbackMouseEnter(selected, true)
                     }
                 }
                 else {
@@ -207,8 +208,6 @@ export const Scatterplot = ({callbackMouseEnter, callbackMouseEnter2, margin = 4
                         callbackMouseEnter(selected, false)
                     }
                 }
-
-
             }
         });
 

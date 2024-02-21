@@ -56,6 +56,8 @@ function App() {
   const [Severity, setSeverity] = useState({0: false, 1: false, 2: false})
   const [selectedItem, setSelectedItem] = useState(false)
   const [dataScatterplot, setDataScatterplot] = useState([])
+  const [recompute, setRecompute] = useState(false)   // False = Highlight, True = Recompute
+  const [brushedPoints, setBrushedPoints] = useState([])
 
   const fitlersRef = useRef()
   fitlersRef.current = activeFilters
@@ -72,8 +74,6 @@ function App() {
       
       if(!isIncluded) 
         addedFilters.push(filter)
-      else
-        console.log(filter + " is included")
     })
 
     fitlersRef.current.map((filter) => {
@@ -136,11 +136,11 @@ function App() {
   }
 
   useEffect(() =>{
-    console.log(activeFilters)
     if(iteration >=1) {
       if(!selectedItem) {
         setData(FilterData(DATA, activeFilters))
         setDataScatterplot(FilterData(DATA, activeFilters))
+        setBrushedPoints(FilterData(brushedPoints, activeFilters))
       }
     }
     else {
@@ -181,41 +181,16 @@ function App() {
 
     if(restrictedData.length === 0) {
       if(dataNull) {
-        setData([], activeFilters)
-      }
-      else {
-        setData(dataScatterplot, activeFilters)
-      }
-    } 
-    else {
-      setData(restrictedData, activeFilters)
-    }
-  }
-
-  // It is called if there is an active selection
-  function limitDataScatterplot2(selectedPoints, dataNull) {
-    let restrictedData = []
-
-    if(selectedPoints) {
-      if(selectedPoints.length !== 0) {
-        selectedPoints.forEach(element => {
-          data.filter(elem => Number(elem.Id) === Number(element)).map(filteredElement => {
-            restrictedData.push(filteredElement)
-          })
-        });
-      }
-    }
-
-    if(restrictedData.length === 0) {
-      if(dataNull) {
         setData([])
       }
       else {
         setData(dataScatterplot, activeFilters)
-      }      
+      }
+      setBrushedPoints([])
     } 
     else {
       setData(restrictedData, activeFilters)
+      setBrushedPoints(restrictedData)
     }
   }
 
@@ -257,7 +232,15 @@ function App() {
               <div color='Red'>Serious</div>
               <div color='Red'>Slight</div>
             </div>
-            <__Scatterplot limitDataScatterplot={limitDataScatterplot} limitDataScatterplot2={limitDataScatterplot2} dataScatterplot={dataScatterplot} addFilter= {addFilter} removeFilter={removeFilter}></__Scatterplot>
+            <div style={{display:"flex", flexDirection:"row", marginLeft:"43%", marginTop:"2%"}}>
+              <h3 style={{color: !recompute ? "lightblue":"gainsboro", marginTop: "0", marginRight: "3%", fontSize: "100%"}}>Highlight</h3>
+              <label class="switch">
+                <input type="checkbox" onChange={() => setRecompute(!recompute)} />
+                <span class="slider round"></span>
+              </label>
+              <h3 style={{color: recompute ? "lightblue":"gainsboro", marginTop: "0", marginLeft: "3%", fontSize: "100%"}}>Recompute</h3>
+            </div>
+            <__Scatterplot limitDataScatterplot={limitDataScatterplot} dataScatterplot={recompute ? dataScatterplot : DATA} addFilter= {addFilter} removeFilter={removeFilter} brushedPoints={brushedPoints}></__Scatterplot>
           </div>
           <div className='LeftTopHeatmap'>
             <Heatmap Data={ExtractFeatures(data, [columns.Time_Interval, columns.Day])} addFilter={addFilter} removeFilter={removeFilter}></Heatmap>
@@ -295,17 +278,17 @@ function App() {
 }
 
 
-const __Scatterplot = React.memo(({limitDataScatterplot, limitDataScatterplot2, dataScatterplot, addFilter, removeFilter}) => {
+const __Scatterplot = React.memo(({limitDataScatterplot, dataScatterplot, addFilter, removeFilter, brushedPoints}) => {
   return(
     <Scatterplot 
-      callbackMouseEnter={limitDataScatterplot} 
-      callbackMouseEnter2={limitDataScatterplot2}
+      callbackMouseEnter={limitDataScatterplot}
       data={ExtractFeatures(dataScatterplot, [columns.tsne_x, columns.tsne_y, columns.Severity, columns.Number_of_Casualties, columns.Number_of_Vehicles, columns.Speed_limit, columns.Id])}
       addFilter={addFilter} removeFilter={removeFilter}
     ></Scatterplot>
   )
 }, (prev, next) => {
-  return prev.dataScatterplot.length === next.dataScatterplot.length
+  console.log("prev.brushedPoints.length === next.brushedPoints.length: ",prev.brushedPoints.length === next.brushedPoints.length)
+  return prev.dataScatterplot.length === next.dataScatterplot.length && prev.brushedPoints.length === next.brushedPoints.length
 })
 
 

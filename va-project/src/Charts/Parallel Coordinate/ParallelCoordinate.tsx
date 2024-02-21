@@ -91,7 +91,6 @@ export const ParallelCoordinate = ({
   const boundsHeight = chartSize.height - MARGIN.top - MARGIN.bottom;
 
   const allGroups = [...new Set(data.map((d) => d.group))];
-  console.log(data.length)
   // Compute a xScale: spread all Y axis along the chart width
   const xScale = d3
     .scalePoint<Variable>()
