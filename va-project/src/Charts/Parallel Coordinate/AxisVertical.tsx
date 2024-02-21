@@ -83,7 +83,7 @@ export const AxisVertical = ({
     var min = 0 
     var max = 0
 
-    if(brushCurrent < _brushPoint){
+    if(yClick < _brushPoint){
       min = yClick
       max = _brushPoint
     }else {
@@ -153,25 +153,38 @@ export const AxisVertical = ({
     
     var movement = clickY - y
     
-    var _brushPoint = Math.max(stateRef.current[0],stateRef.current[1])
-    var _brushCurrent = Math.min(stateRef.current[0],stateRef.current[1])
+
+    var _brushPoint = stateRef.current[0]
+    var _brushCurrent = stateRef.current[1]
 
     _brushPoint = brushPoint + movement - offset
     _brushCurrent = brushCurrent + movement - offset
 
 
       //check position
-    
-    if(_brushCurrent >= xy.current.getBoundingClientRect()["bottom"]) 
-    {
-      _brushPoint = xy.current.getBoundingClientRect()["bottom"]
-      _brushCurrent = _brushPoint - rectSize
-    }  
-    if(_brushPoint < xy.current.getBoundingClientRect()["y"]) {
-      _brushPoint = xy.current.getBoundingClientRect()["y"]
-      _brushCurrent = _brushPoint + rectSize
-    }
+    if(_brushPoint > _brushCurrent){
 
+      if(_brushPoint >= xy.current.getBoundingClientRect()["bottom"]) 
+      {
+        _brushPoint = xy.current.getBoundingClientRect()["bottom"]
+        _brushCurrent = _brushPoint - rectSize
+      }  
+      if(_brushCurrent < xy.current.getBoundingClientRect()["y"]) {
+        _brushCurrent = xy.current.getBoundingClientRect()["y"]
+        _brushPoint = _brushCurrent + rectSize
+      }
+    }else {
+
+      if(_brushCurrent >= xy.current.getBoundingClientRect()["bottom"]) 
+      {
+        _brushCurrent = xy.current.getBoundingClientRect()["bottom"]
+        _brushPoint = _brushCurrent - rectSize
+      }  
+      if(_brushPoint < xy.current.getBoundingClientRect()["y"]) {
+        _brushPoint = xy.current.getBoundingClientRect()["y"]
+        _brushCurrent = _brushPoint + rectSize
+      }
+    }
 
     setBrushPoint(_brushPoint)
     setCurrent(_brushCurrent)
