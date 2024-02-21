@@ -62,8 +62,14 @@ export const AxisVertical = ({
 
   function brushing(e) {
     //get the current y of the mouse
-    setCurrent(e["clientY"])
+    var current = e["clientY"]
     //get the Top most point of the Line
+    if(current < stateRef.current[0] && current <= xy.current.getBoundingClientRect()["y"])
+      current = xy.current.getBoundingClientRect()["y"]
+    else if(current > stateRef.current[0] && current >= xy.current.getBoundingClientRect()["bottom"])
+      current = xy.current.getBoundingClientRect()["bottom"]
+    
+    setCurrent(current)
   }
 
   function resetBrush() {
