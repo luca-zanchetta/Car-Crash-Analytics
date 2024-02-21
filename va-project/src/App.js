@@ -1,7 +1,7 @@
 import './App.css';
 import * as d3 from "d3"
 import MapComponent from './Charts/Map/mapView.tsx';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { ExtractFeatures, CreateTooltipStringFromData } from './Utilities/SliceColumns.js';
 import { Scatterplot } from './Charts/Scatterplot/Scatterplot.tsx';
 import { Heatmap } from './Charts/Heatmap/Heatmap.tsx';
@@ -57,14 +57,26 @@ function App() {
   const [selectedItem, setSelectedItem] = useState(false)
   const [dataScatterplot, setDataScatterplot] = useState([])
 
+  const fitlersRef = useRef()
+  fitlersRef.current = activeFilters
 
   function addFilter (filters)  {
     var addedFilters= []
     filters.map( (filter) => {
-      if(!activeFilters.includes(filter))
+      var isIncluded = false
+      
+      fitlersRef.current.map(aFilter => {
+        if(aFilter[0] === filter[0] && filter[1] === aFilter[1])
+          isIncluded = true
+      })
+      
+      if(!isIncluded) 
         addedFilters.push(filter)
+      else
+        console.log(filter + " is included")
     })
-    activeFilters.map((filter) => {
+
+    fitlersRef.current.map((filter) => {
       addedFilters.push(filter)
     })
     setFilters(addedFilters)
@@ -73,7 +85,7 @@ function App() {
   function removeFilter(filters) {
     var newFilters = []
   
-    activeFilters.map(d => {
+    fitlersRef.current.map(d => {
       var push = true;
       filters.map( (filter) => {
 
@@ -87,9 +99,47 @@ function App() {
     setFilters(newFilters)
   }
 
+  function updateFilter(filterToAdd, filtersToRemove) {
+    var addedFilters= []
 
+    filterToAdd.map( (filter) => {
+      var isIncluded = false
+      
+      fitlersRef.current.map(aFilter => {
+        if(aFilter[0] === filter[0] && filter[1] === aFilter[1])
+          isIncluded = true
+      })
+      
+      if(!isIncluded) 
+        addedFilters.push(filter)
+    })
+
+    fitlersRef.current.map((filter) => {
+      addedFilters.push(filter)
+    })
+
+
+    console.log(addedFilters)
+
+    var newFilters = []
+  
+    addedFilters.map(d => {
+      var push = true;
+      filtersToRemove.map( (filter) => {
+
+        if(d[0] === filter[0] && d[1] == filter[1])
+          push = false
+      })
+
+      if(push)
+        newFilters.push(d)
+    })
+    
+    setFilters(newFilters)
+  }
 
   useEffect(() =>{
+    console.log(activeFilters)
     if(iteration >=1) {
       if(!selectedItem) {
         setData(FilterData(DATA, activeFilters))
@@ -223,7 +273,7 @@ function App() {
           
         </div>
         <div className='ParallelCoordinates'>
-          <ParallelCoordinate Data={ExtractFeatures(data, [columns.JControl,columns.JDetail,columns.Light,columns.Road_Surface_Conditions,columns.Road_Type,columns.Vehicle_Type,columns.Weather_Conditions])} addFilter={addFilter} removeFilter={removeFilter}></ParallelCoordinate>
+          <ParallelCoordinate Data={ExtractFeatures(data, [columns.JControl,columns.JDetail,columns.Light,columns.Road_Surface_Conditions,columns.Road_Type,columns.Vehicle_Type,columns.Weather_Conditions])} addFilter={addFilter} removeFilter={removeFilter} updateFilter={updateFilter}></ParallelCoordinate>
         </div>
         <div className='Heatmap'>
           <Heatmap Data={ExtractFeatures(data, [columns.Time_Interval, columns.Day])} addFilter={addFilter} removeFilter={removeFilter}></Heatmap>

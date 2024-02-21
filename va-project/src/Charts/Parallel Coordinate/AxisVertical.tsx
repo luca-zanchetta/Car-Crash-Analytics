@@ -22,6 +22,7 @@ type AxisVerticalProps = {
   addFilter: Function;
   removeFilter: Function;
   filterName: string;
+  updateFilter: Function;
 };
 
 const TICK_LENGTH = 3;
@@ -32,7 +33,8 @@ export const AxisVertical = ({
   name,
   addFilter,
   removeFilter,
-  filterName
+  filterName,
+  updateFilter
 }: AxisVerticalProps) => {
   const [brushPoint, setBrushPoint] = useState(0)
   const [BrushedPoints, setBrushedPoint] = useState([])
@@ -41,6 +43,9 @@ export const AxisVertical = ({
   const [movingBrush,setMovingBrush] = useState(false)
   const xy = useRef(null)
   const brushRect = useRef(null)
+  const stateRef = useRef()
+  stateRef.current = [brushPoint,brushCurrent];
+
 
   function onMouseDown(e) {
     if(brushOn) return
@@ -100,6 +105,8 @@ export const AxisVertical = ({
       }
         
     }
+
+    console.log(min + "-" + max)
     if(brushedPoints.length === 0){
       setBrushing(false)
       resetBrush()
@@ -107,8 +114,6 @@ export const AxisVertical = ({
       addFilter(brushedPoints)
       setBrushedPoint(brushedPoints)
     }
-    // document.getElementById(filterName)?.removeEventListener("click", () => resetBrush(BrushedPoints))
-    // document.getElementById(filterName)?.addEventListener("click", () => resetBrush(brushedPoints))
   }
 
   const range = yScale.range();
@@ -126,13 +131,13 @@ export const AxisVertical = ({
   // Brush moving
   function onBrushClick(e) {
     var startTime = new Date().getTime();
-    e.target.addEventListener("mouseup",(e) => onBrushEndClick(e,startTime), {once:true})
-
+    var callBackMousemove =  (e) => MoveBrush(e,offset,startTime);
     var cursorAbsY = e["clientY"]
-    
     var offset = cursorAbsY - Math.min(brushCurrent,brushPoint) 
     setMovingBrush(true)
-    document.addEventListener("mousemove", (e) => MoveBrush(e,offset,startTime),{once:true});
+  
+    document.addEventListener("mousemove", callBackMousemove);
+    document.addEventListener("mouseup",(e) => onBrushEndClick(e,callBackMousemove,startTime), {once:true})
   }
 
   function MoveBrush(e,offset,startTime) {
@@ -148,29 +153,35 @@ export const AxisVertical = ({
     var movement = clickY - y
     setBrushPoint(brushPoint + movement - offset)
     setCurrent(brushCurrent + movement - offset)
-    if(movingBrush)
-      document.addEventListener("mousemove", (e) => MoveBrush(e,offset,startTime),{once:true});
+    
+    stateRef.current = [brushPoint + movement - offset, brushCurrent + movement - offset]
   }
 
-  function onBrushEndClick(e,startTime) {
+  function onBrushEndClick (e,callBackMousemove:Function,startTime)  {
+    document.removeEventListener("mousemove", callBackMousemove)
+
     setMovingBrush(false)
     var endTime = new Date().getTime();
     var elapsedTime = endTime - startTime
+
     if(elapsedTime < CLICK_SENSITIVITY)
       resetBrush() 
     else {
+      //change filters
+
       var min = 0 
       var max = 0
 
-      if(brushCurrent < brushPoint){
-        min = brushCurrent
-        max = brushPoint
+      if(stateRef.current[0] < stateRef.current[1]){
+        min = stateRef.current[0]
+        max = stateRef.current[1]
       }else {
-        min = brushPoint
-        max = brushCurrent
+        min = stateRef.current[1]
+        max = stateRef.current[0]
       }
-      
+
       var brushedPoints = []
+      
       var yLine = xy.current.getBoundingClientRect()["y"]
 
       for (let index = 0; index < ticks.length; index++) {
@@ -185,8 +196,10 @@ export const AxisVertical = ({
         }
           
       }
-      removeFilter(BrushedPoints)
-      addFilter(brushedPoints)
+
+      console.log(brushedPoints)
+
+      updateFilter(brushedPoints,BrushedPoints)
       setBrushedPoint(brushedPoints)
     }
   }
@@ -206,7 +219,7 @@ export const AxisVertical = ({
         fillOpacity="0.3"
         stroke= "rgb(255, 255, 255)"
         width={20}
-        height={ Math.abs(brushCurrent - brushPoint)}
+        height={Math.abs(brushCurrent - brushPoint)}
         y = {(Math.min(brushCurrent,brushPoint) - xy.current.getBoundingClientRect()["y"])}
         
       ></rect>}
@@ -218,6 +231,7 @@ export const AxisVertical = ({
           fontSize: ".7vw",
           textAnchor: "middle",
           fill: "white",
+          userSelect: "none"
         }}
       >
         {name}
@@ -267,6 +281,7 @@ export const AxisVertical = ({
             alignmentBaseline: "central",
             transform: "translateX(-.5vw)",
             fill:"white",
+            userSelect: "none"
           }}
         >
            {encodes[name][value]}
