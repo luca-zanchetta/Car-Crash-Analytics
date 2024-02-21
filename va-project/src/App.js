@@ -273,7 +273,13 @@ function App() {
           
         </div>
         <div className='ParallelCoordinates'>
-          <ParallelCoordinate Data={ExtractFeatures(data, [columns.JControl,columns.JDetail,columns.Light,columns.Road_Surface_Conditions,columns.Road_Type,columns.Vehicle_Type,columns.Weather_Conditions])} addFilter={addFilter} removeFilter={removeFilter} updateFilter={updateFilter}></ParallelCoordinate>
+        <ParallelCoordinate 
+          FULLDATA={ExtractFeatures(DATA, [columns.JControl,columns.JDetail,columns.Light,columns.Road_Surface_Conditions,columns.Road_Type,columns.Vehicle_Type,columns.Weather_Conditions, columns.Id])} 
+          Data={ExtractFeatures(data, [columns.JControl,columns.JDetail,columns.Light,columns.Road_Surface_Conditions,columns.Road_Type,columns.Vehicle_Type,columns.Weather_Conditions, columns.Id])} 
+          addFilter={addFilter} 
+          removeFilter={removeFilter} 
+          updateFilter={updateFilter}>
+        </ParallelCoordinate>
         </div>
         <div className='Heatmap'>
           <Heatmap Data={ExtractFeatures(data, [columns.Time_Interval, columns.Day])} addFilter={addFilter} removeFilter={removeFilter}></Heatmap>
@@ -296,5 +302,6 @@ const __Scatterplot = React.memo(({limitDataScatterplot, limitDataScatterplot2, 
 }, (prev, next) => {
   return prev.dataScatterplot.length === next.dataScatterplot.length
 })
+
 
 export default App;

@@ -8,11 +8,7 @@ const MARGIN = { top: 60, right: 80, bottom: 30, left: 80 };
 
 const COLORS = [
   "#e0ac2b",
-  "#e85252",
-  "#6689c6",
-  "#9a6fb0",
-  "#a53253",
-  "#69b3a2",
+  "#d3d3d3"
 ];
 
 //DATA TYPES
@@ -22,6 +18,7 @@ type Variable = "Junction_Control" | "Junction_Detail" | "Light_Conditions" | "R
 type ParallelCoordinateProps = {
   margin: number;
   variables: Variable[];
+  FULLDATA : [];
   Data: [];
   addFilter: Function;
   removeFilter: Function;
@@ -42,6 +39,7 @@ export const ParallelCoordinate = ({
   margin = 20,
   variables = ["Junction_Control","Junction_Detail","Light_Conditions","Road_Surface_Conditions","Road_Type","Vehicle_Type","Weather_Conditions"],
   Data,
+  FULLDATA,
   addFilter,
   removeFilter,
   updateFilter
@@ -49,13 +47,37 @@ export const ParallelCoordinate = ({
   var data : DataItem<Variable>[] = []
   //Model data 
   
+
   Data.map((d,i) => {
-    var newEntry:DataItem<Variable> = {"Junction_Control":0,"Junction_Detail":0,"Light_Conditions":0,"Road_Surface_Conditions":0,"Road_Type":0,"Vehicle_Type":0,"Weather_Conditions":0,"group":"AE"}
+    var newEntry:DataItem<Variable> = {"Junction_Control":0,"Junction_Detail":0,"Light_Conditions":0,"Road_Surface_Conditions":0,"Road_Type":0,"Vehicle_Type":0,"Weather_Conditions":0,"group":"A"}
     variables.map((v,i) => {
       newEntry[v] = d[i]
     })
     data.push(newEntry)
   })
+
+  if(Data.length != FULLDATA.length){
+
+    FULLDATA.map((d,i) => {
+    
+      var newEntry:DataItem<Variable> = {"Junction_Control":0,"Junction_Detail":0,"Light_Conditions":0,"Road_Surface_Conditions":0,"Road_Type":0,"Vehicle_Type":0,"Weather_Conditions":0,"group":"B"}
+      variables.map((v,i) => {
+        newEntry[v] = d[i]
+      })
+      
+      //var idToCheck = d[7]
+      var include = false;
+      for (let index = 0; index < Data.length; index++) {
+        const element = Data[index];
+        if(element[7] === d[7])
+          include = true
+      }
+
+      if(!include)
+        data.push(newEntry)
+    })
+  }
+
 
   //needed for responsive dimensions
   const chartRef = useRef(null);
@@ -66,7 +88,7 @@ export const ParallelCoordinate = ({
   const boundsHeight = chartSize.height - MARGIN.top - MARGIN.bottom;
 
   const allGroups = [...new Set(data.map((d) => d.group))];
-
+  console.log(data.length)
   // Compute a xScale: spread all Y axis along the chart width
   const xScale = d3
     .scalePoint<Variable>()
@@ -104,7 +126,7 @@ export const ParallelCoordinate = ({
       return;
     }
 
-    return <path key={i} d={d} stroke={colorScale(series.group)} fill="none"/>;
+    return <path key={i}  z={series.group === "A"? 10 : 1} d={d} style={{zIndex: series.group === "A"? "10" : "1" }} stroke={series.group === "A"? COLORS[0] : COLORS[1]} fill="none" strokeOpacity={series.group === "A"? 1 : 0.1} strokeWidth={series.group === "A"? 1 : 0.1}/>;
   });
 
   // Compute Axes
