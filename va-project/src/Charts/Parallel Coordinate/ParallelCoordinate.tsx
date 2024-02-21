@@ -8,11 +8,7 @@ const MARGIN = { top: 60, right: 80, bottom: 30, left: 80 };
 
 const COLORS = [
   "#e0ac2b",
-  "#e85252",
-  "#6689c6",
-  "#9a6fb0",
-  "#a53253",
-  "#69b3a2",
+  "#d3d3d3"
 ];
 
 //DATA TYPES
@@ -23,9 +19,11 @@ type ParallelCoordinateProps = {
   callbackMouseEnter: Function;
   margin: number;
   variables: Variable[];
+  FULLDATA : [];
   Data: [];
   addFilter: Function;
   removeFilter: Function;
+  updateFilter: Function;
 };
 
 type DataItem<T extends string> = {
@@ -43,20 +41,46 @@ export const ParallelCoordinate = ({
   margin = 20,
   variables = ["Junction_Control","Junction_Detail","Light_Conditions","Road_Surface_Conditions","Road_Type","Vehicle_Type","Weather_Conditions"],
   Data,
+  FULLDATA,
   addFilter,
-  removeFilter
+  removeFilter,
+  updateFilter
 }: ParallelCoordinateProps) => {
   var data : DataItem<Variable>[] = []
   const [hoveredLine, setHoveredLine] = useState(null);
   
   //Model data 
+
   Data.map((d,i) => {
-    var newEntry:DataItem<Variable> = {"Junction_Control":0,"Junction_Detail":0,"Light_Conditions":0,"Road_Surface_Conditions":0,"Road_Type":0,"Vehicle_Type":0,"Weather_Conditions":0,"group":"AE"}
+    var newEntry:DataItem<Variable> = {"Junction_Control":0,"Junction_Detail":0,"Light_Conditions":0,"Road_Surface_Conditions":0,"Road_Type":0,"Vehicle_Type":0,"Weather_Conditions":0,"group":"A"}
     variables.map((v,i) => {
       newEntry[v] = d[i]
     })
     data.push(newEntry)
   })
+
+  if(Data.length != FULLDATA.length){
+
+    FULLDATA.map((d,i) => {
+    
+      var newEntry:DataItem<Variable> = {"Junction_Control":0,"Junction_Detail":0,"Light_Conditions":0,"Road_Surface_Conditions":0,"Road_Type":0,"Vehicle_Type":0,"Weather_Conditions":0,"group":"B"}
+      variables.map((v,i) => {
+        newEntry[v] = d[i]
+      })
+      
+      //var idToCheck = d[7]
+      var include = false;
+      for (let index = 0; index < Data.length; index++) {
+        const element = Data[index];
+        if(element[7] === d[7])
+          include = true
+      }
+
+      if(!include)
+        data.push(newEntry)
+    })
+  }
+
 
   //needed for responsive dimensions
   const chartRef = useRef(null);
@@ -67,7 +91,7 @@ export const ParallelCoordinate = ({
   const boundsHeight = chartSize.height - MARGIN.top - MARGIN.bottom;
 
   const allGroups = [...new Set(data.map((d) => d.group))];
-
+  console.log(data.length)
   // Compute a xScale: spread all Y axis along the chart width
   const xScale = d3
     .scalePoint<Variable>()
@@ -106,31 +130,32 @@ export const ParallelCoordinate = ({
     }
 
     return (
-    <path
-        key={i}
-        d={d}
-        stroke={hoveredLine === i ? "red" : colorScale(series.group)} // Change stroke color if line is hovered
-        fill="none"
-        onMouseEnter={() => {
+    <path 
+      key={i}  
+      z={series.group === "A"? 10 : 1}
+      d={d} 
+      style={{zIndex: hoveredLine === i ? 9000 : series.group === "A"? "10" : "1", position: "relative"}} 
+      stroke={hoveredLine === i ? "red" : series.group === "A"? COLORS[0] : COLORS[1]} 
+      fill="none" 
+      strokeOpacity={series.group === "A"? 1 : 0.1} 
+      strokeWidth={hoveredLine === i ? 5 : series.group === "A"? 1 : 0.1}
+      onMouseEnter={() => {
+        if(series.group === "A")
           setHoveredLine(i)
-          Data.map((dato, j) => {
-            if (j===i) callbackMouseEnter(dato[7])
-          })
-        }} // Set hoveredLine state when mouse enters
-        onMouseLeave={() => setHoveredLine(null)} // Reset hoveredLine state when mouse leaves
-        strokeWidth={hoveredLine === i ? 5 : 1}
-        style={{position: "relative", zIndex: hoveredLine === i ? 9000 : 0}}
-      />
-    )
-    
-  });
+        Data.map((dato, j) => {
+          if (j===i) callbackMouseEnter(dato[7])
+        })
+      }} // Set hoveredLine state when mouse enters
+      onMouseLeave={() => setHoveredLine(null)} // Reset hoveredLine state when mouse leaves
+    />
+  )});
 
   // Compute Axes
   const allAxes = variables.map((variable, i) => {
     const yScale = yScales[variable];
     return (
       <g key={i} transform={"translate(" + xScale(variable) + ",0)"}>
-        <AxisVertical yScale={yScale} pixelsPerTick={40} name={variable} filterName={variable} addFilter={addFilter} removeFilter={removeFilter}/>
+        <AxisVertical yScale={yScale} pixelsPerTick={40} name={variable} filterName={variable} addFilter={addFilter} removeFilter={removeFilter} updateFilter={updateFilter}/>
       </g>
     );
   });
