@@ -192,7 +192,7 @@ function App() {
 
 
   function highlightDataParallel(d) {
-    console.log("SELECTED: ", d)
+    // console.log("SELECTED: ", d)
   }
 
 

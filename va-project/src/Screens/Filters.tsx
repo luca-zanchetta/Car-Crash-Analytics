@@ -58,10 +58,10 @@ function Filters({addFilter,removeFilter}:filterProp) {
                   {
                     Object.entries(d[1]).map(([key, value]) => {
                       var backgroundcolor = "#FFF"
-                      if(activeFilter.includes(key+value))
-                        backgroundcolor = "#FCD901"
+                      // if(activeFilter.includes(key+value))
+                      //   backgroundcolor = "#FCD901"
                       return(
-                        <div className="FilterEntry" onClick={() => toggleFilter(d[0],key, value)}>
+                        <div className="FilterEntry" style={{cursor:"pointer", backgroundColor: activeFilter.includes(key + value) ? "#FCD901" : "#BFBFBF" }} onClick={() => toggleFilter(d[0],key, value)}>
                           <div style={{backgroundColor:backgroundcolor}}></div>
                           <h5>{key}</h5>
                         </div>
