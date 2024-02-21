@@ -100,41 +100,38 @@ function App() {
   }
 
   function updateFilter(filterToAdd, filtersToRemove) {
-    var addedFilters= []
-
-    filterToAdd.map( (filter) => {
-      var isIncluded = false
-      
-      fitlersRef.current.map(aFilter => {
-        if(aFilter[0] === filter[0] && filter[1] === aFilter[1])
-          isIncluded = true
-      })
-      
-      if(!isIncluded) 
-        addedFilters.push(filter)
-    })
-
-    fitlersRef.current.map((filter) => {
-      addedFilters.push(filter)
-    })
-
-
-    console.log(addedFilters)
 
     var newFilters = []
   
-    addedFilters.map(d => {
+    fitlersRef.current.map(d => {
       var push = true;
-      filtersToRemove.map( (filter) => {
+      filtersToRemove.map((filter) => {
 
-        if(d[0] === filter[0] && d[1] == filter[1])
+        if(d[0] === filter[0] && d[1] === filter[1])
           push = false
       })
 
       if(push)
         newFilters.push(d)
     })
-    
+
+    filterToAdd.map( (filter) => {
+      var isIncluded = false
+      
+      newFilters.map(aFilter => {
+        if(aFilter[0] === filter[0] && filter[1] === aFilter[1])
+          isIncluded = true
+      })
+      
+      if(!isIncluded) 
+      newFilters.push(filter)
+    })
+
+    newFilters.map((filter) => {
+      newFilters.push(filter)
+    })
+
+
     setFilters(newFilters)
   }
 

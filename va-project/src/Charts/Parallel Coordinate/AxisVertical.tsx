@@ -131,16 +131,17 @@ export const AxisVertical = ({
   // Brush moving
   function onBrushClick(e) {
     var startTime = new Date().getTime();
-    var callBackMousemove =  (e) => MoveBrush(e,offset,startTime);
+    var callBackMousemove =  (e) => MoveBrush(e,offset,rectSize,startTime);
     var cursorAbsY = e["clientY"]
     var offset = cursorAbsY - Math.min(brushCurrent,brushPoint) 
     setMovingBrush(true)
   
+    var rectSize =  Math.abs(stateRef.current[0] -  stateRef.current[1])
     document.addEventListener("mousemove", callBackMousemove);
     document.addEventListener("mouseup",(e) => onBrushEndClick(e,callBackMousemove,startTime), {once:true})
   }
 
-  function MoveBrush(e,offset,startTime) {
+  function MoveBrush(e,offset,rectSize,startTime) {
     var currTime = new Date().getTime();
     var elapsedTime = currTime - startTime
     if(elapsedTime < CLICK_SENSITIVITY)
@@ -151,10 +152,31 @@ export const AxisVertical = ({
     var y = Math.min(brushCurrent,brushPoint)
     
     var movement = clickY - y
-    setBrushPoint(brushPoint + movement - offset)
-    setCurrent(brushCurrent + movement - offset)
     
-    stateRef.current = [brushPoint + movement - offset, brushCurrent + movement - offset]
+    var _brushPoint = Math.max(stateRef.current[0],stateRef.current[1])
+    var _brushCurrent = Math.min(stateRef.current[0],stateRef.current[1])
+
+    _brushPoint = brushPoint + movement - offset
+    _brushCurrent = brushCurrent + movement - offset
+
+
+      //check position
+    
+    if(_brushCurrent >= xy.current.getBoundingClientRect()["bottom"]) 
+    {
+      _brushPoint = xy.current.getBoundingClientRect()["bottom"]
+      _brushCurrent = _brushPoint - rectSize
+    }  
+    if(_brushPoint < xy.current.getBoundingClientRect()["y"]) {
+      _brushPoint = xy.current.getBoundingClientRect()["y"]
+      _brushCurrent = _brushPoint + rectSize
+    }
+
+
+    setBrushPoint(_brushPoint)
+    setCurrent(_brushCurrent)
+    
+    stateRef.current = [_brushPoint,_brushCurrent]
   }
 
   function onBrushEndClick (e,callBackMousemove:Function,startTime)  {
