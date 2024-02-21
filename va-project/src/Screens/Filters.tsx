@@ -44,10 +44,20 @@ function Filters({addFilter,removeFilter}:filterProp) {
     return false;
   }
 
+  function resetFilters() {
+    window.location.reload();
+  }
+
 
   return (
     <div className="FiltersBox">
-      <h1>Filters</h1>
+      <div style={{display: "flex", flexDirection:"row", width: "max-content"}}>
+        <h1>Filters</h1>
+        <div className='resetFilters' onClick={resetFilters}>
+          <h4>Reset</h4>
+        </div>
+      </div>
+      
       <div className="FilContainer">
         {
           filters.map(d => {
