@@ -256,11 +256,11 @@ function App() {
           <MapComponent callback={limitDataMap} data={ExtractFeatures(data,[columns.Latitude,columns.Longitude,columns.Severity, columns.Number_of_Casualties, columns.Number_of_Vehicles, columns.Speed_limit, columns.Id])}></MapComponent>
           <div className='MapLegend'>
             <img src={redcircle} style={{aspectRatio:1/1,width:"1rem", paddingRight:".5rem", paddingLeft:".5rem"}} onClick={() => ToggleServerity(2)}></img>
-            <text fill={Severity[2]? "Yellow": "White"}>Fatal Accident</text>
+            <text style={{color: Severity[2]? "Yellow": "White"}}>Fatal Accident</text>
             <img src={yellowCircle} style={{aspectRatio:1/1,width:"1rem", paddingRight:".5rem", paddingLeft:".5rem"}} onClick={() => ToggleServerity(1)}></img>
-            <text fill={Severity[1]? "Yellow": "White"}>Serious Accident</text>
+            <text style={{color: Severity[1]? "Yellow": "White"}}>Serious Accident</text>
             <img src={greenCircle} style={{aspectRatio:1/1,width:"1rem", paddingRight:".5rem", paddingLeft:".5rem"}} onClick={() => ToggleServerity(0)}></img>
-            <text fill={Severity[0]? "Yellow": "White"}>Slight Accident</text>
+            <text style={{color: Severity[0]? "Yellow": "White"}}>Slight Accident</text>
           </div>
         </div>
       </div>
@@ -276,6 +276,7 @@ function App() {
         </div>
         <div className='ParallelCoordinates'>
         <ParallelCoordinate 
+          callbackMouseEnter={highlightDataParallel}
           FULLDATA={ExtractFeatures(DATA, [columns.JControl,columns.JDetail,columns.Light,columns.Road_Surface_Conditions,columns.Road_Type,columns.Vehicle_Type,columns.Weather_Conditions, columns.Id])} 
           Data={ExtractFeatures(data, [columns.JControl,columns.JDetail,columns.Light,columns.Road_Surface_Conditions,columns.Road_Type,columns.Vehicle_Type,columns.Weather_Conditions, columns.Id])} 
           addFilter={addFilter} 
