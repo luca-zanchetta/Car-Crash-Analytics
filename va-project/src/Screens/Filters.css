@@ -39,7 +39,7 @@ div.FiltersBox {
 
 .FilContainer {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     padding: 1%;
     overflow-x:hidden;
     overflow-y:auto;

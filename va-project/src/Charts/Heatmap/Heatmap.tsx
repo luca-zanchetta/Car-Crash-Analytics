@@ -116,12 +116,13 @@ export const Heatmap = ({Data, addFilter, removeFilter}: HeatmapProps) => {
         r={4}
         x={xScale(d.time)}
         y={yScale(d.day)}
-        width={xScale.bandwidth()}
-        height={yScale.bandwidth()}
+        width={xScale.bandwidth()*0.95}
+        height={yScale.bandwidth()*0.95}
         opacity={1}
         fill={fill}
         rx={5}
         stroke={"white"}
+        
         onMouseEnter={() => {
           setHovered({
             xPos: xScale(d.time),

@@ -143,8 +143,9 @@ export const Scatterplot = ({callbackMouseEnter, callbackMouseEnter2, margin = 4
                 cx={x(d[0])}
                 cy={y(d[1])}
                 opacity={1}
-                stroke={withinSelection ? color : "grey"}
-                fillOpacity={0.2}
+                stroke={color}
+                fillOpacity={1}
+                strokeOpacity={withinSelection ? 1 : 0.3}
                 strokeWidth={1}
             />
         );

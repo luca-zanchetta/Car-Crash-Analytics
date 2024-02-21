@@ -9,12 +9,12 @@
 }
 
 div.TopBar {
-  height: 5rem;
+  height: 3rem;
   width: -webkit-fill-available;
   display: flex;
   background-color: #3D3D3D;
-  padding:0 1rem 0 1rem;
   align-items: center;
+  margin:.5%
 }
 
 .TopBar>h1{
@@ -28,7 +28,7 @@ div.TopBar {
   display: flex;
   flex-direction: row;
   width: -webkit-fill-available;
-  max-height:45%;
+  max-height:52.5%;
   padding: 1rem 0 0 0
 }
 
@@ -132,3 +132,82 @@ div.TopBar {
   color: #649664;
   margin-left: 10%;
 }
+
+
+/* SECONDO LAYOUT */
+
+.Dashboard {
+  width: -webkit-fill-available;
+  height: -webkit-fill-available;
+  background-color: black;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+  position: relative;
+}
+
+.LeftBoard {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* LEFT SIDE */
+
+.LeftTop {
+  flex: 1;
+  display: flex;
+  flex: row;
+  position: relative;
+}
+
+.LeftTopScatter {
+  flex: 1;
+  margin:.5%;
+  position: relative;
+  background-color: #3D3D3D;
+}
+
+.LeftTopHeatmap {
+  flex: 1;
+  margin:.5%;
+  position: relative;
+  background-color: #3D3D3D;
+  aspect-ratio: 1 / 1;
+}
+
+
+.LeftBottom {
+  flex: 1;
+  display: flex;
+  flex: row;
+  margin:.5%;;
+  position: relative;
+  background-color: #3D3D3D;
+}
+
+/* RIGH SIDE */
+.RightBoard {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  
+}
+
+.RighTop {
+  flex: 2;
+  display: flex;
+  position: relative;
+  margin:.5%;
+  background-color: #3D3D3D;
+}
+
+.RighBottom {
+  display: flex;
+  flex: 1.2;
+  position: relative;
+  margin:.5%;
+  background-color: #3D3D3D;
+} 

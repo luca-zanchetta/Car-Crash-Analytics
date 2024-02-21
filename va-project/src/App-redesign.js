@@ -46,7 +46,7 @@ const weather_conditions_enc = {'Snowing no high winds': 0, 'Raining + high wind
 const vehicle_Type_enc = {'Motorcycle': 0, 'Car': 1, 'Good': 2, 'Other vehicle': 3, 'Bus': 4, 'Agricultural vehicle': 5, 'Minibus': 6}
 export const filters = [[columns.JControl,junction_control_enc], [columns.JDetail,junction_detail_enc],[columns.Light,light_conditions_enc],[columns.Road_Surface_Conditions,road_surface_conditions_enc],[columns.Road_Type,road_type_enc],[columns.Weather_Conditions,weather_conditions_enc]]
 
-function App() {
+function AppR() {
   // the single filter is an array [column,value]
   const [DATA, setDATA] = useState([])
   const [activeFilters, setFilters] = useState([])
@@ -244,38 +244,15 @@ function App() {
 
 
   return (
-    <div className="Dashboard">
-      
-      <div className='LeftBoard'> 
-        <div className='TopBar'>
-          <h1>Car crash analytics</h1>
+    <div className="App">
+      {/* <div className='TopBar'>
+        <h1>Car crash analytics</h1>
+      </div> */}
+      <div className='ScreenCenter'>
+        <div className='Filters'>
+          <Filters addFilter={addFilter} removeFilter={removeFilter}></Filters>
         </div>
-        <div className='LeftTop'>
-          <div className='LeftTopScatter'>
-            <div className='ScatterplotLegend'>
-              <div color='Red'>Fatal</div>
-              <div color='Red'>Serious</div>
-              <div color='Red'>Slight</div>
-            </div>
-            <__Scatterplot limitDataScatterplot={limitDataScatterplot} limitDataScatterplot2={limitDataScatterplot2} dataScatterplot={dataScatterplot} addFilter= {addFilter} removeFilter={removeFilter}></__Scatterplot>
-          </div>
-          <div className='LeftTopHeatmap'>
-            <Heatmap Data={ExtractFeatures(data, [columns.Time_Interval, columns.Day])} addFilter={addFilter} removeFilter={removeFilter}></Heatmap>
-          </div>
-        </div>
-        <div className='LeftBottom'>
-          <ParallelCoordinate 
-            callbackMouseEnter={highlightDataParallel}
-            FULLDATA={ExtractFeatures(DATA, [columns.JControl,columns.JDetail,columns.Light,columns.Road_Surface_Conditions,columns.Road_Type,columns.Vehicle_Type,columns.Weather_Conditions, columns.Id])} 
-            Data={ExtractFeatures(data, [columns.JControl,columns.JDetail,columns.Light,columns.Road_Surface_Conditions,columns.Road_Type,columns.Vehicle_Type,columns.Weather_Conditions, columns.Id])} 
-            addFilter={addFilter} 
-            removeFilter={removeFilter} 
-            updateFilter={updateFilter}>
-          </ParallelCoordinate>
-        </div>
-      </div>
-      <div className='RightBoard'> 
-        <div className='RighTop'>
+        <div className='Map'>
           <MapComponent callback={limitDataMap} data={ExtractFeatures(data,[columns.Latitude,columns.Longitude,columns.Severity, columns.Number_of_Casualties, columns.Number_of_Vehicles, columns.Speed_limit, columns.Id])}></MapComponent>
           <div className='MapLegend'>
             <img src={redcircle} style={{aspectRatio:1/1,width:"1rem", paddingRight:".5rem", paddingLeft:".5rem"}} onClick={() => ToggleServerity(2)}></img>
@@ -286,8 +263,29 @@ function App() {
             <text style={{color: Severity[0]? "Yellow": "White"}}>Slight Accident</text>
           </div>
         </div>
-        <div className='RighBottom'>
-          <Filters addFilter={addFilter} removeFilter={removeFilter}></Filters> 
+      </div>
+      <div className='ScreenBottom'>
+        <div className='DimReduction'>
+          <div className='ScatterplotLegend'>
+            <div color='Red'>Fatal</div>
+            <div color='Red'>Serious</div>
+            <div color='Red'>Slight</div>
+          </div>
+          <__Scatterplot limitDataScatterplot={limitDataScatterplot} limitDataScatterplot2={limitDataScatterplot2} dataScatterplot={dataScatterplot} addFilter= {addFilter} removeFilter={removeFilter}></__Scatterplot>
+          
+        </div>
+        <div className='ParallelCoordinates'>
+        <ParallelCoordinate 
+          callbackMouseEnter={highlightDataParallel}
+          FULLDATA={ExtractFeatures(DATA, [columns.JControl,columns.JDetail,columns.Light,columns.Road_Surface_Conditions,columns.Road_Type,columns.Vehicle_Type,columns.Weather_Conditions, columns.Id])} 
+          Data={ExtractFeatures(data, [columns.JControl,columns.JDetail,columns.Light,columns.Road_Surface_Conditions,columns.Road_Type,columns.Vehicle_Type,columns.Weather_Conditions, columns.Id])} 
+          addFilter={addFilter} 
+          removeFilter={removeFilter} 
+          updateFilter={updateFilter}>
+        </ParallelCoordinate>
+        </div>
+        <div className='Heatmap'>
+          <Heatmap Data={ExtractFeatures(data, [columns.Time_Interval, columns.Day])} addFilter={addFilter} removeFilter={removeFilter}></Heatmap>
         </div>
       </div>
     </div>
@@ -309,4 +307,4 @@ const __Scatterplot = React.memo(({limitDataScatterplot, limitDataScatterplot2, 
 })
 
 
-export default App;
+export default AppR;
