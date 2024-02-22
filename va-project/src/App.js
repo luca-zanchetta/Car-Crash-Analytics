@@ -256,6 +256,14 @@ function App() {
       <div className='LeftBoard'> 
         <div className='TopBar'>
           <h1>Car crash analytics</h1>
+          <div style={{display:"flex", flexDirection:"row", marginLeft:"43%", marginTop:"2%"}}>
+              <h3 style={{color: !recompute ? "lightblue":"gainsboro", marginTop: "0", marginRight: "3%", fontSize: "100%"}}>Highlight</h3>
+              <label class="switch">
+                <input type="checkbox" onChange={() => setRecompute(!recompute)} />
+                <span class="slider round"></span>
+              </label>
+              <h3 style={{color: recompute ? "lightblue":"gainsboro", marginTop: "0", marginLeft: "3%", fontSize: "100%"}}>Recompute</h3>
+            </div>
         </div>
         <div className='LeftTop'>
           <div className='LeftTopScatter'>
@@ -263,14 +271,6 @@ function App() {
               <div color='Red'>Fatal</div>
               <div color='Red'>Serious</div>
               <div color='Red'>Slight</div>
-            </div>
-            <div style={{display:"flex", flexDirection:"row", marginLeft:"43%", marginTop:"2%"}}>
-              <h3 style={{color: !recompute ? "lightblue":"gainsboro", marginTop: "0", marginRight: "3%", fontSize: "100%"}}>Highlight</h3>
-              <label class="switch">
-                <input type="checkbox" onChange={() => setRecompute(!recompute)} />
-                <span class="slider round"></span>
-              </label>
-              <h3 style={{color: recompute ? "lightblue":"gainsboro", marginTop: "0", marginLeft: "3%", fontSize: "100%"}}>Recompute</h3>
             </div>
             <__Scatterplot 
               limitDataScatterplot={limitDataScatterplot} 

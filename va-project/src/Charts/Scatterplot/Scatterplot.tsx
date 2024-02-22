@@ -220,7 +220,7 @@ export const Scatterplot = ({callbackMouseEnter, isFiltered, margin = 40,data= [
     //Rendering of the chart
     return(
         <div className="Chart" ref={chartRef}>
-            <svg width={chartSize.width} height={chartSize.height} ref={svgRef}f onWheel={Zoom} onMouseUp={OnMouseUp} onMouseDown={OnMouseDown} onMouseMove={MoveCamera}>
+            <svg width={chartSize.width} height={chartSize.height} ref={svgRef} onWheel={Zoom} onMouseUp={OnMouseUp} onMouseDown={OnMouseDown} onMouseMove={MoveCamera}>
                 <g className="brush" transform={`translate(${[margin, margin].join(',')})`} />
                 <g
                     width={boundsWidth}
