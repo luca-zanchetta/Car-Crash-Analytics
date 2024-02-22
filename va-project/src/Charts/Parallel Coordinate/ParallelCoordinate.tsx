@@ -136,10 +136,10 @@ export const ParallelCoordinate = ({
       key={i}  
       z={series.group === "A"? 10 : 1}
       d={d} 
-      style={{zIndex: hoveredLine === i ? 9000 : series.group === "A"? "10" : "1", position: "relative"}} 
+      style={{zIndex: hoveredLine === i ? 9000 : series.group === "A"? 10 : 1, position: "relative"}} 
       stroke={hoveredLine === i ? "red" : series.group === "A"? COLORS[0] : COLORS[1]} 
       fill="none" 
-      strokeOpacity={series.group === "A"? 1 : 0.1} 
+      strokeOpacity={series.group === "A"? 1 : 0.05} 
       strokeWidth={hoveredLine === i ? 5 : series.group === "A"? 1 : 0.1}
       onMouseEnter={() => {
         if(series.group === "A")
