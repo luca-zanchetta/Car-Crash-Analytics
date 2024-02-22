@@ -8,6 +8,7 @@ import "../Charts.css"
 import { brushX, select } from "d3";
 import usePrevious from "./usePrevious.js";
 import { columns } from "../../App.js";
+import { FilterData } from "../../Utilities/FilterData.js";
 
 type ScatterplotProps = {
     margin : number;
@@ -15,10 +16,11 @@ type ScatterplotProps = {
     name?: string;
     addFilter: Function;
     removeFilter: Function;
+    isFiltered: Function;
 };
 
 
-export const Scatterplot = ({callbackMouseEnter, margin = 40,data= [{x: 2,y: 4, severity: 0},{x: 8,y: 5, severity: 0}], addFilter, removeFilter}:ScatterplotProps) => {
+export const Scatterplot = ({callbackMouseEnter, isFiltered, margin = 40,data= [{x: 2,y: 4, severity: 0},{x: 8,y: 5, severity: 0}], addFilter, removeFilter}:ScatterplotProps) => {
 
     const zoomContant = 1.1
     const scrollK = .1
@@ -145,7 +147,7 @@ export const Scatterplot = ({callbackMouseEnter, margin = 40,data= [{x: 2,y: 4, 
                 opacity={1}
                 stroke={color}
                 fillOpacity={1}
-                strokeOpacity={withinSelection ? 1 : 0.3}
+                strokeOpacity={withinSelection && isFiltered(d) ? 1 : 0.3}
                 strokeWidth={1}
             />
         );

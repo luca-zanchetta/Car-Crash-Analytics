@@ -162,7 +162,7 @@ function App() {
         setIteration(1)
       });
     }
-  },[activeFilters, recompute, brushedPoints, selectedItem, DATA])
+  },[activeFilters, recompute, brushedPoints])
  
   
   function ToggleServerity(s) {
@@ -235,6 +235,18 @@ function App() {
   }
 
 
+  function isFiltered(d) {
+    var filter = false
+    
+    data.map((dato, i) => {
+      if(Number(dato.Id) === Number(d[6])) 
+        filter = true
+    })
+    
+    return filter
+  }
+
+
   return (
     <div className="Dashboard">
       
@@ -261,7 +273,8 @@ function App() {
               limitDataScatterplot={limitDataScatterplot} 
               dataScatterplot={recompute ? dataScatterplot : DATA} 
               addFilter= {addFilter} 
-              removeFilter={removeFilter} 
+              removeFilter={removeFilter}
+              isFiltered={isFiltered}
               data={data}
             ></__Scatterplot>
           </div>
@@ -301,12 +314,14 @@ function App() {
 }
 
 
-const __Scatterplot = React.memo(({limitDataScatterplot, dataScatterplot, addFilter, removeFilter, data}) => {
+const __Scatterplot = React.memo(({limitDataScatterplot, dataScatterplot, addFilter, removeFilter, data, isFiltered}) => {
   return(
     <Scatterplot 
       callbackMouseEnter={limitDataScatterplot}
       data={ExtractFeatures(dataScatterplot, [columns.tsne_x, columns.tsne_y, columns.Severity, columns.Number_of_Casualties, columns.Number_of_Vehicles, columns.Speed_limit, columns.Id])}
-      addFilter={addFilter} removeFilter={removeFilter}
+      addFilter={addFilter} 
+      removeFilter={removeFilter}
+      isFiltered={isFiltered}
     ></Scatterplot>
   )
 }, (prev, next) => {
