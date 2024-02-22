@@ -56,6 +56,7 @@ function App() {
   const [Severity, setSeverity] = useState({0: false, 1: false, 2: false})
   const [selectedItem, setSelectedItem] = useState(false)
   const [dataScatterplot, setDataScatterplot] = useState([])
+  const [mapFilters, setMapFilters] = useState([])
 
   const fitlersRef = useRef()
   fitlersRef.current = activeFilters
@@ -136,11 +137,11 @@ function App() {
   }
 
   useEffect(() =>{
-    console.log(activeFilters)
+    console.log(mapFilters)
     if(iteration >=1) {
       if(!selectedItem) {
-        setData(FilterData(DATA, activeFilters))
-        setDataScatterplot(FilterData(DATA, activeFilters))
+        setData(FilterData(DATA, activeFilters,mapFilters))
+        setDataScatterplot(FilterData(DATA, activeFilters,mapFilters))
       }
     }
     else {
@@ -151,7 +152,7 @@ function App() {
         setIteration(1)
       });
     }
-  },[activeFilters])
+  },[activeFilters,mapFilters])
  
   
   function ToggleServerity(s) {
@@ -237,6 +238,9 @@ function App() {
     }
   }
 
+  function SetMapFilters(filters) {
+    setMapFilters(filters)
+  }
 
   function highlightDataParallel(d) {
     // console.log("SELECTED: ", d)
@@ -244,8 +248,7 @@ function App() {
 
 
   return (
-    <div className="Dashboard">
-      
+    <div className="Dashboard">   
       <div className='LeftBoard'> 
         <div className='TopBar'>
           <h1>Car crash analytics</h1>
@@ -276,7 +279,7 @@ function App() {
       </div>
       <div className='RightBoard'> 
         <div className='RighTop'>
-          <MapComponent callback={limitDataMap} data={ExtractFeatures(data,[columns.Latitude,columns.Longitude,columns.Severity, columns.Number_of_Casualties, columns.Number_of_Vehicles, columns.Speed_limit, columns.Id])}></MapComponent>
+          <MapComponent setFilters={SetMapFilters} callback={limitDataMap} data={ExtractFeatures(data,[columns.Latitude,columns.Longitude,columns.Severity, columns.Number_of_Casualties, columns.Number_of_Vehicles, columns.Speed_limit, columns.Id])}></MapComponent>
           <div className='MapLegend'>
             <img src={redcircle} style={{aspectRatio:1/1,width:"1rem", paddingRight:".5rem", paddingLeft:".5rem"}} onClick={() => ToggleServerity(2)}></img>
             <text style={{color: Severity[2]? "Yellow": "White"}}>Fatal Accident</text>
