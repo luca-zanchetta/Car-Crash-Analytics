@@ -141,18 +141,18 @@ function App() {
       if(!selectedItem) {     // Da adattare al brushing della mappa
 
         if(brushedPoints.length !== 0 && activeFilters.length !== 0) {
-          if(!recompute) setData(FilterData(brushedPoints, activeFilters))
-          else setData(FilterData(brushedPoints, activeFilters))
+          if(!recompute) setData(FilterData(brushedPoints, activeFilters, mapFilters))
+          else setData(FilterData(brushedPoints, activeFilters, mapFilters))
         }
         else if(brushedPoints.length !== 0 && activeFilters.length === 0) {
           if(!recompute) setData(brushedPoints, activeFilters)
           else setData(brushedPoints)
         }
         else {
-          setData(FilterData(DATA, activeFilters))
+          setData(FilterData(DATA, activeFilters, mapFilters))
         }
 
-        if(recompute) setDataScatterplot(FilterData(DATA, activeFilters))
+        if(recompute) setDataScatterplot(FilterData(DATA, activeFilters, mapFilters))
       }
     }
     else {

@@ -117,7 +117,10 @@ export const ParallelCoordinate = ({
     const allCoordinates = variables.map((variable) => {
       const yScale = yScales[variable];
       const x = xScale(variable) ?? 0; // I don't understand the type of scalePoint. IMO x cannot be undefined since I'm passing it something of type Variable.
-      const y = yScale(series[variable]);
+      let y = yScale(series[variable]);
+
+      // Adjust y-value to prevent overlap
+      y += Math.random() * 10 - 5; // You can adjust the range of jittering as needed
       const coordinate: [number, number] = [x, y];
       return coordinate;
     });
