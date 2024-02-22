@@ -141,11 +141,11 @@ function App() {
 
         if(brushedPoints.length !== 0 && activeFilters.length !== 0) {
           if(!recompute) setData(FilterData(brushedPoints, activeFilters))
-          else setData(FilterData(DATA, activeFilters))
+          else setData(FilterData(brushedPoints, activeFilters))
         }
         else if(brushedPoints.length !== 0 && activeFilters.length === 0) {
           if(!recompute) setData(brushedPoints, activeFilters)
-          else setData(DATA)
+          else setData(brushedPoints)
         }
         else {
           setData(FilterData(DATA, activeFilters))
@@ -162,7 +162,7 @@ function App() {
         setIteration(1)
       });
     }
-  },[activeFilters])
+  },[activeFilters, recompute, brushedPoints, selectedItem, DATA])
  
   
   function ToggleServerity(s) {
@@ -179,11 +179,16 @@ function App() {
 
   function limitDataScatterplot(selectedPoints, dataNull) {
     let restrictedData = []
+    let brushed = []
 
     if(selectedPoints) {
       if(selectedPoints.length !== 0) {
         selectedPoints.forEach(element => {
           DATA.filter(elem => Number(elem.Id) === Number(element)).map(filteredElement => {
+            brushed.push(filteredElement)
+          })
+
+          data.filter(elem => Number(elem.Id) === Number(element)).map(filteredElement => {
             restrictedData.push(filteredElement)
           })
         });
@@ -200,8 +205,9 @@ function App() {
       setBrushedPoints([])
     } 
     else {
+
       setData(restrictedData, activeFilters)
-      setBrushedPoints(restrictedData)
+      setBrushedPoints(brushed)
     }
   }
 
