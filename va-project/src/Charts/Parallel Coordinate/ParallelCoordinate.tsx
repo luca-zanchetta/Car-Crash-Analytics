@@ -140,7 +140,7 @@ export const ParallelCoordinate = ({
       stroke={hoveredLine === i ? "red" : series.group === "A"? COLORS[0] : COLORS[1]} 
       fill="none" 
       strokeOpacity={series.group === "A"? 1 : 0.05} 
-      strokeWidth={hoveredLine === i ? 5 : series.group === "A"? 2 : 0.1}
+      strokeWidth={hoveredLine === i ? 5 : series.group === "A"? 0.2 : 0.1}
       onMouseEnter={() => {
         if(series.group === "A")
           setHoveredLine(i)
