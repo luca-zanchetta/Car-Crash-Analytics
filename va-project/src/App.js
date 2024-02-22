@@ -58,6 +58,7 @@ function App() {
   const [dataScatterplot, setDataScatterplot] = useState([])
   const [recompute, setRecompute] = useState(false)   // False = Highlight, True = Recompute
   const [brushedPoints, setBrushedPoints] = useState([])
+  const [mapFilters, setMapFilters] = useState([])
 
   const fitlersRef = useRef()
   fitlersRef.current = activeFilters
@@ -162,7 +163,7 @@ function App() {
         setIteration(1)
       });
     }
-  },[activeFilters, recompute, brushedPoints])
+  },[activeFilters, recompute, brushedPoints, mapFilters])
  
   
   function ToggleServerity(s) {
@@ -229,6 +230,9 @@ function App() {
     }
   }
 
+  function SetMapFilters(filters) {
+    setMapFilters(filters)
+  }
 
   function highlightDataParallel(d) {
     // console.log("SELECTED: ", d)
@@ -248,8 +252,7 @@ function App() {
 
 
   return (
-    <div className="Dashboard">
-      
+    <div className="Dashboard">   
       <div className='LeftBoard'> 
         <div className='TopBar'>
           <h1>Car crash analytics</h1>
@@ -295,7 +298,7 @@ function App() {
       </div>
       <div className='RightBoard'> 
         <div className='RighTop'>
-          <MapComponent callback={limitDataMap} data={ExtractFeatures(data,[columns.Latitude,columns.Longitude,columns.Severity, columns.Number_of_Casualties, columns.Number_of_Vehicles, columns.Speed_limit, columns.Id])}></MapComponent>
+          <MapComponent setFilters={SetMapFilters} callback={limitDataMap} data={ExtractFeatures(data,[columns.Latitude,columns.Longitude,columns.Severity, columns.Number_of_Casualties, columns.Number_of_Vehicles, columns.Speed_limit, columns.Id])}></MapComponent>
           <div className='MapLegend'>
             <img src={redcircle} style={{aspectRatio:1/1,width:"1rem", paddingRight:".5rem", paddingLeft:".5rem"}} onClick={() => ToggleServerity(2)}></img>
             <text style={{color: Severity[2]? "Yellow": "White"}}>Fatal Accident</text>
