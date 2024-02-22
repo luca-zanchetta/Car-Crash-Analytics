@@ -1,10 +1,9 @@
 div.FiltersBox {
     display: flex;
     flex-direction: column;
-    padding: 1%;
     overflow:hidden;
-    width: -webkit-fill-available;
-    height: -webkit-fill-available;
+    width: 100%;
+    height: 100%;
     align-items: center;
 }
 
@@ -12,21 +11,18 @@ div.FiltersBox {
     display: flex;
     font-size: 1.5vw;
     color: white;
+    margin: 0;
 }
 
 .resetFilters {
     border-radius: 1rem;
     background-color: #BFBFBF;
-    padding-left: 5%;
-    padding-right: 5%;
-    padding-bottom: 1%;
     display: flex;
     flex-direction: row;
     width: max-content;
     justify-content: center;
     align-items: center;
-    margin-left: 90%;
-    margin-top: 23%;
+
     cursor: pointer;
     height: 35%;
     transition: all 0.1s ease;
@@ -49,23 +45,24 @@ div.FiltersBox {
 
 .CategoryEntry {
     display: flex;
-    width: -webkit-fill-available;
+    flex: 1 1;
     flex-direction: column;
     align-items: flex-start;
+    margin: 0% 1% 0% 1%;
 }
 
 .CategoryEntry > h3 {
     margin: 0;
-    font-size: .9vw;
+    font-size: .7vw;
     color: white;
     font-weight: normal;
+    
 }
 
 .CategoryList {
     display: flex;
-    flex-wrap: wrap;
     width: -webkit-fill-available;
-    flex-direction: row;
+    flex-direction: column;
     padding: 2%;
 }
 
@@ -75,10 +72,10 @@ div.FiltersBox {
     padding: 1.5%;
     display: flex;
     flex-direction: row;
-    width: min-content;
+    width: 100%;
     justify-content: center;
     align-items: center;
-    margin: .5%;
+    margin: 2%;
 }
 
 
@@ -95,6 +92,6 @@ div.FiltersBox {
     margin: 0;
     color: black;
     margin-left:.5rem;
-    white-space: nowrap;
-    font-size: .6vw;
+
+    font-size: .5vw;
 }

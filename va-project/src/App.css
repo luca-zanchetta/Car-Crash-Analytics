@@ -226,7 +226,7 @@ div.TopBar {
 
 .RighBottom {
   display: flex;
-  flex: 1.2;
+  flex: 1;
   position: relative;
   margin:.5%;
   background-color: #3D3D3D;
