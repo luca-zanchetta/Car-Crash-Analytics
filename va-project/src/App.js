@@ -214,21 +214,21 @@ function App() {
 
 
 
-  function limitDataMap(d) {    // Da adattare al brushing della mappa
-    if(selectedItem) {
-      setSelectedItem(false)
-      setData(DATA)
-      setDataScatterplot(DATA)
-    }
-    else {
-      DATA.filter(element => Number(element.Id) === Number(d[6])).map(filteredElement => {
-        setFilters([])
-        setData([filteredElement])
-        setDataScatterplot([filteredElement])
-        setSelectedItem(true)
-      })
-    }
-  }
+  // function limitDataMap(d) {    // Da adattare al brushing della mappa
+  //   if(selectedItem) {
+  //     setSelectedItem(false)
+  //     setData(DATA)
+  //     setDataScatterplot(DATA)
+  //   }
+  //   else {
+  //     DATA.filter(element => Number(element.Id) === Number(d[6])).map(filteredElement => {
+  //       setFilters([])
+  //       setData([filteredElement])
+  //       setDataScatterplot([filteredElement])
+  //       setSelectedItem(true)
+  //     })
+  //   }
+  // }
 
   function SetMapFilters(filters) {
     setMapFilters(filters)
@@ -267,7 +267,11 @@ function App() {
         </div>
         <div className='LeftTop'>
           <div className='LeftTopScatter'>
-            <Heatmap Data={ExtractFeatures(data, [columns.Time_Interval, columns.Day])} addFilter={addFilter} removeFilter={removeFilter}></Heatmap>
+            <Heatmap 
+              Data={ExtractFeatures(data, [columns.Time_Interval, columns.Day])} 
+              addFilter={addFilter} 
+              removeFilter={removeFilter}
+            ></Heatmap>
           </div>
           <div className='LeftTopHeatmap'>
             <div className='ScatterplotLegend'>
@@ -305,7 +309,10 @@ function App() {
       </div>
       <div className='RightBoard'> 
         <div className='RighTop'>
-          <MapComponent setFilters={SetMapFilters} callback={limitDataMap} data={ExtractFeatures(data,[columns.Latitude,columns.Longitude,columns.Severity, columns.Number_of_Casualties, columns.Number_of_Vehicles, columns.Speed_limit, columns.Id])}></MapComponent>
+          <MapComponent 
+            setFilters={SetMapFilters} 
+            data={ExtractFeatures(data,[columns.Latitude,columns.Longitude,columns.Severity, columns.Number_of_Casualties, columns.Number_of_Vehicles, columns.Speed_limit, columns.Id])}
+          ></MapComponent>
           <div className='MapLegend'>
             <img src={redcircle} style={{aspectRatio:1/1,width:"1rem", paddingRight:".5rem", paddingLeft:".5rem"}} onClick={() => ToggleServerity(2)}></img>
             <text style={{color: Severity[2]? "Yellow": "White"}}>Fatal Accident</text>
