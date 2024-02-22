@@ -108,12 +108,12 @@ div.TopBar {
 
 
 .ScatterplotLegend {
-  margin: 1% 0% 0% 2.5%;
+  margin: 3.5% 3.5% 0% 0%;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   position: absolute;
   top: 0;
-  left: 0;
+  right: 0;
   
   color: yellow;
   padding: 1%;
@@ -121,16 +121,36 @@ div.TopBar {
   width: max-content;
   max-width: 100%;
   z-index: 1;
+
+  border: 1px #ccc solid;
 }
 
 .ScatterplotLegend> div:first-child {
   color: red;
-  margin-right: 10%;
+  
+  flex-direction: row;
 }
 
+.ScatterplotLegend > div {
+  align-items: center;
+  display: flex;
+  justify-content: flex-start;
+  height: 1.5rem;
+}
+
+.ScatterplotLegend > div > svg {
+ 
+  max-height: 100%;
+  aspect-ratio: 1/1;
+}
+
+.ScatterplotLegend > div > svg > g >circle{
+   max-height: 100%;
+   aspect-ratio: 1/1;
+}
 .ScatterplotLegend> div:last-child {
   color: lightgreen;
-  margin-left: 10%;
+  flex-direction: row;
 }
 
 
@@ -167,6 +187,7 @@ div.TopBar {
   margin:.5%;
   position: relative;
   background-color: #3D3D3D;
+  aspect-ratio: 1 / 1;
 }
 
 .LeftTopHeatmap {
@@ -174,7 +195,6 @@ div.TopBar {
   margin:.5%;
   position: relative;
   background-color: #3D3D3D;
-  aspect-ratio: 1 / 1;
 }
 
 
@@ -275,4 +295,11 @@ input:checked + .slider:before {
 
 .slider.round:before {
   border-radius: 50%;
+}
+
+.leaflet-layer,
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out,
+.leaflet-control-attribution {
+  filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
 }

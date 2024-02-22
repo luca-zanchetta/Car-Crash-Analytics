@@ -267,22 +267,29 @@ function App() {
         </div>
         <div className='LeftTop'>
           <div className='LeftTopScatter'>
-            <div className='ScatterplotLegend'>
-              <div color='Red'>Fatal</div>
-              <div color='Red'>Serious</div>
-              <div color='Red'>Slight</div>
-            </div>
-            <__Scatterplot 
-              limitDataScatterplot={limitDataScatterplot} 
-              dataScatterplot={recompute ? dataScatterplot : DATA} 
-              addFilter= {addFilter} 
-              removeFilter={removeFilter}
-              isFiltered={isFiltered}
-              data={data}
-            ></__Scatterplot>
+            <Heatmap Data={ExtractFeatures(data, [columns.Time_Interval, columns.Day])} addFilter={addFilter} removeFilter={removeFilter}></Heatmap>
           </div>
           <div className='LeftTopHeatmap'>
-            <Heatmap Data={ExtractFeatures(data, [columns.Time_Interval, columns.Day])} addFilter={addFilter} removeFilter={removeFilter}></Heatmap>
+            <div className='ScatterplotLegend'>
+                <div color='Red'> 
+                  <svg fill="#000000" width="16px" height="16px" viewBox="0 0 256 256" id="Flat" xmlns="http://www.w3.org/2000/svg">
+                    <g opacity="0.2"><circle cx="128" cy="128" r="96" fill="red"/>
+                    </g>
+                    <path fill="red" d="M128,232A104,104,0,1,1,232,128,104.11782,104.11782,0,0,1,128,232Zm0-192a88,88,0,1,0,88,88A88.09961,88.09961,0,0,0,128,40Z"/>
+                  </svg>
+                  Fatal
+                </div>
+                <div color='Red'><svg fill="#000000" width="16px" height="16px" viewBox="0 0 256 256" id="Flat" xmlns="http://www.w3.org/2000/svg"><g opacity="0.2"><circle cx="128" cy="128" r="96" fill="yellow"/></g><path fill="yellow" d="M128,232A104,104,0,1,1,232,128,104.11782,104.11782,0,0,1,128,232Zm0-192a88,88,0,1,0,88,88A88.09961,88.09961,0,0,0,128,40Z"/></svg>Serious</div>
+                <div color='Red'><svg fill="#000000" width="16px" height="16px" viewBox="0 0 256 256" id="Flat" xmlns="http://www.w3.org/2000/svg"><g opacity="0.2"><circle cx="128" cy="128" r="96" fill="green"/></g><path fill="green" d="M128,232A104,104,0,1,1,232,128,104.11782,104.11782,0,0,1,128,232Zm0-192a88,88,0,1,0,88,88A88.09961,88.09961,0,0,0,128,40Z"/></svg>Slight</div>
+              </div>
+              <__Scatterplot 
+                limitDataScatterplot={limitDataScatterplot} 
+                dataScatterplot={recompute ? dataScatterplot : DATA} 
+                addFilter= {addFilter} 
+                removeFilter={removeFilter}
+                isFiltered={isFiltered}
+                data={data}
+              ></__Scatterplot>
           </div>
         </div>
         <div className='LeftBottom'>

@@ -7,7 +7,7 @@ import "../Charts.css"
 const MARGIN = { top: 60, right: 80, bottom: 30, left: 80 };
 
 const COLORS = [
-  "#e0ac2b",
+  "#F2C200",
   "#d3d3d3"
 ];
 
@@ -140,7 +140,7 @@ export const ParallelCoordinate = ({
       stroke={hoveredLine === i ? "red" : series.group === "A"? COLORS[0] : COLORS[1]} 
       fill="none" 
       strokeOpacity={series.group === "A"? 1 : 0.05} 
-      strokeWidth={hoveredLine === i ? 5 : series.group === "A"? 1 : 0.1}
+      strokeWidth={hoveredLine === i ? 5 : series.group === "A"? 2 : 0.1}
       onMouseEnter={() => {
         if(series.group === "A")
           setHoveredLine(i)
