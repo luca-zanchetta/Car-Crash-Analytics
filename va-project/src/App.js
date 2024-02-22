@@ -325,6 +325,7 @@ const __Scatterplot = React.memo(({limitDataScatterplot, dataScatterplot, addFil
       addFilter={addFilter} 
       removeFilter={removeFilter}
       isFiltered={isFiltered}
+      _data={ExtractFeatures(data, [columns.tsne_x, columns.tsne_y, columns.Severity, columns.Number_of_Casualties, columns.Number_of_Vehicles, columns.Speed_limit, columns.Id])}
     ></Scatterplot>
   )
 }, (prev, next) => {
