@@ -137,10 +137,21 @@ function App() {
 
   useEffect(() =>{
     if(iteration >=1) {
-      if(!selectedItem) {
-        setData(FilterData(DATA, activeFilters))
-        setDataScatterplot(FilterData(DATA, activeFilters))
-        setBrushedPoints(FilterData(brushedPoints, activeFilters))
+      if(!selectedItem) {     // Da adattare al brushing della mappa
+
+        if(brushedPoints.length !== 0 && activeFilters.length !== 0) {
+          if(!recompute) setData(FilterData(brushedPoints, activeFilters))
+          else setData(FilterData(DATA, activeFilters))
+        }
+        else if(brushedPoints.length !== 0 && activeFilters.length === 0) {
+          if(!recompute) setData(brushedPoints, activeFilters)
+          else setData(DATA)
+        }
+        else {
+          setData(FilterData(DATA, activeFilters))
+        }
+
+        if(recompute) setDataScatterplot(FilterData(DATA, activeFilters))
       }
     }
     else {
@@ -172,7 +183,7 @@ function App() {
     if(selectedPoints) {
       if(selectedPoints.length !== 0) {
         selectedPoints.forEach(element => {
-          data.filter(elem => Number(elem.Id) === Number(element)).map(filteredElement => {
+          DATA.filter(elem => Number(elem.Id) === Number(element)).map(filteredElement => {
             restrictedData.push(filteredElement)
           })
         });
@@ -196,7 +207,7 @@ function App() {
 
 
 
-  function limitDataMap(d) {
+  function limitDataMap(d) {    // Da adattare al brushing della mappa
     if(selectedItem) {
       setSelectedItem(false)
       setData(DATA)
@@ -240,7 +251,13 @@ function App() {
               </label>
               <h3 style={{color: recompute ? "lightblue":"gainsboro", marginTop: "0", marginLeft: "3%", fontSize: "100%"}}>Recompute</h3>
             </div>
-            <__Scatterplot limitDataScatterplot={limitDataScatterplot} dataScatterplot={recompute ? dataScatterplot : DATA} addFilter= {addFilter} removeFilter={removeFilter} brushedPoints={brushedPoints}></__Scatterplot>
+            <__Scatterplot 
+              limitDataScatterplot={limitDataScatterplot} 
+              dataScatterplot={recompute ? dataScatterplot : DATA} 
+              addFilter= {addFilter} 
+              removeFilter={removeFilter} 
+              data={data}
+            ></__Scatterplot>
           </div>
           <div className='LeftTopHeatmap'>
             <Heatmap Data={ExtractFeatures(data, [columns.Time_Interval, columns.Day])} addFilter={addFilter} removeFilter={removeFilter}></Heatmap>
@@ -278,7 +295,7 @@ function App() {
 }
 
 
-const __Scatterplot = React.memo(({limitDataScatterplot, dataScatterplot, addFilter, removeFilter, brushedPoints}) => {
+const __Scatterplot = React.memo(({limitDataScatterplot, dataScatterplot, addFilter, removeFilter, data}) => {
   return(
     <Scatterplot 
       callbackMouseEnter={limitDataScatterplot}
@@ -287,8 +304,7 @@ const __Scatterplot = React.memo(({limitDataScatterplot, dataScatterplot, addFil
     ></Scatterplot>
   )
 }, (prev, next) => {
-  console.log("prev.brushedPoints.length === next.brushedPoints.length: ",prev.brushedPoints.length === next.brushedPoints.length)
-  return prev.dataScatterplot.length === next.dataScatterplot.length && prev.brushedPoints.length === next.brushedPoints.length
+  return prev.dataScatterplot.length === next.dataScatterplot.length && prev.data.length === next.data.length
 })
 
 

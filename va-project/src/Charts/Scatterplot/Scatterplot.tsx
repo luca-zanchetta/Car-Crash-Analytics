@@ -189,8 +189,6 @@ export const Scatterplot = ({callbackMouseEnter, margin = 40,data= [{x: 2,y: 4, 
 
                 setPreviousEvent(event.type);
 
-                console.log("isThereBrushingWindow: ", isThereBrushingWindow)
-
                 if(isThereBrushingWindow) {
                     if (previousEvent === "end" && event.type === "start") {
                         callbackMouseEnter(selected, false)
