@@ -120,7 +120,8 @@ export const ParallelCoordinate = ({
       let y = yScale(series[variable]);
 
       // Adjust y-value to prevent overlap
-      y += Math.random() * 10 - 5; // You can adjust the range of jittering as needed
+      if(series.group === "A")
+        y += Math.random() * 10 - 5; // You can adjust the range of jittering as needed
       const coordinate: [number, number] = [x, y];
       return coordinate;
     });
@@ -136,11 +137,11 @@ export const ParallelCoordinate = ({
       key={i}  
       z={series.group === "A"? 10 : 1}
       d={d} 
-      style={{zIndex: hoveredLine === i ? 9000 : series.group === "A"? 10 : 1, position: "relative"}} 
+      style={{zIndex: hoveredLine === i ? 9000 : series.group === "A"? 500 : 1, position: "relative"}} 
       stroke={hoveredLine === i ? "red" : series.group === "A"? COLORS[0] : COLORS[1]} 
       fill="none" 
       strokeOpacity={series.group === "A"? 1 : 0.05} 
-      strokeWidth={hoveredLine === i ? 5 : series.group === "A"? 0.2 : 0.1}
+      strokeWidth={hoveredLine === i ? 5 : series.group === "A"? data.length <= 10 ? 50 : 0.2 : 0.1}
       onMouseEnter={() => {
         if(series.group === "A")
           setHoveredLine(i)
