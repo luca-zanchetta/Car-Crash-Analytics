@@ -38,6 +38,9 @@ export const Scatterplot = ({callbackMouseEnter, setFilters, isFiltered, margin 
 
     var isThereBrushingWindow = false
 
+    var brusPoints = useRef(null)
+
+
     useEffect(() =>{
         setPreviousEvent("start")
       },[])
@@ -194,23 +197,16 @@ export const Scatterplot = ({callbackMouseEnter, setFilters, isFiltered, margin 
 
                 setPreviousEvent(event.type);
 
-                if(isThereBrushingWindow) {
-                    if (previousEvent === "end" && event.type === "start") {
-                        callbackMouseEnter(selected, false)
+                if(brusPoints){
+                    if(!(brusPoints.length === selected.length)){
+                        callbackMouseEnter(selected)
                     }
-                    else {
-                        callbackMouseEnter(selected, true)
-                    }
+                        
                 }
-                else {
-                    
-                    if (previousEvent === "start" && event.type === "brush") {
-                        callbackMouseEnter(selected, true)
-                    }
-                    else {
-                        callbackMouseEnter(selected, false)
-                    }
-                }
+
+                brusPoints.current = selected
+                if(selected.length === 0) brusPoints.current = null
+               
             }
         });
 

@@ -59,9 +59,13 @@ function App() {
   const [recompute, setRecompute] = useState(false)   // False = Highlight, True = Recompute
   const [brushedPoints, setBrushedPoints] = useState([])
   const [mapFilters, setMapFilters] = useState([])
+  const [scatterFilters, setScatterFilters] = useState([])
 
   const fitlersRef = useRef()
   fitlersRef.current = activeFilters
+
+  var scatterFil = useRef()
+  scatterFil.current = scatterFilters
 
   function addFilter (filters)  {
     var addedFilters= []
@@ -138,17 +142,8 @@ function App() {
 
   useEffect(() =>{
     if(iteration >=1) {
-      if(brushedPoints.length !== 0 && activeFilters.length !== 0) {
-        setData(FilterData(brushedPoints, activeFilters, mapFilters))
-      }
-      else if(brushedPoints.length !== 0 && activeFilters.length === 0) {
-        setData(brushedPoints)
-      }
-      else {
-        setData(FilterData(DATA, activeFilters, mapFilters))
-      }
-
-      if(recompute) setDataScatterplot(FilterData(DATA, activeFilters, mapFilters))
+      setData(FilterData(DATA, activeFilters, mapFilters,scatterFil.current))
+      if(recompute) setDataScatterplot(FilterData(DATA, activeFilters, mapFilters,scatterFil.current))
     }
     else {
       d3.csv("dataset.csv").then(data => {
@@ -158,7 +153,7 @@ function App() {
         setIteration(1)
       });
     }
-  },[activeFilters, recompute, brushedPoints, mapFilters])
+  },[activeFilters, recompute, brushedPoints, mapFilters, scatterFilters])
  
   
   function ToggleServerity(s) {
@@ -173,9 +168,16 @@ function App() {
     
   }
 
+
+  function SetScatterFilters(selectedPoints){
+    console.log(selectedPoints)
+    setScatterFilters(selectedPoints)
+  }
+
   function limitDataScatterplot(selectedPoints, dataNull) {
     let restrictedData = []
     let brushed = []
+
 
     if(selectedPoints) {
       if(selectedPoints.length !== 0) {
@@ -208,23 +210,6 @@ function App() {
   }
 
 
-
-  // function limitDataMap(d) {    // Da adattare al brushing della mappa
-  //   if(selectedItem) {
-  //     setSelectedItem(false)
-  //     setData(DATA)
-  //     setDataScatterplot(DATA)
-  //   }
-  //   else {
-  //     DATA.filter(element => Number(element.Id) === Number(d[6])).map(filteredElement => {
-  //       setFilters([])
-  //       setData([filteredElement])
-  //       setDataScatterplot([filteredElement])
-  //       setSelectedItem(true)
-  //     })
-  //   }
-  // }
-
   function SetMapFilters(filters) {
     setMapFilters(filters)
   }
@@ -240,7 +225,6 @@ function App() {
     data.map((dato, i) => {
       if(Number(dato.Id) === Number(d[6])) {
         // filter = CheckMapFilters([dato.Latitude, dato.Longitude], mapFilters)
-        console.log(dato.Latitude, dato.Longitude, mapFilters)
         filter = true
       }
         
@@ -286,7 +270,7 @@ function App() {
                 <div color='Red'><svg fill="#000000" width="16px" height="16px" viewBox="0 0 256 256" id="Flat" xmlns="http://www.w3.org/2000/svg"><g opacity="0.2"><circle cx="128" cy="128" r="96" fill="green"/></g><path fill="green" d="M128,232A104,104,0,1,1,232,128,104.11782,104.11782,0,0,1,128,232Zm0-192a88,88,0,1,0,88,88A88.09961,88.09961,0,0,0,128,40Z"/></svg>Slight</div>
               </div>
               <__Scatterplot 
-                limitDataScatterplot={limitDataScatterplot} 
+                limitDataScatterplot={SetScatterFilters} 
                 dataScatterplot={recompute ? dataScatterplot : DATA} 
                 addFilter= {addFilter} 
                 removeFilter={removeFilter}
@@ -331,6 +315,7 @@ function App() {
 
 
 const __Scatterplot = React.memo(({limitDataScatterplot, dataScatterplot, addFilter, removeFilter, data, isFiltered}) => {
+  console.log("re render")
   return(
     <Scatterplot 
       callbackMouseEnter={limitDataScatterplot}
@@ -342,7 +327,7 @@ const __Scatterplot = React.memo(({limitDataScatterplot, dataScatterplot, addFil
     ></Scatterplot>
   )
 }, (prev, next) => {
-  return prev.dataScatterplot.length === next.dataScatterplot.length && prev.data.length === next.data.length
+  return prev.data.length === next.data.length
 })
 
 
