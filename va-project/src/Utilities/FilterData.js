@@ -6,9 +6,6 @@ export function FilterData(data,_filters,mapFilters, scatterplotFilter) {
     var newData = []
     if(filters.length == 0) return data
 
-    
-    console.log("filter data")
-    console.log(scatterplotFilter)
     data.map((d) => {
         var totalCheck = true;
         
@@ -31,7 +28,6 @@ export function FilterData(data,_filters,mapFilters, scatterplotFilter) {
            
         }
     })
-    console.log(newData.length)
     return newData
 }
 

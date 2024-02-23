@@ -112,7 +112,6 @@ export const AxisVertical = ({
         
     }
 
-    console.log(min + "-" + max)
     if(brushedPoints.length === 0){
       setBrushing(false)
       resetBrush()
@@ -237,8 +236,6 @@ export const AxisVertical = ({
         }
           
       }
-
-      console.log(brushedPoints)
 
       updateFilter(brushedPoints,BrushedPoints)
       setBrushedPoint(brushedPoints)
