@@ -6,7 +6,6 @@ import { useEffect, useRef, useState } from "react";
 import "../../App.css"
 
 type MapProps ={
-  callback: Function;
   setFilters: Function;
   data: [];
 }
@@ -21,7 +20,7 @@ const fatal = "2"   // Fatal
 const colors = {"0":"green","1":"yellow" ,"2":"red" }
 const icons = {"0":greenCircle,"1":yellowCircle ,"2":redCircle }
 
-const MapComponent = ({callback,setFilters, data}:MapProps) => {
+const MapComponent = ({setFilters, data}:MapProps) => {
 
   const [map, setMap] = useState(null)
   const [firstPoint, setFirst] = useState([])
@@ -56,7 +55,7 @@ const MapComponent = ({callback,setFilters, data}:MapProps) => {
           position: [d[0], d[1]],
           popup: "Quack!",
           popupOpen: false, // if popup has to be open by default
-          onClick: () => callback(d),
+          // onClick: () => callback(d),
           tooltip: "Id: "+ d[6] + "<br>Causalities: " + d[3] + "<br> Veichles involved: " + d[4] + "<br> Speed limit: " + d[5],
           customIcon:icons[d[2]],
         }

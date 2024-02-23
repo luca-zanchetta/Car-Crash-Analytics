@@ -18,10 +18,11 @@ type ScatterplotProps = {
     removeFilter: Function;
     isFiltered: Function;
     _data : {x:number, y:number, severity:number}[];
+    setFilters: Function;
 };
 
 
-export const Scatterplot = ({callbackMouseEnter, isFiltered, margin = 40, data= [{x: 2,y: 4, severity: 0},{x: 8,y: 5, severity: 0}], _data= [{x: 2,y: 4, severity: 0},{x: 8,y: 5, severity: 0}], addFilter, removeFilter}:ScatterplotProps) => {
+export const Scatterplot = ({callbackMouseEnter, setFilters, isFiltered, margin = 40, data= [{x: 2,y: 4, severity: 0},{x: 8,y: 5, severity: 0}], _data= [{x: 2,y: 4, severity: 0},{x: 8,y: 5, severity: 0}], addFilter, removeFilter}:ScatterplotProps) => {
 
     const zoomContant = 1.1
     const scrollK = .1

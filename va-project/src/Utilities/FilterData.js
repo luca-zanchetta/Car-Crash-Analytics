@@ -44,7 +44,7 @@ function SortFilters(filters) {
     return SortedFilters;
 }
 
-function CheckMapFilters(point,mapFilters) {
+export function CheckMapFilters(point,mapFilters) {
     if(mapFilters.length === 0) return true
 
     var firstPoint = mapFilters[0]
