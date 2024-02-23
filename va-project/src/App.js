@@ -7,7 +7,7 @@ import { Scatterplot } from './Charts/Scatterplot/Scatterplot.tsx';
 import { Heatmap } from './Charts/Heatmap/Heatmap.tsx';
 import { ParallelCoordinate } from './Charts/Parallel Coordinate/ParallelCoordinate.tsx';
 import Filters from './Screens/Filters.tsx';
-import { FilterData } from './Utilities/FilterData.js';
+import { CheckMapFilters, FilterData } from './Utilities/FilterData.js';
 
 import redcircle from './img/redcircle.svg'
 import greenCircle from './img/circle-oval-svgrepo-com (2).svg'
@@ -138,22 +138,17 @@ function App() {
 
   useEffect(() =>{
     if(iteration >=1) {
-      if(!selectedItem) {     // Da adattare al brushing della mappa
-
-        if(brushedPoints.length !== 0 && activeFilters.length !== 0) {
-          if(!recompute) setData(FilterData(brushedPoints, activeFilters, mapFilters))
-          else setData(FilterData(brushedPoints, activeFilters, mapFilters))
-        }
-        else if(brushedPoints.length !== 0 && activeFilters.length === 0) {
-          if(!recompute) setData(brushedPoints, activeFilters)
-          else setData(brushedPoints)
-        }
-        else {
-          setData(FilterData(DATA, activeFilters, mapFilters))
-        }
-
-        if(recompute) setDataScatterplot(FilterData(DATA, activeFilters, mapFilters))
+      if(brushedPoints.length !== 0 && activeFilters.length !== 0) {
+        setData(FilterData(brushedPoints, activeFilters, mapFilters))
       }
+      else if(brushedPoints.length !== 0 && activeFilters.length === 0) {
+        setData(brushedPoints)
+      }
+      else {
+        setData(FilterData(DATA, activeFilters, mapFilters))
+      }
+
+      if(recompute) setDataScatterplot(FilterData(DATA, activeFilters, mapFilters))
     }
     else {
       d3.csv("dataset.csv").then(data => {
@@ -243,8 +238,12 @@ function App() {
     var filter = false
     
     data.map((dato, i) => {
-      if(Number(dato.Id) === Number(d[6])) 
+      if(Number(dato.Id) === Number(d[6])) {
+        // filter = CheckMapFilters([dato.Latitude, dato.Longitude], mapFilters)
+        console.log(dato.Latitude, dato.Longitude, mapFilters)
         filter = true
+      }
+        
     })
     
     return filter
