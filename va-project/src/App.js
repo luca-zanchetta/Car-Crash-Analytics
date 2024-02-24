@@ -67,6 +67,21 @@ function App() {
   var scatterFil = useRef()
   scatterFil.current = scatterFilters
 
+  useEffect(() =>{
+    if(iteration >=1) {
+      setData(FilterData(DATA, activeFilters, mapFilters, scatterFil.current))
+      if(recompute) setDataScatterplot(FilterData(DATA, activeFilters, mapFilters, []))
+    }
+    else {
+      d3.csv("dataset.csv").then(data => {
+        setDATA(data)
+        setData(data)
+        setDataScatterplot(data)
+        setIteration(1)
+      });
+    }
+  },[activeFilters, recompute, brushedPoints, mapFilters, scatterFilters])
+
   function addFilter (filters)  {
     var addedFilters= []
     filters.map( (filter) => {
@@ -139,21 +154,6 @@ function App() {
 
     setFilters(newFilters)
   }
-
-  useEffect(() =>{
-    if(iteration >=1) {
-      setData(FilterData(DATA, activeFilters, mapFilters,scatterFil.current))
-      if(recompute) setDataScatterplot(FilterData(DATA, activeFilters, mapFilters,scatterFil.current))
-    }
-    else {
-      d3.csv("dataset.csv").then(data => {
-        setDATA(data)
-        setData(data)
-        setDataScatterplot(data)
-        setIteration(1)
-      });
-    }
-  },[activeFilters, recompute, brushedPoints, mapFilters, scatterFilters])
  
   
   function ToggleServerity(s) {
@@ -164,51 +164,12 @@ function App() {
     else {
       addFilter([[columns.Severity, s]])
       setSeverity({...Severity, [s]: true})
+    }
   }
-    
-  }
-
 
   function SetScatterFilters(selectedPoints){
-    console.log(selectedPoints)
     setScatterFilters(selectedPoints)
   }
-
-  function limitDataScatterplot(selectedPoints, dataNull) {
-    let restrictedData = []
-    let brushed = []
-
-
-    if(selectedPoints) {
-      if(selectedPoints.length !== 0) {
-        selectedPoints.forEach(element => {
-          DATA.filter(elem => Number(elem.Id) === Number(element)).map(filteredElement => {
-            brushed.push(filteredElement)
-          })
-
-          data.filter(elem => Number(elem.Id) === Number(element)).map(filteredElement => {
-            restrictedData.push(filteredElement)
-          })
-        });
-      }
-    }
-
-    if(restrictedData.length === 0) {
-      if(dataNull) {
-        setData([])
-      }
-      else {
-        setData(dataScatterplot, activeFilters)
-      }
-      setBrushedPoints([])
-    } 
-    else {
-
-      setData(restrictedData, activeFilters)
-      setBrushedPoints(brushed)
-    }
-  }
-
 
   function SetMapFilters(filters) {
     setMapFilters(filters)
@@ -315,7 +276,6 @@ function App() {
 
 
 const __Scatterplot = React.memo(({limitDataScatterplot, dataScatterplot, addFilter, removeFilter, data, isFiltered}) => {
-  console.log("re render")
   return(
     <Scatterplot 
       callbackMouseEnter={limitDataScatterplot}
@@ -327,7 +287,7 @@ const __Scatterplot = React.memo(({limitDataScatterplot, dataScatterplot, addFil
     ></Scatterplot>
   )
 }, (prev, next) => {
-  return prev.data.length === next.data.length
+  return prev.data.length === next.data.length && prev.dataScatterplot.length === next.dataScatterplot.length
 })
 
 
