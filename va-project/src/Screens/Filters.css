@@ -59,6 +59,7 @@ div.FiltersBox {
     
 }
 
+
 .CategoryList {
     display: flex;
     width: -webkit-fill-available;
@@ -86,7 +87,12 @@ div.FiltersBox {
     aspect-ratio: 1/1;
 }
 
-
+.FilterTopBar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
 
 .FilterEntry > h5 {
     margin: 0;

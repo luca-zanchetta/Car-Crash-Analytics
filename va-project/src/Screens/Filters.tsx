@@ -51,9 +51,9 @@ function Filters({addFilter,removeFilter}:filterProp) {
 
   return (
     <div className="FiltersBox">
-      <div style={{display: "flex", flexDirection:"row", width: "max-content"}}>
+      <div className="FilterTopBar">
         <h1>Filters</h1>
-        <div className='resetFilters' onClick={resetFilters}>
+        <div className='resetFilters' style={{marginLeft:"5%"}} onClick={resetFilters}>
           <h4>Reset</h4>
         </div>
       </div>
