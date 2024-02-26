@@ -9,9 +9,6 @@ import { ParallelCoordinate } from './Charts/Parallel Coordinate/ParallelCoordin
 import Filters from './Screens/Filters.tsx';
 import { CheckMapFilters, FilterData } from './Utilities/FilterData.js';
 
-import redcircle from './img/redcircle.svg'
-import greenCircle from './img/circle-oval-svgrepo-com (2).svg'
-import yellowCircle from './img/circle-oval-svgrepo-com.svg'
 export const columns = {
   Date: "Accident Date",
   Severity: "Accident_Severity",
@@ -257,17 +254,25 @@ function App() {
             setFilters={SetMapFilters} 
             data={ExtractFeatures(data,[columns.Latitude,columns.Longitude,columns.Severity, columns.Number_of_Casualties, columns.Number_of_Vehicles, columns.Speed_limit, columns.Id])}
           ></MapComponent>
-          <div className='MapLegend'>
+          <div className='ScatterplotLegend' style={{zIndex:'9999', backgroundColor:"#3d3d3d"}}>
+                <div color='Red'> 
+                <svg fill="#000000" width="18px" height="18px" viewBox="0 0 256 256" id="Flat" xmlns="http://www.w3.org/2000/svg"><g opacity="0.5"><circle cx="128" cy="128" r="96" stroke-width="10" stroke="black" fill="red"/></g><path fill="red" d="M128,232A104,104,0,1,1,232,128,104.11782,104.11782,0,0,1,128,232Zm0-192a88,88,0,1,0,88,88A88.09961,88.09961,0,0,0,128,40Z"/></svg>
+                  Fatal
+                </div>
+                <div color='Red'><svg fill="#000000" width="18px" height="18px" viewBox="0 0 256 256" id="Flat" xmlns="http://www.w3.org/2000/svg"><g opacity="1"><circle cx="128" cy="128" r="96" stroke-width="10" stroke="black" fill="#F2C200"/></g><path fill="#F2C200" d="M128,232A104,104,0,1,1,232,128,104.11782,104.11782,0,0,1,128,232Zm0-192a88,88,0,1,0,88,88A88.09961,88.09961,0,0,0,128,40Z"/></svg>Serious</div>
+                <div color='Red'><svg fill="#000000" width="18px" height="18px" viewBox="0 0 256 256" id="Flat" xmlns="http://www.w3.org/2000/svg"><g opacity="0.5"><circle cx="128" cy="128" r="96" stroke-width="10" stroke="black" fill="lightgreen"/></g><path fill="green" d="M128,232A104,104,0,1,1,232,128,104.11782,104.11782,0,0,1,128,232Zm0-192a88,88,0,1,0,88,88A88.09961,88.09961,0,0,0,128,40Z"/></svg>Slight</div>
+              </div>
+          {/* <div className='MapLegend'>
             <img src={redcircle} style={{aspectRatio:1/1,width:"1rem", paddingRight:".5rem", paddingLeft:".5rem"}} onClick={() => ToggleServerity(2)}></img>
             <text style={{color: Severity[2]? "Yellow": "White"}}>Fatal Accident</text>
             <img src={yellowCircle} style={{aspectRatio:1/1,width:"1rem", paddingRight:".5rem", paddingLeft:".5rem"}} onClick={() => ToggleServerity(1)}></img>
             <text style={{color: Severity[1]? "Yellow": "White"}}>Serious Accident</text>
             <img src={greenCircle} style={{aspectRatio:1/1,width:"1rem", paddingRight:".5rem", paddingLeft:".5rem"}} onClick={() => ToggleServerity(0)}></img>
             <text style={{color: Severity[0]? "Yellow": "White"}}>Slight Accident</text>
-          </div>
+          </div> */}
         </div>
         <div className='RighBottom'>
-          <Filters addFilter={addFilter} removeFilter={removeFilter}></Filters> 
+          <Filters addFilter={addFilter} removeFilter={removeFilter} ToggleSeverity={ToggleServerity}></Filters> 
         </div>
       </div>
     </div>

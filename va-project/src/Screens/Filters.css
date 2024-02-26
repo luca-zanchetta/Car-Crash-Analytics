@@ -7,14 +7,22 @@ div.FiltersBox {
     align-items: center;
 }
 
-.FiltersBox > div > h1 {
+.FiltersBox > div >div> h1 {
     display: flex;
     font-size: 1.5vw;
     color: white;
     margin: 0;
 }
 
+.topBarWrapper {
+    display:flex;
+    flex-direction: row; 
+    align-items:center;
+    width: 100%;
+}
+
 .resetFilters {
+    
     border-radius: 1rem;
     background-color: #BFBFBF;
     display: flex;
@@ -22,11 +30,17 @@ div.FiltersBox {
     width: max-content;
     justify-content: center;
     align-items: center;
-
+    margin-left: 5%;
+    padding: 0;
     cursor: pointer;
-    height: 35%;
+    height: 10%;
+    padding: 0% 1.5% 0% 1.5%;
     transition: all 0.1s ease;
     font-size: small;
+}
+.resetFilters>h4 {
+    margin: 10%;
+    font-size: .8vw;
 }
 
 .resetFilters:hover {
@@ -91,7 +105,9 @@ div.FiltersBox {
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-around;
+    justify-content: flex-start;
+    width: 95%;
+    padding-left: 5%;
 }
 
 .FilterEntry > h5 {
@@ -100,4 +116,12 @@ div.FiltersBox {
     margin-left:.5rem;
 
     font-size: .55vw;
+}
+
+.topBarWrapper > h5 {
+    margin: 0;
+    color: rgb(255, 255, 255);
+    margin-left:.5rem;
+    font-weight: normal;
+    font-size: .8vw;
 }

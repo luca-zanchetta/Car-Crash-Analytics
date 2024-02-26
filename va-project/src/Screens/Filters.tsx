@@ -16,16 +16,21 @@ import { filter } from "d3";
 import { columns, filters } from "../App";
 import "./Filters.css"
 import React, { useState } from "react";
+import redcircle from './../img/redcircle.svg'
+import greenCircle from './../img/circle-oval-svgrepo-com (2).svg'
+import yellowCircle from './../img/circle-oval-svgrepo-com.svg'
 
 type filterProp= {
   addFilter:Function;
   removeFilter:Function;
+  ToggleSeverity:Function;
 }
 
 
-function Filters({addFilter,removeFilter}:filterProp) {
+function Filters({addFilter,removeFilter,ToggleSeverity}:filterProp) {
   const [activeFilter,setActiveFilters] = useState([])
-  
+  const [Severity, setSeverity] = useState({0: false, 1: false, 2: false})
+
   function toggleFilter(filterClass, key, value) {
     if(activeFilter.includes(key+value)){
       setActiveFilters(current => current.filter(elem =>{ return elem !== key+value}))  
@@ -52,9 +57,20 @@ function Filters({addFilter,removeFilter}:filterProp) {
   return (
     <div className="FiltersBox">
       <div className="FilterTopBar">
-        <h1>Filters</h1>
-        <div className='resetFilters' style={{marginLeft:"5%"}} onClick={resetFilters}>
-          <h4>Reset</h4>
+        <div className="topBarWrapper">
+          <h1>Filters</h1>
+          <div className='resetFilters'  onClick={resetFilters}>
+            <h4>Reset</h4>
+          </div>
+          <div className="topBarWrapper" style={{justifyContent:"flex-end",width:"-webkit-fill-available", marginRight:"5%"}}>
+            <h5 style={{marginLeft:"5%"}}>Accident Severity</h5>
+            <img src={redcircle} style={{aspectRatio:1/1,width:"1rem", paddingRight:".5rem", paddingLeft:".5rem",cursor:"pointer"}} onClick={() => {ToggleSeverity(2) ; setSeverity({...Severity, [2] : !Severity[2]})}}></img>
+            <text style={{whiteSpace: "nowrap",color: Severity[2]? "Yellow": "White"}}>Fatal Accident</text>
+            <img src={yellowCircle} style={{aspectRatio:1/1,width:"1rem", paddingRight:".5rem", paddingLeft:".5rem",cursor:"pointer"}} onClick={() => {ToggleSeverity(1);setSeverity({...Severity, [1] : !Severity[1]})}}></img>
+            <text style={{whiteSpace: "nowrap",color: Severity[1]? "Yellow": "White"}}>Serious Accident</text>
+            <img src={greenCircle} style={{aspectRatio:1/1,width:"1rem", paddingRight:".5rem", paddingLeft:".5rem",cursor:"pointer"}} onClick={() => {ToggleSeverity(0);setSeverity({...Severity, [0] : !Severity[0]})}}></img>
+            <text style={{whiteSpace: "nowrap",color: Severity[0]? "Yellow": "White"}}>Slight Accident</text>
+          </div>
         </div>
       </div>
       
