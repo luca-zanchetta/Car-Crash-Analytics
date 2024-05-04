@@ -1,9 +1,15 @@
 # Car Crash Analytics
 **Presented by:**
-- Mattia Aquilina, 1921153
-  [![Email](aquilina.1921153@studenti.uniroma1.it)][![GitHub](https://github.com/Mattia-Aquilina)]
-- Luca Zanchetta, 1848878
-  [![Email](zanchetta.1848878@studenti.uniroma1.it)][![GitHub](https://github.com/luca-zanchetta)]
+- **Mattia Aquilina**, 1921153
+  
+  Email: aquilina.1921153@studenti.uniroma1.it
+  
+  GitHub: https://github.com/Mattia-Aquilina
+- **Luca Zanchetta**, 1848878
+
+  Email: zanchetta.1848878@studenti.uniroma1.it
+
+  GitHub: https://github.com/luca-zanchetta
 
 ## Index
 - [Introduction](#introduction)
